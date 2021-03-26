@@ -16,5 +16,28 @@
   },
   "credentialType": "absolute",
   "policies": [],
+  "settingsSchema": {
+    "title": "Glovo Integration",
+    "description": "Glovo integration settings",
+    "type": "object",
+    "required": ["glovoToken"],
+    "properties": {
+      "glovoToken": {
+        "title": "Glovo Token",
+        "description": "Token to performe calls to Glovo API",
+        "type": "string"
+      },
+      "affiliateIds": {
+        "title": "Affiliate IDs",
+        "description": "Three letters id generated when creating a new affiliate",
+        "type": "array",
+        "items": {
+          "title": "Affiliate ID",
+          "description": "Format 'YXZ'",
+          "type": "string"
+        }
+      }
+    }
+  },
   "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
 }
