@@ -27,7 +27,7 @@
         "description": "Token to performe calls to Glovo API",
         "type": "string"
       },
-      "affiliateIds": {
+      "affiliateConfig": {
         "title": "Affiliate Settings",
         "description": "Affiliate ID and Glovo Store ID",
         "type": "array",
