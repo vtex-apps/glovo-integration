@@ -28,13 +28,26 @@
         "type": "string"
       },
       "affiliateIds": {
-        "title": "Affiliate IDs",
-        "description": "Three letters id generated when creating a new affiliate",
+        "title": "Affiliate Settings",
+        "description": "Affiliate ID and Glovo Store ID",
         "type": "array",
         "items": {
-          "title": "Affiliate ID",
-          "description": "Format 'YXZ'",
-          "type": "string"
+          "type": "object",
+          "required": ["affiliateId", "glovoStoreId"],
+          "properties": {
+            "affiliateId": {
+              "title": "Affiliate ID",
+              "description": "Three letters id generated when creating a new affiliate. Format 'YXZ'",
+              "type": "string",
+              "maxLength": 3,
+              "minLength": 3
+            },
+            "glovoStoreId": {
+              "title": "Glovo Store ID",
+              "description": "Glovo Store ID registered in Glovo for the configured Affiliate ID",
+              "type": "string"
+            }
+          }
         }
       }
     }
