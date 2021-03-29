@@ -12,7 +12,7 @@ export async function validate(ctx: Context, next: () => Promise<any>) {
   }
 
   ctx.state.glovoToken = appConfig.glovoToken
-  ctx.state.affiliateIds = appConfig.affiliateIds
+  ctx.state.affiliateConfig = appConfig.affiliateConfig
 
   await next()
 }

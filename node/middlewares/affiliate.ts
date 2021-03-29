@@ -1,9 +1,9 @@
 export async function affiliate(ctx: Context, next: () => Promise<any>) {
   const {
-    state: { glovoToken, affiliateIds },
+    state: { glovoToken, affiliateConfig },
   } = ctx
 
   ctx.status = 200
-  ctx.body = { glovoToken, affiliateIds }
+  ctx.body = { glovoToken, affiliateConfig }
   await next()
 }

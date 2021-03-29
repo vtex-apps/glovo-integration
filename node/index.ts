@@ -39,7 +39,10 @@ declare global {
 
   interface State extends RecorderState {
     glovoToken: string
-    affiliateIds: string[]
+    affiliateConfig: Array<{
+      affiliateId: string
+      glovoStoreId: string
+    }>
   }
 }
 
