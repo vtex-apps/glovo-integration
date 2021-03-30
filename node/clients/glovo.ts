@@ -3,6 +3,8 @@ import { ExternalClient } from '@vtex/api'
 
 export default class Glovo extends ExternalClient {
   constructor(context: IOContext, options?: InstanceOptions) {
-    super('http://httpstat.us', context, options)
+    super('https://testaffiliate.free.beeceptor.com/', context, options)
   }
+
+  public sendBody = (body: unknown) => this.http.post('/', body)
 }

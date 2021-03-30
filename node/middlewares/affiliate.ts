@@ -1,9 +1,14 @@
+import { json } from 'co-body'
+
 export async function affiliate(ctx: Context, next: () => Promise<any>) {
   const {
-    state: { glovoToken, affiliateConfig },
+    clients: { glovo },
   } = ctx
 
-  ctx.status = 200
-  ctx.body = { glovoToken, affiliateConfig }
+  const body = await json(ctx.req)
+
+  await glovo.sendBody(body)
+
+  ctx.status = 204
   await next()
 }
