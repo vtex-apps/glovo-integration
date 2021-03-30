@@ -1,15 +1,31 @@
 import { json } from 'co-body'
 
-export async function affiliate(ctx: Context, next: () => Promise<any>) {
+export async function affiliate(ctx: Context, next: () => Promise<void>) {
   const {
     clients: { glovo },
     vtex: { logger },
   } = ctx
 
-  const body = await json(ctx.req)
+  const body: CatalogChange = await json(ctx.req)
+
+  const {
+    IsActive,
+    HasStockKeepingUnitRemovedFromAffiliate: isRemovedFromAffiliate,
+    PriceModified,
+    StockModified,
+  } = body
 
   try {
-    await glovo.sendBody(body)
+    if (!IsActive) {
+      await glovo.isNotActive(body)
+    } else if (isRemovedFromAffiliate) {
+      await glovo.removedFromAffiliate(body)
+    } else if (PriceModified) {
+      await glovo.priceChanged(body)
+    } else if (StockModified) {
+      await glovo.stockChanged(body)
+    }
+
     logger.info(body)
   } catch (error) {
     throw new TypeError(error)
