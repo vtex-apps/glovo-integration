@@ -11,3 +11,9 @@ interface CatalogChange {
   HasStockKeepingUnitModified: boolean
   HasStockKeepingUnitRemovedFromAffiliate: boolean
 }
+
+interface AffiliateInfo {
+  affiliateId: string
+  salesChannel: string
+  glovoStoreId: string
+}

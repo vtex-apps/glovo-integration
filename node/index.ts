@@ -9,6 +9,7 @@ import { LRUCache, method, Service } from '@vtex/api'
 import { Clients } from './clients'
 import { affiliate } from './middlewares/affiliate'
 import { errorHandler } from './middlewares/errorHandler'
+import { filterAffiliateSettings } from './middlewares/filterAffiliateSettings'
 import { validate } from './middlewares/validate'
 
 const TIMEOUT_MS = 800
@@ -39,10 +40,9 @@ declare global {
 
   interface State extends RecorderState {
     glovoToken: string
-    affiliateConfig: Array<{
-      affiliateId: string
-      glovoStoreId: string
-    }>
+    catalogUpdate: CatalogChange
+    affiliateConfig: AffiliateInfo[]
+    affiliateInfo: AffiliateInfo
   }
 }
 
@@ -51,7 +51,7 @@ export default new Service<Clients, State, ParamsContext>({
   clients,
   routes: {
     affiliate: method({
-      POST: [errorHandler, validate, affiliate],
+      POST: [errorHandler, validate, filterAffiliateSettings, affiliate],
     }),
   },
 })
