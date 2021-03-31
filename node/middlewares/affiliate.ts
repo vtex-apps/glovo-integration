@@ -1,12 +1,20 @@
+import { json } from 'co-body'
+
 export async function affiliate(ctx: Context, next: () => Promise<any>) {
   const {
-    clients: { apps },
+    clients: { glovo },
+    vtex: { logger },
   } = ctx
 
-  const appConfig = await apps.getAppSettings(process.env.VTEX_APP_ID as string)
+  const body = await json(ctx.req)
 
-  ctx.status = 200
-  ctx.body = appConfig
+  try {
+    await glovo.sendBody(body)
+    logger.info(body)
+  } catch (error) {
+    throw new TypeError(error)
+  }
 
+  ctx.status = 204
   await next()
 }

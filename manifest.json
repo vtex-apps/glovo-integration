@@ -15,7 +15,15 @@
     "prereleasy": "bash lint.sh"
   },
   "credentialType": "absolute",
-  "policies": [],
+  "policies": [
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "testaffiliate.free.beeceptor.com",
+        "path": "*"
+      }
+    }
+  ],
   "settingsSchema": {
     "title": "Glovo Integration",
     "description": "Glovo integration settings",

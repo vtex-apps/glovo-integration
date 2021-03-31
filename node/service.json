@@ -7,7 +7,7 @@
   "workers": 1,
   "routes": {
     "affiliate": {
-      "path": "/_v/glovo-integration/affiliate",
+      "path": "/_v/glovo/affiliate",
       "public": true
     }
   }
