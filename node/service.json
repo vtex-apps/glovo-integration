@@ -10,5 +10,11 @@
       "path": "/_v/glovo/affiliate",
       "public": true
     }
+  },
+  "events": {
+    "orderStates": {
+      "sender": "vtex.orders-broadcast",
+      "topics": ["ready-for-handling", "invoiced"]
+    }
   }
 }

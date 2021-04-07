@@ -3,6 +3,7 @@ import type {
   ServiceContext,
   RecorderState,
   ParamsContext,
+  EventContext
 } from '@vtex/api'
 import { LRUCache, method, Service } from '@vtex/api'
 
@@ -11,6 +12,7 @@ import { affiliate } from './middlewares/affiliate'
 import { errorHandler } from './middlewares/errorHandler'
 import { filterAffiliateSettings } from './middlewares/filterAffiliateSettings'
 import { validate } from './middlewares/validate'
+import { orderStates } from './middlewares/orderStates'
 
 const TIMEOUT_MS = 800
 
@@ -44,6 +46,17 @@ declare global {
     affiliateConfig: AffiliateInfo[]
     affiliateInfo: AffiliateInfo
   }
+
+  interface StatusChangeContext extends EventContext<Clients> {
+    body: {
+      domain: string,
+      orderId: string,
+      currentState: string,
+      lastState: string,
+      currentChangeDate: string,
+      lastChangeDate: string
+    }
+  }
 }
 
 // Export a service that defines route handlers and client options.
@@ -54,4 +67,7 @@ export default new Service<Clients, State, ParamsContext>({
       POST: [errorHandler, validate, filterAffiliateSettings, affiliate],
     }),
   },
+  events: {
+    orderStates
+  }
 })
