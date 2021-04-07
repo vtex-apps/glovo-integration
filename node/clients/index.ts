@@ -1,4 +1,5 @@
 import { IOClients } from '@vtex/api'
+import { Checkout } from '@vtex/clients'
 
 import Glovo from './glovo'
 
@@ -6,5 +7,9 @@ import Glovo from './glovo'
 export class Clients extends IOClients {
   public get glovo() {
     return this.getOrSet('glovo', Glovo)
+  }
+
+  public get checkout() {
+    return this.getOrSet('checkout', Checkout)
   }
 }

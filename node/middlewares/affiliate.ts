@@ -1,18 +1,56 @@
-import { json } from 'co-body'
+import { createSimulationPayload, isSkuAvailable } from '../utils'
 
-export async function affiliate(ctx: Context, next: () => Promise<any>) {
+export async function affiliate(ctx: Context, next: () => Promise<void>) {
   const {
-    clients: { glovo },
+    state: { glovoToken, affiliateInfo, catalogUpdate },
+    clients: { glovo, checkout },
     vtex: { logger },
   } = ctx
 
-  const body = await json(ctx.req)
+  const { IsActive, IdSku, IdAffiliate } = catalogUpdate
+
+  const { salesChannel, glovoStoreId } = affiliateInfo
+
+  let glovoPayload = {
+    glovoToken,
+    skuId: IdSku,
+    glovoStoreId,
+    sellingPrice: 0,
+    available: false,
+  }
 
   try {
-    await glovo.sendBody(body)
-    logger.info(body)
+    if (IsActive) {
+      const simulation = await checkout.simulation(
+        ...createSimulationPayload({
+          skuId: IdSku,
+          salesChannel,
+          affiliateId: IdAffiliate,
+        })
+      )
+
+      const { items } = simulation
+      const [item] = items
+
+      if (isSkuAvailable(item)) {
+        const { sellingPrice } = item
+
+        glovoPayload = {
+          ...glovoPayload,
+          sellingPrice,
+          available: true,
+        }
+      }
+    }
+
+    await glovo.api(glovoPayload)
+
+    logger.info({
+      glovoPayload,
+      catalogUpdate,
+    })
   } catch (error) {
-    throw new TypeError(error)
+    throw new Error(error)
   }
 
   ctx.status = 204

@@ -6,5 +6,5 @@ export default class Glovo extends ExternalClient {
     super('https://testaffiliate.free.beeceptor.com/', context, options)
   }
 
-  public sendBody = (body: unknown) => this.http.post('/', body)
+  public api = (body: unknown) => this.http.post('/', body)
 }

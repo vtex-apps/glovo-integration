@@ -22,6 +22,13 @@
         "host": "testaffiliate.free.beeceptor.com",
         "path": "*"
       }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "portal.vtexcommercestable.com.br",
+        "path": "/*"
+      }
     }
   ],
   "settingsSchema": {
@@ -41,7 +48,7 @@
         "type": "array",
         "items": {
           "type": "object",
-          "required": ["affiliateId", "glovoStoreId"],
+          "required": ["affiliateId", "salesChannel", "glovoStoreId"],
           "properties": {
             "affiliateId": {
               "title": "Affiliate ID",
@@ -49,6 +56,11 @@
               "type": "string",
               "maxLength": 3,
               "minLength": 3
+            },
+            "salesChannel": {
+              "title": "Sales Channel",
+              "description": "Sales Channel associated to the affiliate ID",
+              "type": "string"
             },
             "glovoStoreId": {
               "title": "Glovo Store ID",
