@@ -7,12 +7,15 @@ import type {
 import { LRUCache, method, Service } from '@vtex/api'
 
 import { Clients } from './clients'
-import { affiliate } from './middlewares/affiliate'
-import { cancelOrder } from './middlewares/cancelOrder'
-import { createOrder } from './middlewares/createOrder'
-import { errorHandler } from './middlewares/errorHandler'
-import { filterAffiliateSettings } from './middlewares/filterAffiliateSettings'
-import { validateSettings } from './middlewares/validateSettings'
+import {
+  affiliate,
+  cancelOrder,
+  createOrder,
+  errorHandler,
+  filterAffiliateSettings,
+  validateSettings,
+  validateGlovoToken,
+} from './middlewares'
 
 const TIMEOUT_MS = 800
 
@@ -61,10 +64,10 @@ export default new Service<Clients, State, ParamsContext>({
       ],
     }),
     createOrder: method({
-      POST: [errorHandler, validateSettings, createOrder],
+      POST: [errorHandler, validateSettings, validateGlovoToken, createOrder],
     }),
     cancelOrder: method({
-      POST: [errorHandler, validateSettings, cancelOrder],
+      POST: [errorHandler, validateSettings, validateGlovoToken, cancelOrder],
     }),
   },
 })
