@@ -149,3 +149,10 @@ interface GlovoDeliveryAddress {
   longitude: number
   latitude: number
 }
+
+interface GlovoOrderCancellation {
+  order_id: string
+  store_id: string
+  cancel_reason: string
+  payment_strategy: string
+}
