@@ -12,7 +12,7 @@
     }
   },
   "events": {
-    "orderStates": {
+    "orderStatus": {
       "sender": "vtex.orders-broadcast",
       "topics": ["ready-for-handling", "invoiced"]
     }

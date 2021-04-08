@@ -3,7 +3,7 @@ import type {
   ServiceContext,
   RecorderState,
   ParamsContext,
-  EventContext
+  EventContext,
 } from '@vtex/api'
 import { LRUCache, method, Service } from '@vtex/api'
 
@@ -12,7 +12,7 @@ import { affiliate } from './middlewares/affiliate'
 import { errorHandler } from './middlewares/errorHandler'
 import { filterAffiliateSettings } from './middlewares/filterAffiliateSettings'
 import { validate } from './middlewares/validate'
-import { orderStates } from './middlewares/orderStates'
+import { updateGlovoOrder } from './events/updateGlovoOrder'
 
 const TIMEOUT_MS = 800
 
@@ -49,11 +49,11 @@ declare global {
 
   interface StatusChangeContext extends EventContext<Clients> {
     body: {
-      domain: string,
-      orderId: string,
-      currentState: string,
-      lastState: string,
-      currentChangeDate: string,
+      domain: string
+      orderId: string
+      currentState: string
+      lastState: string
+      currentChangeDate: string
       lastChangeDate: string
     }
   }
@@ -68,6 +68,6 @@ export default new Service<Clients, State, ParamsContext>({
     }),
   },
   events: {
-    orderStates
-  }
+    orderStatus: [updateGlovoOrder],
+  },
 })

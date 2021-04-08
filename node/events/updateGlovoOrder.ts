@@ -1,19 +1,18 @@
-export async function orderStates(
+export async function updateGlovoOrder(
   ctx: StatusChangeContext,
   next: () => Promise<any>
 ) {
-
   const {
     body: { domain, orderId, currentState, currentChangeDate },
     clients: { glovo },
-    vtex: { logger }
+    vtex: { logger },
   } = ctx
 
   const glovoPayload = {
     domain,
     orderId,
     currentState,
-    currentChangeDate
+    currentChangeDate,
   }
 
   try {
