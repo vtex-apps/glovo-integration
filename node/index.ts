@@ -53,5 +53,15 @@ export default new Service<Clients, State, ParamsContext>({
     affiliate: method({
       POST: [errorHandler, validate, filterAffiliateSettings, affiliate],
     }),
+    createOrder: method({
+      POST: (ctx: Context) => {
+        ctx.body = 'Create an order'
+      },
+    }),
+    deleteOrder: method({
+      POST: (ctx: Context) => {
+        ctx.body = 'Delete an order'
+      },
+    }),
   },
 })
