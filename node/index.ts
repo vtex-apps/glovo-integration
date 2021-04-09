@@ -15,6 +15,7 @@ import {
   filterAffiliateSettings,
   validateSettings,
   validateGlovoToken,
+  simulateOrder,
 } from './middlewares'
 
 const TIMEOUT_MS = 800
@@ -64,7 +65,13 @@ export default new Service<Clients, State, ParamsContext>({
       ],
     }),
     createOrder: method({
-      POST: [errorHandler, validateSettings, validateGlovoToken, createOrder],
+      POST: [
+        errorHandler,
+        validateSettings,
+        validateGlovoToken,
+        simulateOrder,
+        createOrder,
+      ],
     }),
     cancelOrder: method({
       POST: [errorHandler, validateSettings, validateGlovoToken, cancelOrder],

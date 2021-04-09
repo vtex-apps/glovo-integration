@@ -33,3 +33,9 @@ export const createSimulationPayload = ({
 
   return [simulationPayload, queryString]
 }
+
+export const getAffilateFromStoreId = (
+  storeId: string,
+  affiliateConfig: AffiliateInfo[]
+): AffiliateInfo | undefined =>
+  affiliateConfig.find(({ glovoStoreId }) => glovoStoreId === storeId)
