@@ -1,3 +1,7 @@
 export async function createOrder(ctx: Context) {
-  ctx.body = 'Order simulated'
+  const {
+    state: { orderSimulation },
+  } = ctx
+
+  ctx.body = orderSimulation
 }

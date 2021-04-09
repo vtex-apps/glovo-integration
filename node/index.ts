@@ -6,6 +6,7 @@ import type {
   EventContext,
 } from '@vtex/api'
 import { LRUCache, method, Service } from '@vtex/api'
+import type { SimulationOrderForm } from '@vtex/clients'
 
 import { Clients } from './clients'
 import { updateGlovoOrder } from './events/updateGlovoOrder'
@@ -51,6 +52,7 @@ declare global {
     catalogUpdate: CatalogChange
     affiliateConfig: AffiliateInfo[]
     affiliateInfo: AffiliateInfo
+    orderSimulation: SimulationOrderForm
   }
 
   interface StatusChangeContext extends EventContext<Clients> {

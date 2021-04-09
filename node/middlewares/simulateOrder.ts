@@ -1,11 +1,16 @@
 import { json } from 'co-body'
 
-import { convertGlovoProductToItems, getAffilateFromStoreId } from '../utils'
+import {
+  convertGlovoProductToItems,
+  createSimulationPayload,
+  getAffilateFromStoreId,
+} from '../utils'
 
 export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
   const {
     state: { affiliateConfig },
     vtex: { logger },
+    clients: { checkout },
   } = ctx
 
   const glovoOrder: GlovoOrder = await json(ctx.req)
@@ -32,9 +37,25 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
     return
   }
 
+  const { salesChannel, affiliateId } = affiliateInfo
+
   const simulationItems = convertGlovoProductToItems(glovoOrder.products)
 
-  ctx.body = simulationItems
+  const simulation = await checkout.simulation(
+    ...createSimulationPayload({
+      items: simulationItems,
+      salesChannel,
+      affiliateId,
+    })
+  )
+
+  logger.info({
+    step: 'Simulation',
+    simulationResult: simulation,
+    glovoOrder,
+  })
+
+  ctx.state.orderSimulation = simulation
 
   await next()
 }

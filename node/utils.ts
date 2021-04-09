@@ -12,7 +12,7 @@ export const isSkuAvailable = (item: OrderFormItem | undefined): boolean => {
   return item.availability === 'available'
 }
 
-const createSimulationItem = ({
+export const createSimulationItem = ({
   id,
   quantity,
 }: {
@@ -27,18 +27,18 @@ const createSimulationItem = ({
 }
 
 interface CreateSimulationArgs {
-  skuId: string
+  items: PayloadItem[]
   affiliateId: string
   salesChannel: string
 }
 
 export const createSimulationPayload = ({
-  skuId,
+  items,
   affiliateId,
   salesChannel,
 }: CreateSimulationArgs): [SimulationPayload, string] => {
   const simulationPayload = {
-    items: [createSimulationItem({ id: skuId, quantity: 1 })],
+    items,
   }
 
   const queryString = `?affiliateId=${affiliateId}&sc=${salesChannel}`
@@ -59,7 +59,7 @@ export const convertGlovoProductToItems = (
   const attributesCollection = []
 
   for (const product of glovoProducts) {
-    const { id, quantity, attributes } = product
+    const { id, quantity, attributes = [] } = product
     const item = createSimulationItem({ id, quantity })
 
     items.push(item)
