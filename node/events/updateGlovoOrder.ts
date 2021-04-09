@@ -19,6 +19,7 @@ export async function updateGlovoOrder(
     await glovo.api(glovoPayload)
     logger.info(glovoPayload)
   } catch (error) {
+    logger.error(error)
     throw new Error(error)
   }
 
