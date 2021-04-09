@@ -1,6 +1,9 @@
 import { UserInputError } from '@vtex/api'
 
-export async function validate(ctx: Context, next: () => Promise<any>) {
+export async function validateSettings(
+  ctx: Context,
+  next: () => Promise<void>
+) {
   const {
     clients: { apps },
   } = ctx

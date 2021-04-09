@@ -1,4 +1,4 @@
-export async function errorHandler(ctx: Context, next: () => Promise<any>) {
+export async function errorHandler(ctx: Context, next: () => Promise<void>) {
   const {
     vtex: { logger },
   } = ctx
