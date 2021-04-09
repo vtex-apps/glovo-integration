@@ -18,5 +18,11 @@
       "path": "/_v/glovo/orders/delete",
       "public": true
     }
+  },
+  "events": {
+    "orderStatus": {
+      "sender": "vtex.orders-broadcast",
+      "topics": ["ready-for-handling", "invoiced"]
+    }
   }
 }
