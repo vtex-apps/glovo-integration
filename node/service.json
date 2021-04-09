@@ -9,6 +9,14 @@
     "affiliate": {
       "path": "/_v/glovo/affiliate",
       "public": true
+    },
+    "createOrder": {
+      "path": "/_v/glovo/orders/create",
+      "public": true
+    },
+    "cancelOrder": {
+      "path": "/_v/glovo/orders/delete",
+      "public": true
     }
   }
 }
