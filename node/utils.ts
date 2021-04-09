@@ -1,4 +1,8 @@
-import type { OrderFormItem, SimulationPayload } from '@vtex/clients'
+import type {
+  OrderFormItem,
+  SimulationPayload,
+  PayloadItem,
+} from '@vtex/clients'
 
 export const isSkuAvailable = (item: OrderFormItem | undefined): boolean => {
   if (!item) {
@@ -6,6 +10,20 @@ export const isSkuAvailable = (item: OrderFormItem | undefined): boolean => {
   }
 
   return item.availability === 'available'
+}
+
+const createSimulationItem = ({
+  id,
+  quantity,
+}: {
+  id: string
+  quantity: number
+}): PayloadItem => {
+  return {
+    id,
+    quantity,
+    seller: '1',
+  }
 }
 
 interface CreateSimulationArgs {
@@ -20,13 +38,7 @@ export const createSimulationPayload = ({
   salesChannel,
 }: CreateSimulationArgs): [SimulationPayload, string] => {
   const simulationPayload = {
-    items: [
-      {
-        id: skuId,
-        quantity: 1,
-        seller: '1',
-      },
-    ],
+    items: [createSimulationItem({ id: skuId, quantity: 1 })],
   }
 
   const queryString = `?affiliateId=${affiliateId}&sc=${salesChannel}`
@@ -39,3 +51,27 @@ export const getAffilateFromStoreId = (
   affiliateConfig: AffiliateInfo[]
 ): AffiliateInfo | undefined =>
   affiliateConfig.find(({ glovoStoreId }) => glovoStoreId === storeId)
+
+export const convertGlovoProductToItems = (
+  glovoProducts: GlovoProduct[] = []
+): PayloadItem[] => {
+  const items = []
+  const attributesCollection = []
+
+  for (const product of glovoProducts) {
+    const { id, quantity, attributes } = product
+    const item = createSimulationItem({ id, quantity })
+
+    items.push(item)
+    attributesCollection.push(...attributes)
+  }
+
+  for (const attribute of attributesCollection) {
+    const { id, quantity } = attribute
+    const item = createSimulationItem({ id, quantity })
+
+    items.push(item)
+  }
+
+  return items
+}

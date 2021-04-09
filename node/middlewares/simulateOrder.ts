@@ -1,6 +1,6 @@
 import { json } from 'co-body'
 
-import { getAffilateFromStoreId } from '../utils'
+import { convertGlovoProductToItems, getAffilateFromStoreId } from '../utils'
 
 export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
   const {
@@ -31,6 +31,10 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
 
     return
   }
+
+  const simulationItems = convertGlovoProductToItems(glovoOrder.products)
+
+  ctx.body = simulationItems
 
   await next()
 }
