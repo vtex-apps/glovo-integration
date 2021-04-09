@@ -3,10 +3,12 @@ import type {
   ServiceContext,
   RecorderState,
   ParamsContext,
+  EventContext,
 } from '@vtex/api'
 import { LRUCache, method, Service } from '@vtex/api'
 
 import { Clients } from './clients'
+import { updateGlovoOrder } from './events/updateGlovoOrder'
 import {
   affiliate,
   cancelOrder,
@@ -50,6 +52,17 @@ declare global {
     affiliateConfig: AffiliateInfo[]
     affiliateInfo: AffiliateInfo
   }
+
+  interface StatusChangeContext extends EventContext<Clients> {
+    body: {
+      domain: string
+      orderId: string
+      currentState: string
+      lastState: string
+      currentChangeDate: string
+      lastChangeDate: string
+    }
+  }
 }
 
 // Export a service that defines route handlers and client options.
@@ -76,5 +89,8 @@ export default new Service<Clients, State, ParamsContext>({
     cancelOrder: method({
       POST: [errorHandler, validateSettings, validateGlovoToken, cancelOrder],
     }),
+  },
+  events: {
+    orderStatus: [updateGlovoOrder],
   },
 })
