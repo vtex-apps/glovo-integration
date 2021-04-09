@@ -22,7 +22,7 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
 
   /**
    * If the order received doesn't match any affilate on settings, we end the process.
-   * We also log it to Splunk, since there might be wrong in the configuration.
+   * We also log it to Splunk, since there might be something wrong in the configuration.
    */
   if (!affiliateInfo) {
     const message = `Order not handled. Couldn't find any affiliate with Glovo Store Id ${glovoOrder.store_id}`
@@ -50,7 +50,7 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
   )
 
   logger.info({
-    step: 'Simulation',
+    message: `Simulation for order ${glovoOrder.order_id}`,
     simulationResult: simulation,
     glovoOrder,
   })
