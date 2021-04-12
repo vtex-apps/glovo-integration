@@ -5,7 +5,7 @@ export const isSkuAvailable = (item: OrderFormItem | undefined): boolean => {
     return false
   }
 
-  return item.availability === 'available'
+  return true
 }
 
 interface CreateSimulationArgs {
