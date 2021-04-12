@@ -37,8 +37,6 @@ export async function updateProduct(ctx: Context, next: () => Promise<void>) {
       if (isSkuAvailable(item)) {
         const { sellingPrice } = item
 
-        // eslint-disable-next-line no-console
-        console.log('Inside isSkuAvailable')
         glovoPayload = {
           ...glovoPayload,
           price: sellingPrice,
