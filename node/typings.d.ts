@@ -68,7 +68,14 @@ interface GlovoOrder {
    */
   customer_cash_payment_amount: number | null
   products: GlovoProduct[]
-  delivery_address: GlovoDeliveryAddress
+  /**
+   * Marketplace partners: object containing information about the delivery address (Delivery address object)
+   * Normal partners: null
+   *
+   * @type {(GlovoDeliveryAddress | null)}
+   * @memberOf GlovoOrder
+   */
+  delivery_address: GlovoDeliveryAddress | null
   /**
    * Marketplace partners: empty array
    * Normal partners: array containing the list of the orders bundled with current order

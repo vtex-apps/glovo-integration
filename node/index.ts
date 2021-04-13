@@ -6,6 +6,7 @@ import type {
   EventContext,
 } from '@vtex/api'
 import { LRUCache, method, Service } from '@vtex/api'
+import type { SimulationOrderForm } from '@vtex/clients'
 
 import { Clients } from './clients'
 import {
@@ -22,6 +23,7 @@ import {
   updateProduct,
   validateSettings,
   validateGlovoToken,
+  simulateOrder,
 } from './middlewares'
 
 const TIMEOUT_MS = 800
@@ -55,6 +57,7 @@ declare global {
     catalogUpdate: CatalogChange
     affiliateConfig: AffiliateInfo[]
     affiliateInfo: AffiliateInfo
+    orderSimulation: SimulationOrderForm
   }
 
   interface StatusChangeContext extends EventContext<Clients> {
@@ -82,7 +85,13 @@ export default new Service<Clients, State, ParamsContext>({
       ],
     }),
     createOrder: method({
-      POST: [errorHandler, validateSettings, validateGlovoToken, createOrder],
+      POST: [
+        errorHandler,
+        validateSettings,
+        validateGlovoToken,
+        simulateOrder,
+        createOrder,
+      ],
     }),
     cancelOrder: method({
       POST: [errorHandler, validateSettings, validateGlovoToken, cancelOrder],

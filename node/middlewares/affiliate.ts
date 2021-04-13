@@ -1,4 +1,8 @@
-import { createSimulationPayload, isSkuAvailable } from '../utils'
+import {
+  createSimulationPayload,
+  isSkuAvailable,
+  createSimulationItem,
+} from '../utils'
 
 export async function affiliate(ctx: Context, next: () => Promise<void>) {
   const {
@@ -21,9 +25,12 @@ export async function affiliate(ctx: Context, next: () => Promise<void>) {
 
   try {
     if (IsActive) {
+      // We create a item with quantity one because Glovo doesn't take quantity, only if the product is available or not
+      const simulationItem = createSimulationItem({ id: IdSku, quantity: 1 })
+
       const simulation = await checkout.simulation(
         ...createSimulationPayload({
-          skuId: IdSku,
+          items: [simulationItem],
           salesChannel,
           affiliateId: IdAffiliate,
         })
