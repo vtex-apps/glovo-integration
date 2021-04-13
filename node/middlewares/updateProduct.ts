@@ -10,9 +10,8 @@ export async function updateProduct(ctx: Context, next: () => Promise<void>) {
   const { IsActive, IdSku, IdAffiliate } = catalogUpdate
   const { salesChannel, glovoStoreId } = affiliateInfo
 
-  let glovoPayload = {
+  let glovoPayload: GlovoPayload = {
     glovoToken,
-    price: 0,
     available: false,
     skuId: IdSku,
     glovoStoreId,
@@ -31,22 +30,16 @@ export async function updateProduct(ctx: Context, next: () => Promise<void>) {
       const { items } = simulation
       const [item] = items
 
-      // eslint-disable-next-line no-console
-      console.log('Item:', item)
-
       if (isSkuAvailable(item)) {
         const { sellingPrice } = item
 
         glovoPayload = {
           ...glovoPayload,
-          price: sellingPrice,
+          price: sellingPrice / 100,
           available: true,
         }
       }
     }
-
-    // eslint-disable-next-line no-console
-    console.log('GlovoPayload: ', glovoPayload)
 
     await glovo.updateProducts(glovoPayload)
     logger.info({ glovoPayload, catalogUpdate })

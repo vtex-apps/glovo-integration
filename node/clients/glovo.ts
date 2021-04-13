@@ -13,14 +13,13 @@ export default class Glovo extends ExternalClient {
   }
 
   public updateProducts = (body: any) => {
-    // eslint-disable-next-line no-console
-    console.log(body)
     const { glovoStoreId, skuId, glovoToken, price, available } = body
 
-    const data = {
-      price,
+    const data: any = {
       available,
     }
+
+    if (price) data.price = price
 
     return this.http.patch(
       `/webhook/stores/${glovoStoreId}/products/${skuId}`,
