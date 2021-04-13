@@ -1,7 +1,7 @@
-import { json } from 'co-body'
-
 export async function createOrder(ctx: Context) {
-  const glovoOrder: GlovoOrder = await json(ctx.req)
+  const {
+    state: { orderSimulation },
+  } = ctx
 
-  ctx.body = glovoOrder
+  ctx.body = orderSimulation
 }
