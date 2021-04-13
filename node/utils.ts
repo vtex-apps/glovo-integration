@@ -9,7 +9,7 @@ export const isSkuAvailable = (item: OrderFormItem | undefined): boolean => {
     return false
   }
 
-  return true
+  return item.availability === 'available'
 }
 
 export const createSimulationItem = ({

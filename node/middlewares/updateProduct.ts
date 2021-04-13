@@ -28,8 +28,8 @@ export async function updateProduct(ctx: Context, next: () => Promise<void>) {
       const simulation = await checkout.simulation(
         ...createSimulationPayload({
           items: [simulationItem],
-          salesChannel,
           affiliateId: IdAffiliate,
+          salesChannel,
         })
       )
 
