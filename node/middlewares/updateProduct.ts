@@ -1,4 +1,8 @@
-import { createSimulationPayload, isSkuAvailable } from '../utils'
+import {
+  createSimulationPayload,
+  isSkuAvailable,
+  createSimulationItem,
+} from '../utils'
 
 export async function updateProduct(ctx: Context, next: () => Promise<void>) {
   const {
@@ -19,9 +23,11 @@ export async function updateProduct(ctx: Context, next: () => Promise<void>) {
 
   try {
     if (IsActive) {
+      const simulationItem = createSimulationItem({ id: IdSku, quantity: 1 })
+
       const simulation = await checkout.simulation(
         ...createSimulationPayload({
-          skuId: IdSku,
+          items: [simulationItem],
           salesChannel,
           affiliateId: IdAffiliate,
         })
@@ -42,6 +48,7 @@ export async function updateProduct(ctx: Context, next: () => Promise<void>) {
     }
 
     await glovo.updateProducts(glovoPayload)
+
     logger.info({ glovoPayload, catalogUpdate })
   } catch (error) {
     throw new Error(error)
