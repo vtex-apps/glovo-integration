@@ -164,7 +164,7 @@ interface GlovoOrderCancellation {
   payment_strategy: string
 }
 
-interface GlovoPayload {
+interface GlovoUpdateProduct {
   glovoToken: string
   price?: number
   available: boolean

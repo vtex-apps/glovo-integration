@@ -12,7 +12,7 @@ export default class Glovo extends ExternalClient {
     this.http.put('/', body)
   }
 
-  public updateProducts = (body: any) => {
+  public updateProducts = (body: GlovoUpdateProduct) => {
     const { glovoStoreId, skuId, glovoToken, price, available } = body
 
     const data: any = {

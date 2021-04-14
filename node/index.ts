@@ -96,7 +96,7 @@ export default new Service<Clients, State, ParamsContext>({
     cancelOrder: method({
       POST: [errorHandler, validateSettings, validateGlovoToken, cancelOrder],
     }),
-    updateOrderStatus: method({
+    updateOrder: method({
       POST: [
         errorHandler,
         validateSettings,

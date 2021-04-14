@@ -14,7 +14,7 @@ export async function updateProduct(ctx: Context, next: () => Promise<void>) {
   const { IsActive, IdSku, IdAffiliate } = catalogUpdate
   const { salesChannel, glovoStoreId } = affiliateInfo
 
-  let glovoPayload: GlovoPayload = {
+  let glovoPayload: GlovoUpdateProduct = {
     glovoToken,
     available: false,
     skuId: IdSku,

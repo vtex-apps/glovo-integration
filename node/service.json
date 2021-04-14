@@ -14,12 +14,12 @@
       "path": "/_v/glovo/orders/delete",
       "public": true
     },
-    "updateOrderStatus": {
-      "path": "/_v/glovo/orders/update-status",
+    "updateOrder": {
+      "path": "/_v/glovo/orders/update",
       "public": true
     },
     "updateProduct": {
-      "path": "/_v/glovo/products/update-product",
+      "path": "/_v/glovo/products/update",
       "public": true
     }
   },
