@@ -37,13 +37,15 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
     return
   }
 
-  const { salesChannel, affiliateId } = affiliateInfo
+  const { salesChannel, affiliateId, postalCode } = affiliateInfo
 
   const simulationItems = convertGlovoProductToItems(glovoOrder.products)
 
   const simulation = await checkout.simulation(
     ...createSimulationPayload({
       items: simulationItems,
+      postalCode,
+      country: 'ESP',
       salesChannel,
       affiliateId,
     })
@@ -56,6 +58,8 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
   })
 
   ctx.state.orderSimulation = simulation
+  ctx.state.glovoOrder = glovoOrder
+  ctx.state.affiliateInfo = affiliateInfo
 
   await next()
 }

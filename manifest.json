@@ -48,7 +48,12 @@
         "type": "array",
         "items": {
           "type": "object",
-          "required": ["affiliateId", "salesChannel", "glovoStoreId"],
+          "required": [
+            "affiliateId",
+            "salesChannel",
+            "postalCode",
+            "glovoStoreId"
+          ],
           "properties": {
             "affiliateId": {
               "title": "Affiliate ID",
@@ -60,6 +65,11 @@
             "salesChannel": {
               "title": "Sales Channel",
               "description": "Sales Channel associated to the affiliate ID",
+              "type": "string"
+            },
+            "postalCode": {
+              "title": "Pickup Point's Postal Code",
+              "description": "The postal code for the store that fulfils this affiliate",
               "type": "string"
             },
             "glovoStoreId": {

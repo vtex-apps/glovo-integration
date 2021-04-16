@@ -15,6 +15,7 @@ import {
   updateGlovoOrder,
 } from './events'
 import {
+  authorizeOrder,
   cancelOrder,
   createOrder,
   errorHandler,
@@ -53,6 +54,8 @@ declare global {
   type Context = ServiceContext<Clients, State>
 
   interface State extends RecorderState {
+    vtexOrder: any
+    glovoOrder: GlovoOrder
     glovoToken: string
     catalogUpdate: CatalogChange
     affiliateConfig: AffiliateInfo[]
@@ -91,6 +94,7 @@ export default new Service<Clients, State, ParamsContext>({
         validateGlovoToken,
         simulateOrder,
         createOrder,
+        authorizeOrder,
       ],
     }),
     cancelOrder: method({

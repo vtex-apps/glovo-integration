@@ -15,6 +15,7 @@ interface CatalogChange {
 interface AffiliateInfo {
   affiliateId: string
   salesChannel: string
+  postalCode: string
   glovoStoreId: string
 }
 

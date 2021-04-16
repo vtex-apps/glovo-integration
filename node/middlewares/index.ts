@@ -1,4 +1,5 @@
 export * from './affiliate'
+export * from './authorizeOrder'
 export * from './cancelOrder'
 export * from './createOrder'
 export * from './errorHandler'
