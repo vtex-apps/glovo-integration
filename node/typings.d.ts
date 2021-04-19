@@ -165,7 +165,6 @@ interface GlovoOrderCancellation {
 }
 
 interface GlovoUpdateProduct {
-  glovoToken: string
   price?: number
   available: boolean
   skuId: string

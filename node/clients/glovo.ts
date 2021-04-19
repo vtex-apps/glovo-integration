@@ -1,9 +1,24 @@
 import type { InstanceOptions, IOContext } from '@vtex/api'
 import { ExternalClient } from '@vtex/api'
 
+const BASE_URL = {
+  PRODUCTION: 'https://api.glovoapp.com',
+  STAGING: 'https://stagepi.glovoapp.com',
+}
+
 export default class Glovo extends ExternalClient {
   constructor(context: IOContext, options?: InstanceOptions) {
-    super('https://stageapi.glovoapp.com', context, options)
+    super('glovoapp.com', context, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    })
+  }
+
+  private static async getAppSettings(ctx: Context) {
+    return ctx.clients.apps.getAppSettings('vtex.glovo-integration')
   }
 
   public api = (body: unknown) => this.http.post('/', body)
@@ -12,22 +27,23 @@ export default class Glovo extends ExternalClient {
     this.http.put('/', body)
   }
 
-  public updateProducts = (body: GlovoUpdateProduct) => {
-    const { glovoStoreId, skuId, glovoToken, price, available } = body
+  public updateProducts = async (ctx: Context, body: GlovoUpdateProduct) => {
+    const { glovoStoreId, skuId, price, available } = body
+    const enviroment = this.context.production ? 'PRODUCTION' : 'STAGING'
+    const { glovoToken } = await Glovo.getAppSettings(ctx)
 
-    const data: any = {
+    const payload: any = {
       available,
     }
 
-    if (price) data.price = price
+    if (price) payload.price = price
 
     return this.http.patch(
-      `/webhook/stores/${glovoStoreId}/products/${skuId}`,
-      data,
+      `${BASE_URL[enviroment]}/webhook/stores/${glovoStoreId}/products/${skuId}`,
+      payload,
       {
         headers: {
           Authorization: glovoToken,
-          'Content-Type': 'application/json',
         },
       }
     )

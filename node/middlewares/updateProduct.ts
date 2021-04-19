@@ -4,9 +4,9 @@ import {
   createSimulationItem,
 } from '../utils'
 
-export async function updateProduct(ctx: Context, next: () => Promise<void>) {
+export async function updateProduct(ctx: Context) {
   const {
-    state: { glovoToken, affiliateInfo, catalogUpdate },
+    state: { affiliateInfo, catalogUpdate },
     clients: { glovo, checkout },
     vtex: { logger },
   } = ctx
@@ -15,7 +15,6 @@ export async function updateProduct(ctx: Context, next: () => Promise<void>) {
   const { salesChannel, glovoStoreId } = affiliateInfo
 
   let glovoPayload: GlovoUpdateProduct = {
-    glovoToken,
     available: false,
     skuId: IdSku,
     glovoStoreId,
@@ -47,14 +46,10 @@ export async function updateProduct(ctx: Context, next: () => Promise<void>) {
       }
     }
 
-    await glovo.updateProducts(glovoPayload)
+    await glovo.updateProducts(ctx, glovoPayload)
 
     logger.info({ glovoPayload, catalogUpdate })
   } catch (error) {
     throw new Error(error)
   }
-
-  ctx.status = 204
-
-  await next()
 }

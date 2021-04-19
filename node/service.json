@@ -14,10 +14,6 @@
       "path": "/_v/glovo/orders/delete",
       "public": true
     },
-    "updateOrder": {
-      "path": "/_v/glovo/orders/update",
-      "public": true
-    },
     "updateProduct": {
       "path": "/_v/glovo/products/update",
       "public": true
