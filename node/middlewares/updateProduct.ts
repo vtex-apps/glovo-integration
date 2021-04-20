@@ -36,11 +36,11 @@ export async function updateProduct(ctx: Context) {
       const [item] = items
 
       if (isSkuAvailable(item)) {
-        const { sellingPrice } = item
+        const { price, listPrice, unitMultiplier } = item
 
         glovoPayload = {
           ...glovoPayload,
-          price: sellingPrice / 100,
+          price: (Math.max(price, listPrice) * unitMultiplier) / 100,
           available: true,
         }
       }
@@ -48,7 +48,8 @@ export async function updateProduct(ctx: Context) {
 
     await glovo.updateProducts(ctx, glovoPayload)
 
-    logger.info({ glovoPayload, catalogUpdate })
+    logger.info({ message: 'Product updated', glovoPayload })
+    ctx.status = 204
   } catch (error) {
     throw new Error(error)
   }

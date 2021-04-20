@@ -3,7 +3,7 @@ import { ExternalClient } from '@vtex/api'
 
 const BASE_URL = {
   PRODUCTION: 'https://api.glovoapp.com',
-  STAGING: 'https://stagepi.glovoapp.com',
+  STAGING: 'https://stageapi.glovoapp.com',
 }
 
 export default class Glovo extends ExternalClient {
@@ -27,8 +27,8 @@ export default class Glovo extends ExternalClient {
     this.http.put('/', body)
   }
 
-  public updateProducts = async (ctx: Context, body: GlovoUpdateProduct) => {
-    const { glovoStoreId, skuId, price, available } = body
+  public updateProducts = async (ctx: Context, data: GlovoUpdateProduct) => {
+    const { glovoStoreId, skuId, price, available } = data
     const enviroment = this.context.production ? 'PRODUCTION' : 'STAGING'
     const { glovoToken } = await Glovo.getAppSettings(ctx)
 
