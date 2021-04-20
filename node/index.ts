@@ -20,7 +20,6 @@ import {
   createOrder,
   errorHandler,
   filterAffiliateSettings,
-  updateOrderStatus,
   updateProduct,
   validateSettings,
   validateGlovoToken,
@@ -99,14 +98,6 @@ export default new Service<Clients, State, ParamsContext>({
     }),
     cancelOrder: method({
       POST: [errorHandler, validateSettings, validateGlovoToken, cancelOrder],
-    }),
-    updateOrderStatus: method({
-      POST: [
-        errorHandler,
-        validateSettings,
-        validateGlovoToken,
-        updateOrderStatus,
-      ],
     }),
   },
   events: {
