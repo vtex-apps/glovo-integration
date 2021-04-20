@@ -1,7 +1,7 @@
 import { UserInputError } from '@vtex/api'
 
-export async function validateSettings(
-  ctx: Context,
+export async function validateEventSettings(
+  ctx: StatusChangeContext,
   next: () => Promise<void>
 ) {
   const {
@@ -14,6 +14,7 @@ export async function validateSettings(
     throw new UserInputError('Missing Glovo token. Please check app settings')
   }
 
+  ctx.state.glovoToken = appConfig.glovoToken
   ctx.state.affiliateConfig = appConfig.affiliateConfig
 
   await next()

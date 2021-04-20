@@ -1,14 +1,17 @@
 export async function updateGlovoOrder(
   ctx: StatusChangeContext,
-  next: () => Promise<any>
+  next: () => Promise<void>
 ) {
   const {
     body: { domain, orderId, currentState, currentChangeDate },
     clients: { glovo },
+    state: { glovoToken, affiliateConfig },
     vtex: { logger },
   } = ctx
 
   const glovoPayload = {
+    glovoToken,
+    affiliateConfig,
     domain,
     orderId,
     currentState,
@@ -16,7 +19,7 @@ export async function updateGlovoOrder(
   }
 
   try {
-    await glovo.api(glovoPayload)
+    await glovo.updateOrderStatus(glovoPayload)
     logger.info(glovoPayload)
   } catch (error) {
     logger.error(error)

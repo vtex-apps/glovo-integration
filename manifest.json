@@ -19,7 +19,14 @@
     {
       "name": "outbound-access",
       "attrs": {
-        "host": "testaffiliate.free.beeceptor.com",
+        "host": "stageapi.glovoapp.com",
+        "path": "*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "api.glovoapp.com",
         "path": "*"
       }
     },
@@ -35,9 +42,7 @@
     "title": "Glovo Integration",
     "description": "Glovo integration settings",
     "type": "object",
-    "required": [
-      "glovoToken"
-    ],
+    "required": ["glovoToken"],
     "properties": {
       "glovoToken": {
         "title": "Glovo Token",
@@ -50,11 +55,7 @@
         "type": "array",
         "items": {
           "type": "object",
-          "required": [
-            "affiliateId",
-            "salesChannel",
-            "glovoStoreId"
-          ],
+          "required": ["affiliateId", "salesChannel", "glovoStoreId"],
           "properties": {
             "affiliateId": {
               "title": "Affiliate ID",

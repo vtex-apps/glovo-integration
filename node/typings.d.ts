@@ -163,3 +163,15 @@ interface GlovoOrderCancellation {
   cancel_reason: string
   payment_strategy: string
 }
+
+interface GlovoUpdateProduct {
+  price?: number
+  available: boolean
+  skuId: string
+  glovoStoreId: string
+}
+
+interface GlovoPatchProduct {
+  available: boolean
+  price?: number
+}

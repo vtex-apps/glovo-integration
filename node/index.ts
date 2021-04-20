@@ -9,13 +9,17 @@ import { LRUCache, method, Service } from '@vtex/api'
 import type { SimulationOrderForm } from '@vtex/clients'
 
 import { Clients } from './clients'
-import { updateGlovoOrder } from './events/updateGlovoOrder'
 import {
-  affiliate,
+  eventsErrorHandler,
+  validateEventSettings,
+  updateGlovoOrder,
+} from './events'
+import {
   cancelOrder,
   createOrder,
   errorHandler,
   filterAffiliateSettings,
+  updateProduct,
   validateSettings,
   validateGlovoToken,
   simulateOrder,
@@ -71,12 +75,12 @@ declare global {
 export default new Service<Clients, State, ParamsContext>({
   clients,
   routes: {
-    affiliate: method({
+    updateProduct: method({
       POST: [
         errorHandler,
         validateSettings,
         filterAffiliateSettings,
-        affiliate,
+        updateProduct,
       ],
     }),
     createOrder: method({
@@ -93,6 +97,6 @@ export default new Service<Clients, State, ParamsContext>({
     }),
   },
   events: {
-    orderStatus: [updateGlovoOrder],
+    orderStatus: [eventsErrorHandler, validateEventSettings, updateGlovoOrder],
   },
 })
