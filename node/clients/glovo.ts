@@ -32,7 +32,7 @@ export default class Glovo extends ExternalClient {
     const enviroment = this.context.production ? 'PRODUCTION' : 'STAGING'
     const { glovoToken } = await Glovo.getAppSettings(ctx)
 
-    const payload: any = {
+    const payload: GlovoPatchProduct = {
       available,
     }
 

@@ -170,3 +170,8 @@ interface GlovoUpdateProduct {
   skuId: string
   glovoStoreId: string
 }
+
+interface GlovoPatchProduct {
+  available: boolean
+  price?: number
+}
