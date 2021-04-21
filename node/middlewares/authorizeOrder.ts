@@ -20,6 +20,6 @@ export async function authorizeOrder(ctx: Context) {
   )
 
   logger.info({ message: 'Order placed', order })
-  ctx.status = 204
+  ctx.status = 200
   ctx.body = order
 }

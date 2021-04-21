@@ -14,7 +14,6 @@ export async function validateEventSettings(
     throw new UserInputError('Missing Glovo token. Please check app settings')
   }
 
-  ctx.state.glovoToken = appConfig.glovoToken
   ctx.state.affiliateConfig = appConfig.affiliateConfig
 
   await next()

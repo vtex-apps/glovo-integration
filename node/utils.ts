@@ -86,15 +86,15 @@ export const convertGlovoProductToItems = (
 export const createVtexOrderData = (
   glovoOrder: GlovoOrder,
   orderSimulation: any
-) => {
+): MarketplaceOrder => {
   const { name, phone_number } = glovoOrder.customer
   const { items, pickupPoints, postalCode, logisticsInfo } = orderSimulation
 
   let firstName = name.split(' ').slice(0, 1).join(' ')
   let lastName = name.split(' ').slice(1).join(' ')
 
-  if (firstName === '') firstName = 'Name'
-  if (lastName === '') lastName = 'Lastname'
+  if (firstName === '') firstName = 'Glovo'
+  if (lastName === '') lastName = 'Customer'
 
   const logisticsInfoArray = logisticsInfo.map((item: any) => {
     return {
@@ -109,60 +109,58 @@ export const createVtexOrderData = (
     }
   })
 
-  return [
-    {
-      marketplaceOrderId: glovoOrder.order_id,
-      marketplaceServicesEndpoint: 'https://stageapi.glovoapp.com/',
-      marketplacePaymentValue: glovoOrder.estimated_total_price,
-      items,
-      clientProfileData: {
-        id: 'clientProfileData',
-        email: 'customer@email.com',
-        firstName,
-        lastName,
-        documentType: null,
-        document: null,
-        phone: phone_number || null,
-        corporateName: null,
-        tradeName: null,
-        corporateDocument: null,
-        stateInscription: null,
-        corporatePhone: null,
-        isCorporate: false,
-        userProfileId: null,
-      },
-      shippingData: {
-        id: 'shippingData',
-        address: {
-          addressType: 'Residential',
-          receiverName: name,
-          addressId: 'Home',
-          postalCode,
-          city: pickupPoints[0].address.city,
-          state: pickupPoints[0].address.state,
-          country: 'ESP',
-          street: pickupPoints[0].address.street,
-          number: null,
-          neighborhood: null,
-          complement: null,
-          reference: null,
-          geoCoordinates: [],
-        },
-        logisticsInfo: logisticsInfoArray,
-      },
-      paymentData: {
-        id: 'paymentData',
-        payments: [
-          {
-            paymentSystem: '0',
-            paymentSystemName: 'Assumed value by affiliate Glovo - tennis',
-            value: 0,
-            installments: 0,
-            referenceValue: 0,
-          },
-        ],
-      },
-      openTextField: null,
+  return {
+    marketplaceOrderId: glovoOrder.order_id,
+    marketplaceServicesEndpoint: 'https://stageapi.glovoapp.com/',
+    marketplacePaymentValue: glovoOrder.estimated_total_price,
+    items,
+    clientProfileData: {
+      id: 'clientProfileData',
+      email: 'customer@email.com',
+      firstName,
+      lastName,
+      documentType: null,
+      document: null,
+      phone: phone_number || null,
+      corporateName: null,
+      tradeName: null,
+      corporateDocument: null,
+      stateInscription: null,
+      corporatePhone: null,
+      isCorporate: false,
+      userProfileId: null,
     },
-  ]
+    shippingData: {
+      id: 'shippingData',
+      address: {
+        addressType: 'Residential',
+        receiverName: name,
+        addressId: 'Home',
+        postalCode,
+        city: pickupPoints[0].address.city,
+        state: pickupPoints[0].address.state,
+        country: 'ESP',
+        street: pickupPoints[0].address.street,
+        number: null,
+        neighborhood: null,
+        complement: null,
+        reference: null,
+        geoCoordinates: [],
+      },
+      logisticsInfo: logisticsInfoArray,
+    },
+    paymentData: {
+      id: 'paymentData',
+      payments: [
+        {
+          paymentSystem: '0',
+          paymentSystemName: 'Assumed value by affiliate Glovo - tennis',
+          value: 0,
+          installments: 0,
+          referenceValue: 0,
+        },
+      ],
+    },
+    openTextField: null,
+  }
 }
