@@ -8,6 +8,9 @@ export async function updateGlovoOrderStatus(ctx: StatusChangeContext) {
     vtex: { logger },
   } = ctx
 
+  /**
+   * We need to remove the affiliateId (i.e. 'TST') from the VTEX orderId to get the glovoOrderId.
+   */
   const glovoOrderId = orderId.split('-').slice(1).join(' ')
 
   if (currentState === 'ready-for-handling' || currentState === 'invoiced') {

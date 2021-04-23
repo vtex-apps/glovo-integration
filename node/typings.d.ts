@@ -217,7 +217,6 @@ interface OrderItem {
 }
 
 interface ClientProfileData {
-  id?: 'clientProfileData'
   email: string
   firstName: string
   lastName: string
@@ -234,7 +233,6 @@ interface ClientProfileData {
 }
 
 interface ShippingData {
-  id: 'shippingData'
   address: ShippingAddress
   logisticsInfo: ItemLogistics[]
 }

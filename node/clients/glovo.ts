@@ -1,6 +1,8 @@
 import type { InstanceOptions, IOContext } from '@vtex/api'
 import { ExternalClient } from '@vtex/api'
 
+import { setGlovoStatus } from '../utils'
+
 const BASE_URL = {
   PRODUCTION: 'https://api.glovoapp.com',
   STAGING: 'https://stageapi.glovoapp.com',
@@ -52,13 +54,7 @@ export default class Glovo extends ExternalClient {
     const { glovoStoreId, glovoOrderId, currentState } = data
     const enviroment = this.context.production ? 'PRODUCTION' : 'STAGING'
     const { glovoToken } = await Glovo.getAppSettings(ctx)
-    let status = ''
-
-    currentState === 'ready-for-handling'
-      ? (status = 'ACCEPTED')
-      : currentState === 'invoiced'
-      ? (status = 'READY_FOR_PICKUP')
-      : null
+    const status = setGlovoStatus(currentState)
 
     const payload: { status: string } = {
       status,

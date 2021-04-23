@@ -5,6 +5,19 @@ import type {
   PayloadItem,
 } from '@vtex/clients'
 
+import {
+  READY_FOR_HANDLING,
+  INVOICED,
+  ACCEPTED,
+  READY_FOR_PICKUP,
+  CLIENT_EMAIL,
+  RESIDENTIAL,
+  HOME,
+  ESP,
+  CUSTOMER_FIRST_NAME,
+  CUSTOMER_LAST_NAME,
+} from './constants'
+
 export const isSkuAvailable = (item: OrderFormItem | undefined): boolean => {
   if (!item) {
     return false
@@ -90,11 +103,8 @@ export const createVtexOrderData = (
   const { name, phone_number } = glovoOrder.customer
   const { items, pickupPoints, postalCode, logisticsInfo } = orderSimulation
 
-  let firstName = name.split(' ').slice(0, 1).join(' ')
-  let lastName = name.split(' ').slice(1).join(' ')
-
-  if (firstName === '') firstName = 'Glovo'
-  if (lastName === '') lastName = 'Customer'
+  const firstName = name.split(' ').slice(0, 1).join(' ') || CUSTOMER_FIRST_NAME
+  const lastName = name.split(' ').slice(1).join(' ') || CUSTOMER_LAST_NAME
 
   const logisticsInfoArray = logisticsInfo.map((item: any) => {
     return {
@@ -111,12 +121,11 @@ export const createVtexOrderData = (
 
   return {
     marketplaceOrderId: glovoOrder.order_id,
-    marketplaceServicesEndpoint: 'https://stageapi.glovoapp.com/',
+    marketplaceServicesEndpoint: 'https://api.glovoapp.com/',
     marketplacePaymentValue: glovoOrder.estimated_total_price,
     items,
     clientProfileData: {
-      id: 'clientProfileData',
-      email: 'customer@email.com',
+      email: CLIENT_EMAIL,
       firstName,
       lastName,
       documentType: null,
@@ -131,15 +140,14 @@ export const createVtexOrderData = (
       userProfileId: null,
     },
     shippingData: {
-      id: 'shippingData',
       address: {
-        addressType: 'Residential',
+        addressType: RESIDENTIAL,
         receiverName: name,
-        addressId: 'Home',
+        addressId: HOME,
         postalCode,
         city: pickupPoints[0].address.city,
         state: pickupPoints[0].address.state,
-        country: 'ESP',
+        country: ESP,
         street: pickupPoints[0].address.street,
         number: null,
         neighborhood: null,
@@ -149,18 +157,12 @@ export const createVtexOrderData = (
       },
       logisticsInfo: logisticsInfoArray,
     },
-    paymentData: {
-      id: 'paymentData',
-      payments: [
-        {
-          paymentSystem: '0',
-          paymentSystemName: 'Assumed value by affiliate Glovo - tennis',
-          value: 0,
-          installments: 0,
-          referenceValue: 0,
-        },
-      ],
-    },
-    openTextField: null,
   }
+}
+
+export const setGlovoStatus = (state: string) => {
+  if (state === READY_FOR_HANDLING) return ACCEPTED
+  if (state === INVOICED) return READY_FOR_PICKUP
+
+  return ''
 }

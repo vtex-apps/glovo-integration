@@ -19,7 +19,10 @@ export async function authorizeOrder(ctx: Context) {
     affiliateId
   )
 
-  logger.info({ message: 'Order placed', order })
-  ctx.status = 200
+  logger.info({
+    message: `Order ${marketplaceOrderId} has been placed.`,
+    order,
+  })
+  ctx.status = 201
   ctx.body = order
 }
