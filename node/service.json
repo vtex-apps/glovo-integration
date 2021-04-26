@@ -22,7 +22,7 @@
   "events": {
     "orderStatus": {
       "sender": "vtex.orders-broadcast",
-      "topics": ["ready-for-handling", "invoiced"]
+      "topics": ["start-handling", "invoiced"]
     }
   }
 }
