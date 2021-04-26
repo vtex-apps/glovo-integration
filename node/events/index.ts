@@ -1,3 +1,3 @@
 export * from './eventsErrorHandler'
-export * from './updateGlovoOrder'
+export * from './updateGlovoOrderStatus'
 export * from './validateEventSettings'

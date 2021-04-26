@@ -12,9 +12,10 @@ import { Clients } from './clients'
 import {
   eventsErrorHandler,
   validateEventSettings,
-  updateGlovoOrder,
+  updateGlovoOrderStatus,
 } from './events'
 import {
+  authorizeOrder,
   cancelOrder,
   createOrder,
   errorHandler,
@@ -52,6 +53,8 @@ declare global {
   type Context = ServiceContext<Clients, State>
 
   interface State extends RecorderState {
+    vtexOrder: VTEXOrder[]
+    glovoOrder: GlovoOrder
     glovoToken: string
     catalogUpdate: CatalogChange
     affiliateConfig: AffiliateInfo[]
@@ -90,6 +93,7 @@ export default new Service<Clients, State, ParamsContext>({
         validateGlovoToken,
         simulateOrder,
         createOrder,
+        authorizeOrder,
       ],
     }),
     cancelOrder: method({
@@ -97,6 +101,10 @@ export default new Service<Clients, State, ParamsContext>({
     }),
   },
   events: {
-    orderStatus: [eventsErrorHandler, validateEventSettings, updateGlovoOrder],
+    orderStatus: [
+      eventsErrorHandler,
+      validateEventSettings,
+      updateGlovoOrderStatus,
+    ],
   },
 })
