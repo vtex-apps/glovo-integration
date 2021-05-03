@@ -1,0 +1,14 @@
+{
+  "name": "Integración Glovo Europa",
+  "headline": "Solución nativa para integrar con Glovo Europa",
+  "overview": "Esta App le Permite integrar con Glovo en Europa",
+  "features": [
+    "Integración de Stock y Precio",
+    "Integración de Ordenes",
+    "Disponibilidad para integrar múltiples tiendas"
+  ],
+  "websiteURL": "https://vtex.com/",
+  "support": {
+    "url": "https://support.vtex.com/hc/requests"
+  }
+}
