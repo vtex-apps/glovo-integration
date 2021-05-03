@@ -6,7 +6,6 @@ import type {
 } from '@vtex/clients'
 
 import {
-  READY_FOR_HANDLING,
   INVOICED,
   ACCEPTED,
   READY_FOR_PICKUP,
@@ -16,6 +15,7 @@ import {
   ESP,
   CUSTOMER_FIRST_NAME,
   CUSTOMER_LAST_NAME,
+  START_HANDLING,
 } from './constants'
 
 export const isSkuAvailable = (item: OrderFormItem | undefined): boolean => {
@@ -96,6 +96,42 @@ export const convertGlovoProductToItems = (
   return items
 }
 
+export const convertGlovoProductsToCompare = (glovoProducts: any[]) => {
+  const items = []
+  const attributesCollection = []
+
+  for (const product of glovoProducts) {
+    const { id, quantity, attributes = [], purchased_product_id } = product
+    const item = {
+      id,
+      quantity,
+      purchased_product_id,
+    }
+
+    items.push(item)
+    attributesCollection.push(...attributes)
+  }
+
+  for (const attribute of attributesCollection) {
+    if (attribute.purchased_product_id) {
+      const { id, quantity } = attribute
+
+      const updatedItems: any = items.map((item) => {
+        if (item.id === id) {
+          // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+          item.quantity += quantity
+        }
+
+        return item
+      })
+
+      items.push(...updatedItems)
+    }
+  }
+
+  return items
+}
+
 export const createVtexOrderData = (
   glovoOrder: GlovoOrder,
   orderSimulation: any
@@ -106,24 +142,54 @@ export const createVtexOrderData = (
   const firstName = name.split(' ').slice(0, 1).join(' ') || CUSTOMER_FIRST_NAME
   const lastName = name.split(' ').slice(1).join(' ') || CUSTOMER_LAST_NAME
 
-  const logisticsInfoArray = logisticsInfo.map((item: any) => {
-    return {
-      itemIndex: item.itemIndex,
-      selectedSla: item.slas[0].id,
-      selectedDeliveryChannel: item.slas[0].deliveryChannel,
-      name: item.slas[0].name,
-      lockTTL: '1d',
-      deliveryWindow: item.slas[0].availableDeliveryWindows[0],
-      shippingEstimate: item.slas[0].shippingEstimate,
-      price: item.slas[0].price,
+  /** Re-Index items array */
+  let counter = 0
+  const updatedItems = items.reduce((acc: any, item: any) => {
+    if (isSkuAvailable(item)) {
+      const updatedItem = {
+        ...item,
+        itemIndex: 0,
+      }
+
+      counter++
+
+      return [...acc, updatedItem]
     }
-  })
+
+    return acc
+  }, [])
+
+  /** Re-Index logisticsInfo array */
+  counter = 0
+  const updatedLogisticsInfo = logisticsInfo.reduce(
+    (acc: any[], item: any, index: number) => {
+      if (items[index].availability === 'available') {
+        const updatedItem = {
+          itemIndex: counter,
+          selectedSla: item.slas[0].id,
+          selectedDeliveryChannel: item.slas[0].deliveryChannel,
+          name: item.slas[0].name,
+          lockTTL: '1d',
+          deliveryWindow: item.slas[0].availableDeliveryWindows[0],
+          shippingEstimate: item.slas[0].shippingEstimate,
+          price: item.slas[0].price,
+        }
+
+        counter++
+
+        return [...acc, updatedItem]
+      }
+
+      return acc
+    },
+    []
+  )
 
   return {
     marketplaceOrderId: glovoOrder.order_id,
     marketplaceServicesEndpoint: 'https://api.glovoapp.com/',
     marketplacePaymentValue: glovoOrder.estimated_total_price,
-    items,
+    items: updatedItems,
     clientProfileData: {
       email: CLIENT_EMAIL,
       firstName,
@@ -155,13 +221,13 @@ export const createVtexOrderData = (
         reference: null,
         geoCoordinates: [],
       },
-      logisticsInfo: logisticsInfoArray,
+      logisticsInfo: updatedLogisticsInfo,
     },
   }
 }
 
 export const setGlovoStatus = (state: string) => {
-  if (state === READY_FOR_HANDLING) return ACCEPTED
+  if (state === START_HANDLING) return ACCEPTED
   if (state === INVOICED) return READY_FOR_PICKUP
 
   return ''

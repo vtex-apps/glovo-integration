@@ -1,4 +1,4 @@
-export async function authorizeOrder(ctx: Context) {
+export async function authorizeOrder(ctx: Context, next: () => Promise<void>) {
   const {
     state: { vtexOrder, affiliateInfo },
     clients: { orders },
@@ -20,9 +20,11 @@ export async function authorizeOrder(ctx: Context) {
   )
 
   logger.info({
-    message: `Order ${marketplaceOrderId} has been placed.`,
+    message: `Order ${orderId} has been placed.`,
     order,
   })
   ctx.status = 201
-  ctx.body = order
+  ctx.state.vtexOrder = vtexOrder
+
+  await next()
 }

@@ -12,6 +12,9 @@ export default class Orders extends JanusClient {
     })
   }
 
+  public getOrder = (orderId: string) =>
+    this.http.get(`/api/oms/pvt/orders/${orderId}`)
+
   public createOrder = (
     data: MarketplaceOrder,
     sc: string,
@@ -31,10 +34,14 @@ export default class Orders extends JanusClient {
     affiliateId: string
     // eslint-disable-next-line max-params
   ) =>
-    this.http.post(`/api/fulfillment/pvt/orders/${orderId}/fulfill`, data, {
-      params: {
-        sc,
-        affiliateId,
-      },
-    })
+    this.http.post<VTEXAuthorizedOrder>(
+      `/api/fulfillment/pvt/orders/${orderId}/fulfill`,
+      data,
+      {
+        params: {
+          sc,
+          affiliateId,
+        },
+      }
+    )
 }

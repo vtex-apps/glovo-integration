@@ -1,7 +1,6 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import type { InstanceOptions, IOContext } from '@vtex/api'
 import { ExternalClient } from '@vtex/api'
-
-import { setGlovoStatus } from '../utils'
 
 const BASE_URL = {
   PRODUCTION: 'https://api.glovoapp.com',
@@ -19,15 +18,9 @@ export default class Glovo extends ExternalClient {
     })
   }
 
-  private static async getAppSettings(ctx: Context | StatusChangeContext) {
-    return ctx.clients.apps.getAppSettings('vtex.glovo-integration')
-  }
-
-  public api = (body: unknown) => this.http.post('/', body)
-
   public updateProducts = async (ctx: Context, data: GlovoUpdateProduct) => {
-    const { glovoStoreId, skuId, price, available } = data
     const enviroment = this.context.production ? 'PRODUCTION' : 'STAGING'
+    const { glovoStoreId, skuId, price, available } = data
     const { glovoToken } = await Glovo.getAppSettings(ctx)
 
     const payload: GlovoPatchProduct = {
@@ -51,10 +44,9 @@ export default class Glovo extends ExternalClient {
     ctx: StatusChangeContext,
     data: GlovoUpdateOrderStatus
   ) => {
-    const { glovoStoreId, glovoOrderId, currentState } = data
     const enviroment = this.context.production ? 'PRODUCTION' : 'STAGING'
+    const { glovoStoreId, glovoOrderId, status } = data
     const { glovoToken } = await Glovo.getAppSettings(ctx)
-    const status = setGlovoStatus(currentState)
 
     const payload: { status: string } = {
       status,
@@ -69,5 +61,37 @@ export default class Glovo extends ExternalClient {
         },
       }
     )
+  }
+
+  public modifyOrder = async (ctx: any, data: GlovoModifyOrderPayload) => {
+    const enviroment = this.context.production ? 'PRODUCTION' : 'STAGING'
+    const { glovoToken } = await Glovo.getAppSettings(ctx)
+    const {
+      storeId,
+      glovoOrderId,
+      replacements,
+      removed_purchases,
+      added_products,
+    } = data
+
+    const payload = {
+      replacements,
+      removed_purchases,
+      added_products,
+    }
+
+    return this.http.post(
+      `${BASE_URL[enviroment]}/webhook/stores/${storeId}/orders/${glovoOrderId}/replace_products`,
+      payload,
+      {
+        headers: {
+          Authorization: glovoToken,
+        },
+      }
+    )
+  }
+
+  private static async getAppSettings(ctx: Context | StatusChangeContext) {
+    return ctx.clients.apps.getAppSettings('vtex.glovo-integration')
   }
 }
