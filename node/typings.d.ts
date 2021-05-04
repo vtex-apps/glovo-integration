@@ -12,6 +12,14 @@ interface CatalogChange {
   HasStockKeepingUnitRemovedFromAffiliate: boolean
 }
 
+interface CreateSimulationArgs {
+  items: PayloadItem[]
+  postalCode?: string
+  country?: string
+  affiliateId: string
+  salesChannel: string
+}
+
 interface AffiliateInfo {
   affiliateId: string
   salesChannel: string
@@ -148,8 +156,9 @@ interface GlovoProduct {
 interface GlovoProductAttributes {
   id: string
   quantity: number
-  name: string
-  price: number
+  name?: string
+  price?: number
+  purchased_product_id?: string
 }
 
 interface GlovoDeliveryAddress {
@@ -362,7 +371,7 @@ interface VTEXAuthorizedOrder {
 interface OrderRecord {
   orderId: string
   glovoOrder: GlovoOrder
-  invoiced: VTEXOrder | null
+  invoiced: any | null
   hasChanged: boolean
   createdAt?: string
   startHandlingAt?: string
@@ -376,7 +385,7 @@ interface GlovoModifyOrderPayload {
     purchased_product_id: string
     product: GlovoModifiedProduct
   }>
-  removed_purchases: string[]
+  removed_purchases: Array<string | undefined>
   added_products: GlovoModifiedProduct[]
 }
 
@@ -389,4 +398,12 @@ interface GlovoModifiedProduct {
 interface GlovoModifiedProductAttributes {
   id: string
   quantity: number
+}
+
+interface ComparisonObject {
+  [key: string]: {
+    id: string
+    quantity: number
+    purchased_product_id: string
+  }
 }

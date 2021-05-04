@@ -40,14 +40,6 @@ export const createSimulationItem = ({
   }
 }
 
-interface CreateSimulationArgs {
-  items: PayloadItem[]
-  postalCode?: string
-  country?: string
-  affiliateId: string
-  salesChannel: string
-}
-
 export const createSimulationPayload = ({
   items,
   postalCode,
@@ -96,7 +88,9 @@ export const convertGlovoProductToItems = (
   return items
 }
 
-export const convertGlovoProductsToCompare = (glovoProducts: any[]) => {
+export const convertGlovoProductsToCompare = (
+  glovoProducts: GlovoProduct[]
+) => {
   const items = []
   const attributesCollection = []
 
@@ -116,9 +110,8 @@ export const convertGlovoProductsToCompare = (glovoProducts: any[]) => {
     if (attribute.purchased_product_id) {
       const { id, quantity } = attribute
 
-      const updatedItems: any = items.map((item) => {
+      const updatedItems: GlovoProductAttributes[] = items.map((item) => {
         if (item.id === id) {
-          // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
           item.quantity += quantity
         }
 

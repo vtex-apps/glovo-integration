@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { convertGlovoProductsToCompare } from '../utils'
 import { ORDERS } from '../constants'
 
@@ -25,19 +26,31 @@ export async function compareOrder(
 
   const comparison: any = {}
   const replacements = []
-
-  for (const receivedItem of receivedItems) {
-    comparison[receivedItem.id] = receivedItem
-  }
+  const removed_purchases = []
 
   for (const invoicedItem of invoicedItems) {
-    if (comparison[invoicedItem.id].quantity !== invoicedItem.quantity) {
+    // check if the comparison object already contains the item
+    if (comparison[invoicedItem.id]) {
+      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+      comparison[invoicedItem.id].quantity += invoicedItem.quantity
+    } else {
+      comparison[invoicedItem.id] = invoicedItem
+    }
+  }
+
+  for (const receivedItem of receivedItems) {
+    // check if the item was in stock and invoiced
+    if (!comparison[receivedItem.id]) {
+      removed_purchases.push(receivedItem.purchased_product_id)
+    }
+
+    // check if the item changed
+    if (comparison[receivedItem.id].quantity !== receivedItem.quantity) {
       const updatedProduct: GlovoUpdatedProduct = {
-        purchased_product_id: comparison[invoicedItem.id].purchased_product_id,
+        purchased_product_id: comparison[receivedItem.id].purchased_product_id,
         product: {
-          id: invoicedItem.id,
-          quantity:
-            comparison[invoicedItem.id].quantity - invoicedItem.quantity,
+          id: receivedItem.id,
+          quantity: receivedItem.quantity,
           attributes: [],
         },
       }
@@ -51,7 +64,7 @@ export async function compareOrder(
    */
   let hasChanged = false
 
-  if (replacements.length) {
+  if (replacements.length || removed_purchases.length) {
     const {
       glovoOrder: { order_id: glovoOrderId, store_id: storeId },
     } = orderRecord
@@ -60,7 +73,7 @@ export async function compareOrder(
       storeId,
       glovoOrderId,
       replacements,
-      removed_purchases: [],
+      removed_purchases,
       added_products: [],
     }
 
