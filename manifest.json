@@ -40,11 +40,17 @@
       }
     },
     {
+      "name": "OMSViewer"
+    },
+    {
       "name": "outbound-access",
       "attrs": {
         "host": "portal.vtexcommercestable.com.br",
-        "path": "/*"
+        "path": "/api/*"
       }
+    },
+    {
+      "name": "vbase-read-write"
     }
   ],
   "settingsSchema": {

@@ -12,6 +12,14 @@ interface CatalogChange {
   HasStockKeepingUnitRemovedFromAffiliate: boolean
 }
 
+interface CreateSimulationArgs {
+  items: PayloadItem[]
+  postalCode?: string
+  country?: string
+  affiliateId: string
+  salesChannel: string
+}
+
 interface AffiliateInfo {
   affiliateId: string
   salesChannel: string
@@ -139,17 +147,18 @@ interface GlovoCustomerInvoice {
 interface GlovoProduct {
   id: string
   quantity: number
-  name: string
-  price: number
+  name?: string
+  price?: number
   attributes: GlovoProductAttributes[]
-  purchased_product_id: string
+  purchased_product_id?: string
 }
 
 interface GlovoProductAttributes {
   id: string
   quantity: number
-  name: string
-  price: number
+  name?: string
+  price?: number
+  purchased_product_id?: string
 }
 
 interface GlovoDeliveryAddress {
@@ -177,10 +186,15 @@ interface GlovoPatchProduct {
   price?: number
 }
 
+interface GlovoUpdatedProduct {
+  purchased_product_id: string
+  product: GlovoProduct
+}
+
 interface GlovoUpdateOrderStatus {
   glovoStoreId: string
   glovoOrderId: string
-  currentState: string
+  status: string
 }
 interface MarketplaceOrder {
   marketplaceOrderId: string
@@ -334,4 +348,62 @@ interface VTEXOrderItem {
 }
 interface AuthorizeOrderPayload {
   marketplaceOrderId: string
+}
+
+interface VTEXAuthorizedOrder {
+  orderId: string
+  marketplaceOrderId: string
+  receipt: string
+  date: string
+  items: [{ id: string }]
+  shippingData: {
+    logisticsInfo: [
+      {
+        itemIndex: number
+        selectedSla: string
+        selectedDeliveryChannel: string
+        shippingEstimateDate: string
+      }
+    ]
+  }
+}
+
+interface OrderRecord {
+  orderId: string
+  glovoOrder: GlovoOrder
+  invoiced: any | null
+  hasChanged: boolean
+  createdAt?: string
+  startHandlingAt?: string
+  invoicedAt?: string
+}
+
+interface GlovoModifyOrderPayload {
+  storeId: string
+  glovoOrderId: string
+  replacements: Array<{
+    purchased_product_id: string
+    product: GlovoModifiedProduct
+  }>
+  removed_purchases: Array<string | undefined>
+  added_products: GlovoModifiedProduct[]
+}
+
+interface GlovoModifiedProduct {
+  id: string
+  quantity: number
+  attributes: GlovoModifiedProductAttributes[]
+}
+
+interface GlovoModifiedProductAttributes {
+  id: string
+  quantity: number
+}
+
+interface ComparisonObject {
+  [key: string]: {
+    id: string
+    quantity: number
+    purchased_product_id: string
+  }
 }

@@ -1,7 +1,9 @@
+export const ORDERS = 'orders'
+
 /* eslint-disable @typescript-eslint/naming-convention */
 export const CUSTOMER_FIRST_NAME = 'Glovo'
 export const CUSTOMER_LAST_NAME = 'Customer'
-export const CLIENT_EMAIL = 'glovo@email.com'
+export const CLIENT_EMAIL = 'glovoapp@ametllerorigen.cat'
 export const RESIDENTIAL = 'Residential'
 export const HOME = 'Home'
 export const ESP = 'ESP'

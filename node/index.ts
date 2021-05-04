@@ -10,20 +10,23 @@ import type { SimulationOrderForm } from '@vtex/clients'
 
 import { Clients } from './clients'
 import {
+  cancelOrder,
+  compareOrder,
   eventsErrorHandler,
-  validateEventSettings,
   updateGlovoOrderStatus,
+  validateEventSettings,
 } from './events'
 import {
   authorizeOrder,
-  cancelOrder,
   createOrder,
   errorHandler,
   filterAffiliateSettings,
+  getOrderRecord,
+  saveOrderRecord,
+  simulateOrder,
   updateProduct,
   validateSettings,
   validateGlovoToken,
-  simulateOrder,
 } from './middlewares'
 
 const TIMEOUT_MS = 800
@@ -53,6 +56,7 @@ declare global {
   type Context = ServiceContext<Clients, State>
 
   interface State extends RecorderState {
+    vtexAuthOrder: VTEXAuthorizedOrder
     vtexOrder: VTEXOrder[]
     glovoOrder: GlovoOrder
     glovoToken: string
@@ -94,16 +98,26 @@ export default new Service<Clients, State, ParamsContext>({
         simulateOrder,
         createOrder,
         authorizeOrder,
+        saveOrderRecord,
       ],
     }),
     cancelOrder: method({
       POST: [errorHandler, validateSettings, validateGlovoToken, cancelOrder],
     }),
+    getOrderRecord: method({
+      GET: [errorHandler, validateSettings, getOrderRecord],
+    }),
   },
   events: {
-    orderStatus: [
+    updateOnStartHandling: [
       eventsErrorHandler,
       validateEventSettings,
+      updateGlovoOrderStatus,
+    ],
+    updateOnInvoiced: [
+      eventsErrorHandler,
+      validateEventSettings,
+      compareOrder,
       updateGlovoOrderStatus,
     ],
   },

@@ -17,12 +17,20 @@
     "updateProduct": {
       "path": "/_v/glovo/products/update",
       "public": true
+    },
+    "getOrderRecord": {
+      "path": "/_v/glovo/order-records/get",
+      "public": false
     }
   },
   "events": {
-    "orderStatus": {
+    "updateOnStartHandling": {
       "sender": "vtex.orders-broadcast",
-      "topics": ["start-handling", "invoiced"]
+      "topics": ["start-handling"]
+    },
+    "updateOnInvoiced": {
+      "sender": "vtex.orders-broadcast",
+      "topics": ["invoiced"]
     }
   }
 }
