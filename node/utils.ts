@@ -136,11 +136,11 @@ export const createVtexOrderData = (
   glovoOrder: GlovoOrder,
   orderSimulation: any
 ): MarketplaceOrder => {
-  const { name, phone_number } = glovoOrder.customer
+  const { phone_number } = glovoOrder.customer
   const { items, pickupPoints, postalCode, logisticsInfo } = orderSimulation
 
-  const firstName = name.split(' ').slice(0, 1).join(' ') || CUSTOMER_FIRST_NAME
-  const lastName = name.split(' ').slice(1).join(' ') || CUSTOMER_LAST_NAME
+  const firstName = CUSTOMER_FIRST_NAME
+  const lastName = CUSTOMER_LAST_NAME
 
   /** Re-Index items array */
   let counter = 0
@@ -194,10 +194,10 @@ export const createVtexOrderData = (
       email: CLIENT_EMAIL,
       firstName,
       lastName,
-      documentType: null,
-      document: null,
-      phone: phone_number || null,
-      corporateName: null,
+      documentType: 'CIF',
+      document: 'B-67522904',
+      phone: phone_number || '9999999999',
+      corporateName: 'Glovoapp Groceries',
       tradeName: null,
       corporateDocument: null,
       stateInscription: null,
@@ -208,7 +208,7 @@ export const createVtexOrderData = (
     shippingData: {
       address: {
         addressType: RESIDENTIAL,
-        receiverName: name,
+        receiverName: `${CUSTOMER_FIRST_NAME} ${CUSTOMER_LAST_NAME}`,
         addressId: HOME,
         postalCode,
         city: pickupPoints[0].address.city,
