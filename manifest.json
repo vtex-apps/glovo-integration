@@ -16,9 +16,7 @@
       "url": "https://support.vtex.com/hc/requests"
     },
     "type": "free",
-    "availableCountries": [
-      "*"
-    ]
+    "availableCountries": ["*"]
   },
   "scripts": {
     "prereleasy": "bash lint.sh"
@@ -64,6 +62,11 @@
         "description": "Token to performe calls to Glovo API",
         "type": "string"
       },
+      "production": {
+        "title": "Production environment",
+        "description": "Toggle between development and production environment",
+        "type": "boolean"
+      },
       "affiliateConfig": {
         "title": "Affiliate Settings",
         "description": "Affiliate ID and Glovo Store ID",
@@ -99,6 +102,42 @@
               "description": "Glovo Store ID registered in Glovo for the configured Affiliate ID",
               "type": "string"
             }
+          }
+        }
+      },
+      "clientProfileData": {
+        "title": "Client information",
+        "description": "Information about the client from Glovo",
+        "type": "object",
+        "required": ["email", "firstName", "lastName"],
+        "properties": {
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "firstName": {
+            "title": "First name",
+            "type": "string"
+          },
+          "lastName": {
+            "title": "Last name",
+            "type": "string"
+          },
+          "documentType": {
+            "title": "Type of document",
+            "type": "string"
+          },
+          "document": {
+            "title": "Document",
+            "type": "string"
+          },
+          "phone": {
+            "title": "Phone number",
+            "type": "string"
+          },
+          "corporateName": {
+            "title": "Corporate name",
+            "type": "string"
           }
         }
       }

@@ -9,12 +9,9 @@ import {
   INVOICED,
   ACCEPTED,
   READY_FOR_PICKUP,
-  CLIENT_EMAIL,
   RESIDENTIAL,
   HOME,
   ESP,
-  CUSTOMER_FIRST_NAME,
-  CUSTOMER_LAST_NAME,
   START_HANDLING,
 } from './constants'
 
@@ -127,13 +124,20 @@ export const convertGlovoProductsToCompare = (
 
 export const createVtexOrderData = (
   glovoOrder: GlovoOrder,
-  orderSimulation: any
+  orderSimulation: any,
+  clientProfileData: ClientProfileData
 ): MarketplaceOrder => {
-  const { phone_number } = glovoOrder.customer
+  const { order_id, estimated_total_price } = glovoOrder
   const { items, pickupPoints, postalCode, logisticsInfo } = orderSimulation
-
-  const firstName = CUSTOMER_FIRST_NAME
-  const lastName = CUSTOMER_LAST_NAME
+  const {
+    email,
+    firstName,
+    lastName,
+    documentType,
+    document,
+    phone,
+    corporateName,
+  } = clientProfileData
 
   /** Re-Index items array */
   let counter = 0
@@ -179,18 +183,18 @@ export const createVtexOrderData = (
   )
 
   return {
-    marketplaceOrderId: glovoOrder.order_id,
+    marketplaceOrderId: order_id,
     marketplaceServicesEndpoint: 'https://api.glovoapp.com/',
-    marketplacePaymentValue: glovoOrder.estimated_total_price,
+    marketplacePaymentValue: estimated_total_price,
     items: updatedItems,
     clientProfileData: {
-      email: CLIENT_EMAIL,
+      email,
       firstName,
       lastName,
-      documentType: 'CIF',
-      document: 'B-67522904',
-      phone: phone_number || '9999999999',
-      corporateName: 'Glovoapp Groceries',
+      documentType,
+      document,
+      phone,
+      corporateName,
       tradeName: null,
       corporateDocument: null,
       stateInscription: null,
@@ -201,7 +205,7 @@ export const createVtexOrderData = (
     shippingData: {
       address: {
         addressType: RESIDENTIAL,
-        receiverName: `${CUSTOMER_FIRST_NAME} ${CUSTOMER_LAST_NAME}`,
+        receiverName: `${firstName} ${lastName}`,
         addressId: HOME,
         postalCode,
         city: pickupPoints[0].address.city,

@@ -238,12 +238,12 @@ interface ClientProfileData {
   document: string | null
   phone: string | null
   corporateName: string | null
-  tradeName: string | null
-  corporateDocument: string | null
-  stateInscription: string | null
-  corporatePhone: string | null
-  isCorporate: boolean
-  userProfileId: string | null
+  tradeName?: string | null
+  corporateDocument?: string | null
+  stateInscription?: string | null
+  corporatePhone?: string | null
+  isCorporate?: boolean
+  userProfileId?: string | null
 }
 
 interface ShippingData {
