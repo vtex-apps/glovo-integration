@@ -19,9 +19,15 @@ export default class Glovo extends ExternalClient {
   }
 
   public updateProducts = async (ctx: Context, data: GlovoUpdateProduct) => {
-    const enviroment = this.context.production ? 'PRODUCTION' : 'STAGING'
     const { glovoStoreId, skuId, price, available } = data
-    const { glovoToken } = await Glovo.getAppSettings(ctx)
+    const {
+      glovoToken,
+      production,
+    }: { glovoToken: string; production: boolean } = await Glovo.getAppSettings(
+      ctx
+    )
+
+    const enviroment = production ? 'PRODUCTION' : 'STAGING'
 
     const payload: GlovoPatchProduct = {
       available,
@@ -44,9 +50,15 @@ export default class Glovo extends ExternalClient {
     ctx: StatusChangeContext,
     data: GlovoUpdateOrderStatus
   ) => {
-    const enviroment = this.context.production ? 'PRODUCTION' : 'STAGING'
     const { glovoStoreId, glovoOrderId, status } = data
-    const { glovoToken } = await Glovo.getAppSettings(ctx)
+    const {
+      glovoToken,
+      production,
+    }: { glovoToken: string; production: boolean } = await Glovo.getAppSettings(
+      ctx
+    )
+
+    const enviroment = production ? 'PRODUCTION' : 'STAGING'
 
     const payload: { status: string } = {
       status,
@@ -64,8 +76,15 @@ export default class Glovo extends ExternalClient {
   }
 
   public modifyOrder = async (ctx: any, data: GlovoModifyOrderPayload) => {
-    const enviroment = this.context.production ? 'PRODUCTION' : 'STAGING'
-    const { glovoToken } = await Glovo.getAppSettings(ctx)
+    const {
+      glovoToken,
+      production,
+    }: { glovoToken: string; production: boolean } = await Glovo.getAppSettings(
+      ctx
+    )
+
+    const enviroment = production ? 'PRODUCTION' : 'STAGING'
+
     const {
       storeId,
       glovoOrderId,
