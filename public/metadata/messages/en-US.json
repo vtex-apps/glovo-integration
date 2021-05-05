@@ -1,0 +1,14 @@
+{
+  "name": "Glovo Europe Integration",
+  "headline": "Native solution to integrate with Glovo ",
+  "overview": "This App allows European Stores to integrate with Glovo",
+  "features": [
+    "Integration of Stock and Prices",
+    "Integration of Orders",
+    "Multiple Store Capability"
+  ],
+  "websiteURL": "https://vtex.com/",
+  "support": {
+    "url": "https://support.vtex.com/hc/requests"
+  }
+}

@@ -63,6 +63,7 @@ declare global {
     catalogUpdate: CatalogChange
     affiliateConfig: AffiliateInfo[]
     affiliateInfo: AffiliateInfo
+    clientProfileData: ClientProfileData
     orderSimulation: SimulationOrderForm
   }
 

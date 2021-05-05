@@ -16,6 +16,7 @@ export async function validateSettings(
 
   ctx.state.glovoToken = appConfig.glovoToken
   ctx.state.affiliateConfig = appConfig.affiliateConfig
+  ctx.state.clientProfileData = appConfig.clientProfileData
 
   await next()
 }
