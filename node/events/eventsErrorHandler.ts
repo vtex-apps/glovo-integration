@@ -18,12 +18,12 @@ export async function eventsErrorHandler(
         message: error.message,
         data: error,
       })
+    } else {
+      logger.error({
+        message: error.message,
+        data: error,
+      })
     }
-
-    logger.error({
-      message: error.message,
-      data: error,
-    })
 
     ctx.body = error.message
   }

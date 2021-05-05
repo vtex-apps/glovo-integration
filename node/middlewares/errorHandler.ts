@@ -13,14 +13,14 @@ export async function errorHandler(ctx: Context, next: () => Promise<void>) {
       logger.error({
         orderId,
         message: error.message,
-        data: error,
+        error,
+      })
+    } else {
+      logger.error({
+        message: error.message,
+        error,
       })
     }
-
-    logger.error({
-      message: error.message,
-      data: error,
-    })
 
     ctx.status = error.status || 500
     ctx.body = error.message
