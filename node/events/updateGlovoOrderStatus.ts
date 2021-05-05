@@ -24,11 +24,15 @@ export async function updateGlovoOrderStatus(ctx: StatusChangeContext) {
       status,
     }
 
-    await glovo.updateOrderStatus(ctx, glovoPayload)
+    try {
+      await glovo.updateOrderStatus(ctx, glovoPayload)
 
-    logger.info({
-      message: `Glovo order ${glovoOrderId} status updated`,
-      glovoPayload,
-    })
+      logger.info({
+        message: `Glovo order ${glovoOrderId} status updated`,
+        glovoPayload,
+      })
+    } catch (error) {
+      throw new Error(error)
+    }
   }
 }

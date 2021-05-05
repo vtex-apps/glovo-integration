@@ -8,15 +8,19 @@ export async function createOrder(ctx: Context, next: () => Promise<void>) {
 
   const { salesChannel, affiliateId } = affiliateInfo
 
-  const vtexOrderData = createVtexOrderData(glovoOrder, orderSimulation)
+  try {
+    const vtexOrderData = createVtexOrderData(glovoOrder, orderSimulation)
 
-  const vtexOrder = await orders.createOrder(
-    vtexOrderData,
-    salesChannel,
-    affiliateId
-  )
+    const vtexOrder = await orders.createOrder(
+      vtexOrderData,
+      salesChannel,
+      affiliateId
+    )
 
-  ctx.state.vtexOrder = vtexOrder
+    ctx.state.vtexOrder = vtexOrder
 
-  await next()
+    await next()
+  } catch (error) {
+    throw new Error(error)
+  }
 }

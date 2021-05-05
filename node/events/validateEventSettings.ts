@@ -11,7 +11,9 @@ export async function validateEventSettings(
   const appConfig = await apps.getAppSettings(process.env.VTEX_APP_ID as string)
 
   if (!appConfig.glovoToken) {
-    throw new UserInputError('Missing Glovo token. Please check app settings')
+    throw new UserInputError(
+      'Missing or invalid Glovo token. Please check app settings'
+    )
   }
 
   ctx.state.affiliateConfig = appConfig.affiliateConfig

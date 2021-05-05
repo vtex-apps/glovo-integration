@@ -16,8 +16,11 @@ export async function saveOrderRecord(ctx: Context) {
     createdAt: currentDate.toISOString(),
   }
 
-  const orderRecord = await vbase.saveJSON(ORDERS, orderId, data)
+  try {
+    await vbase.saveJSON(ORDERS, orderId, data)
 
-  ctx.status = 201
-  ctx.body = orderRecord
+    ctx.status = 201
+  } catch (error) {
+    throw new Error(error)
+  }
 }

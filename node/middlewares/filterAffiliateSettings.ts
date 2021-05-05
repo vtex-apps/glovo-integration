@@ -1,3 +1,4 @@
+import { UserInputError } from '@vtex/api'
 import { json } from 'co-body'
 
 export async function filterAffiliateSettings(
@@ -17,9 +18,7 @@ export async function filterAffiliateSettings(
   )
 
   if (!affiliateInfo) {
-    ctx.status = 204
-
-    return
+    throw new UserInputError('Missing or invalid affiliate information')
   }
 
   ctx.state.affiliateInfo = affiliateInfo

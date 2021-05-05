@@ -6,7 +6,22 @@ export async function errorHandler(ctx: Context, next: () => Promise<void>) {
   try {
     await next()
   } catch (error) {
-    logger.error(error)
+    // If the Glovo order was received, add the order id to the log.
+    if (ctx.state.glovoOrder) {
+      const { order_id: orderId } = ctx.state.glovoOrder
+
+      logger.error({
+        orderId,
+        message: error.message,
+        data: error,
+      })
+    }
+
+    logger.error({
+      message: error.message,
+      data: error,
+    })
+
     ctx.status = error.status || 500
     ctx.body = error.message
     ctx.app.emit('error', error, ctx)

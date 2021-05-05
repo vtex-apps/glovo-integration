@@ -12,19 +12,23 @@ export async function authorizeOrder(ctx: Context, next: () => Promise<void>) {
     marketplaceOrderId,
   }
 
-  const order = await orders.authorizeOrder(
-    payload,
-    orderId,
-    salesChannel,
-    affiliateId
-  )
+  try {
+    const order = await orders.authorizeOrder(
+      payload,
+      orderId,
+      salesChannel,
+      affiliateId
+    )
 
-  logger.info({
-    message: `Order ${orderId} has been placed.`,
-    order,
-  })
-  ctx.status = 201
-  ctx.state.vtexOrder = vtexOrder
+    logger.info({
+      message: `Order ${orderId} has been placed.`,
+      order,
+    })
+    ctx.status = 201
+    ctx.state.vtexOrder = vtexOrder
 
-  await next()
+    await next()
+  } catch (error) {
+    throw new Error(error)
+  }
 }
