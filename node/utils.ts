@@ -229,3 +229,82 @@ export const setGlovoStatus = (state: string) => {
 
   return ''
 }
+
+export const updateGlovoProduct = async (
+  ctx: Context,
+  catalogUpdate: CatalogChange
+) => {
+  const {
+    clients: { apps, glovo, checkout },
+    vtex: { logger },
+  } = ctx
+
+  // Get app configuration
+  const appConfig = await apps.getAppSettings(process.env.VTEX_APP_ID as string)
+
+  if (!appConfig.glovoToken) {
+    logger.warn({
+      message: 'Missing Glovo token. Please check app settings',
+    })
+
+    return
+  }
+
+  const { affiliateConfig } = appConfig
+  const { IdSku, IdAffiliate, IsActive } = catalogUpdate
+  const affiliateInfo = affiliateConfig.find(
+    ({ affiliateId }: { affiliateId: string }) => affiliateId === IdAffiliate
+  )
+
+  if (!affiliateInfo) {
+    logger.warn({
+      message: 'Missing or invalid affiliate information',
+      catalogUpdate,
+    })
+
+    return
+  }
+
+  const { salesChannel, glovoStoreId } = affiliateInfo
+
+  let glovoPayload: GlovoUpdateProduct = {
+    available: false,
+    skuId: IdSku,
+    glovoStoreId,
+  }
+
+  if (IsActive) {
+    const simulationItem = createSimulationItem({ id: IdSku, quantity: 1 })
+
+    const simulation = await checkout.simulation(
+      ...createSimulationPayload({
+        items: [simulationItem],
+        affiliateId: IdAffiliate,
+        salesChannel,
+      })
+    )
+
+    const {
+      items: [item],
+    } = simulation
+
+    if (isSkuAvailable(item)) {
+      const { price, listPrice, unitMultiplier } = item
+
+      glovoPayload = {
+        ...glovoPayload,
+        price: (Math.max(price, listPrice) * unitMultiplier) / 100,
+        available: true,
+      }
+    }
+  }
+
+  const updatedProduct = await glovo.updateProducts(ctx, glovoPayload)
+
+  logger.info({
+    message: `Product with sku ${IdSku} from store ${glovoStoreId} has been updated`,
+    updatedProduct,
+  })
+
+  return updatedProduct
+}
