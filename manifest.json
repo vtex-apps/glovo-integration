@@ -1,7 +1,7 @@
 {
   "name": "glovo-integration",
   "vendor": "vtex",
-  "version": "0.1.0",
+  "version": "0.2.1-beta",
   "title": "Glovo Integration",
   "description": "Glovo Integration",
   "mustUpdateAt": "2018-01-04",

@@ -35,6 +35,14 @@ export default class Glovo extends ExternalClient {
 
     if (price) payload.price = price
 
+    const {
+      vtex: { logger },
+    } = ctx
+
+    logger.info({
+      message: `Sending product ${skuId} update to Glovo for ${glovoStoreId}`,
+    })
+
     return this.http.patch(
       `${BASE_URL[enviroment]}/webhook/stores/${glovoStoreId}/products/${skuId}`,
       payload,

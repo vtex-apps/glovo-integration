@@ -12,8 +12,9 @@ import {
   RESIDENTIAL,
   HOME,
   ESP,
-  START_HANDLING,
+  HANDLING,
 } from './constants'
+import glovoIds from './glovoCatalog'
 
 export const isSkuAvailable = (item: OrderFormItem | undefined): boolean => {
   if (!item) {
@@ -224,7 +225,7 @@ export const createVtexOrderData = (
 }
 
 export const setGlovoStatus = (state: string) => {
-  if (state === START_HANDLING) return ACCEPTED
+  if (state === HANDLING) return ACCEPTED
   if (state === INVOICED) return READY_FOR_PICKUP
 
   return ''
@@ -259,6 +260,15 @@ export const updateGlovoProduct = async (
   if (!affiliateInfo) {
     logger.warn({
       message: 'Missing or invalid affiliate information',
+      catalogUpdate,
+    })
+
+    return
+  }
+
+  if (!glovoIds.includes({ skuId: IdSku })) {
+    logger.info({
+      message: `Product with sku ${IdSku} is not part of the Glovo Catalog`,
       catalogUpdate,
     })
 

@@ -9,13 +9,29 @@ export async function compareOrder(
   const {
     body: { orderId },
     clients: { glovo, orders, vbase },
+    state: { affiliateConfig },
     vtex: { logger },
   } = ctx
 
   try {
+    const orderAffiliate = orderId.slice(0, 3)
+    const affiliatesIds = affiliateConfig.map(
+      ({ affiliateId }: { affiliateId: string }) => affiliateId
+    )
+
+    if (!affiliatesIds.includes(orderAffiliate)) {
+      return
+    }
+
     // fetch order's information
     const invoicedOrder = await orders.getOrder(orderId)
     const orderRecord = await vbase.getJSON<OrderRecord>(ORDERS, orderId, true)
+
+    if (!orderRecord) {
+      logger.warn({
+        message: `The record for the order ${orderId} was not found`,
+      })
+    }
 
     // check if order has changed
     const {
