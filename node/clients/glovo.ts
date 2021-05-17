@@ -12,7 +12,7 @@ export default class Glovo extends ExternalClient {
     super('glovoapp.com', context, {
       ...options,
       headers: {
-        'Content-Type': 'application/json',
+        contentType: 'application/json',
         Accept: 'application/json',
       },
     })
@@ -28,16 +28,15 @@ export default class Glovo extends ExternalClient {
     )
 
     const enviroment = production ? 'PRODUCTION' : 'STAGING'
+    const {
+      vtex: { logger },
+    } = ctx
 
     const payload: GlovoPatchProduct = {
       available,
     }
 
     if (price) payload.price = price
-
-    const {
-      vtex: { logger },
-    } = ctx
 
     logger.info({
       message: `Sending product ${skuId} update to Glovo for ${glovoStoreId}`,

@@ -31,6 +31,8 @@ export async function compareOrder(
       logger.warn({
         message: `The record for the order ${orderId} was not found`,
       })
+
+      return
     }
 
     // check if order has changed
