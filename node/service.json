@@ -1,5 +1,5 @@
 {
-  "memory": 256,
+  "memory": 1024,
   "ttl": 60,
   "timeout": 5,
   "minReplicas": 2,
@@ -16,6 +16,10 @@
     },
     "updateProduct": {
       "path": "/_v/glovo/products/update",
+      "public": true
+    },
+    "updateCatalog": {
+      "path": "/_v/glovo/products/bulk-update",
       "public": true
     },
     "getOrderRecord": {

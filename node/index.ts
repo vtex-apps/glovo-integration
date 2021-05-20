@@ -21,10 +21,11 @@ import {
   createOrder,
   errorHandler,
   getOrderRecord,
+  glovoCatalogUpdate,
+  glovoProductUpdate,
   saveOrderRecord,
   sendResponse,
   simulateOrder,
-  glovoProductUpdate,
   validateSettings,
   validateGlovoToken,
 } from './middlewares'
@@ -85,6 +86,9 @@ export default new Service<Clients, State, ParamsContext>({
   routes: {
     updateProduct: method({
       POST: [errorHandler, glovoProductUpdate, sendResponse],
+    }),
+    updateCatalog: method({
+      POST: [errorHandler, glovoCatalogUpdate, sendResponse],
     }),
     createOrder: method({
       POST: [
