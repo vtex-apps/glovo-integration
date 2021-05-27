@@ -6,6 +6,10 @@ export async function glovoProductUpdate(
   ctx: Context,
   next: () => Promise<void>
 ) {
+  const {
+    vtex: { logger },
+  } = ctx
+
   const catalogUpdate: CatalogChange = await json(ctx.req)
 
   // Send response to VTEX Notificator to avoid retries.
@@ -17,8 +21,11 @@ export async function glovoProductUpdate(
     ctx.status = 200
     ctx.body = updatedProduct
   } catch (error) {
-    throw new Error(
-      `Product with sku ${catalogUpdate.IdSku} could not be updated`
-    )
+    logger.error({
+      message: `There was a problem updating ${catalogUpdate}`,
+      data: error,
+    })
+
+    return error
   }
 }

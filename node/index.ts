@@ -85,10 +85,10 @@ export default new Service<Clients, State, ParamsContext>({
   clients,
   routes: {
     updateProduct: method({
-      POST: [errorHandler, glovoProductUpdate, sendResponse],
+      POST: [glovoProductUpdate, sendResponse],
     }),
     updateCatalog: method({
-      POST: [errorHandler, glovoCatalogUpdate, sendResponse],
+      POST: [glovoCatalogUpdate, sendResponse],
     }),
     createOrder: method({
       POST: [
