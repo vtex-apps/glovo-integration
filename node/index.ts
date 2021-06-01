@@ -88,7 +88,7 @@ export default new Service<Clients, State, ParamsContext>({
       POST: [glovoProductUpdate, sendResponse],
     }),
     updateCatalog: method({
-      POST: [glovoCatalogUpdate, sendResponse],
+      GET: [glovoCatalogUpdate, sendResponse],
     }),
     createOrder: method({
       POST: [
