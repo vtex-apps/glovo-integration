@@ -60,7 +60,7 @@ export default class Glovo extends ExternalClient {
 
     const environment = production ? 'PRODUCTION' : 'STAGING'
 
-    return this.http.post(
+    return this.http.post<GlovoBulkUpdateResponse>(
       `${BASE_URL[environment]}/webhook/stores/${glovoStoreId}/menu/updates`,
       data,
       {

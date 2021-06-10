@@ -1,7 +1,7 @@
 {
   "name": "glovo-integration",
   "vendor": "vtex",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "title": "Glovo Integration",
   "description": "Glovo Integration",
   "mustUpdateAt": "2018-01-04",
@@ -41,14 +41,17 @@
       "name": "OMSViewer"
     },
     {
+      "name": "vbase-read-write"
+    },
+    {
+      "name": "ADMIN_DS"
+    },
+    {
       "name": "outbound-access",
       "attrs": {
         "host": "portal.vtexcommercestable.com.br",
         "path": "/api/*"
       }
-    },
-    {
-      "name": "vbase-read-write"
     }
   ],
   "settingsSchema": {

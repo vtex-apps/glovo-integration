@@ -18,10 +18,14 @@ import {
 } from './events'
 import {
   authorizeOrder,
+  createGlovoMenuRecord,
   createOrder,
   errorHandler,
+  getJSON,
+  saveJSON,
   getOrderRecord,
-  glovoCatalogUpdate,
+  glovoMenuUpdateAll,
+  glovoMenuUpdatePartial,
   glovoProductUpdate,
   saveOrderRecord,
   sendResponse,
@@ -84,12 +88,6 @@ declare global {
 export default new Service<Clients, State, ParamsContext>({
   clients,
   routes: {
-    updateProduct: method({
-      POST: [glovoProductUpdate, sendResponse],
-    }),
-    updateCatalog: method({
-      POST: [glovoCatalogUpdate, sendResponse],
-    }),
     createOrder: method({
       POST: [
         errorHandler,
@@ -104,8 +102,31 @@ export default new Service<Clients, State, ParamsContext>({
     cancelOrder: method({
       POST: [errorHandler, validateSettings, validateGlovoToken, cancelOrder],
     }),
+    getJSON: method({
+      GET: [errorHandler, validateSettings, getJSON],
+    }),
+    saveJSON: method({
+      POST: [errorHandler, validateSettings, saveJSON],
+    }),
     getOrderRecord: method({
       GET: [errorHandler, validateSettings, getOrderRecord],
+    }),
+    updateProduct: method({
+      POST: [glovoProductUpdate, sendResponse],
+    }),
+    updateMenuAll: method({
+      POST: [glovoMenuUpdateAll, sendResponse],
+    }),
+    updateMenuPartial: method({
+      POST: [glovoMenuUpdatePartial, sendResponse],
+    }),
+    createGlovoMenuRecord: method({
+      POST: [
+        errorHandler,
+        validateSettings,
+        createGlovoMenuRecord,
+        sendResponse,
+      ],
     }),
   },
   events: {

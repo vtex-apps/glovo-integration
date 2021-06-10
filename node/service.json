@@ -14,17 +14,33 @@
       "path": "/_v/glovo/orders/delete",
       "public": true
     },
-    "updateProduct": {
-      "path": "/_v/glovo/products/update",
-      "public": true
+    "getJSON": {
+      "path": "/_v/glovo/json/get",
+      "public": false
     },
-    "updateCatalog": {
-      "path": "/_v/glovo/products/bulk-update",
-      "public": true
+    "saveJSON": {
+      "path": "/_v/glovo/json/save",
+      "public": false
     },
     "getOrderRecord": {
       "path": "/_v/glovo/order-records/get",
       "public": false
+    },
+    "updateProduct": {
+      "path": "/_v/glovo/products/update",
+      "public": true
+    },
+    "updateMenuPartial": {
+      "path": "/_v/glovo/menu/update-partial",
+      "public": true
+    },
+    "updateMenuAll": {
+      "path": "/_v/glovo/menu/update-all",
+      "public": true
+    },
+    "createGlovoMenuRecord": {
+      "path": "/_v/glovo/menu-record/create",
+      "public": true
     }
   },
   "events": {

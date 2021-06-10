@@ -6,15 +6,16 @@ import type {
 } from '@vtex/clients'
 
 import {
-  INVOICED,
   ACCEPTED,
+  ESP,
+  GLOVO,
+  HANDLING,
+  HOME,
+  INVOICED,
+  MENU,
   READY_FOR_PICKUP,
   RESIDENTIAL,
-  HOME,
-  ESP,
-  HANDLING,
 } from './constants'
-import glovoCatalogIds from './glovoCatalog'
 
 export const isSkuAvailable = (item: OrderFormItem | undefined): boolean => {
   if (!item) {
@@ -242,7 +243,7 @@ export const updateGlovoProduct = async (
   catalogUpdate: CatalogChange
 ) => {
   const {
-    clients: { apps, glovo, checkout },
+    clients: { apps, checkout, vbase },
     vtex: { logger },
   } = ctx
 
@@ -256,23 +257,21 @@ export const updateGlovoProduct = async (
     return
   }
 
-  const { affiliateConfig } = appConfig
-  const { IdSku, IdAffiliate, IsActive } = catalogUpdate
-  const affiliateInfo = getAffiliateFromAffiliateId(
-    IdAffiliate,
-    affiliateConfig
-  )
+  const { affiliateConfig }: { affiliateConfig: AffiliateInfo[] } = appConfig
+  const { IdSku, IsActive } = catalogUpdate
 
-  if (!affiliateInfo) {
+  if (!affiliateConfig) {
     logger.warn({
-      message: 'Missing or invalid affiliate information',
+      message: 'Missing or invalid store information',
       catalogUpdate,
     })
 
     return
   }
 
-  if (!glovoCatalogIds.some((item) => item.skuId === IdSku)) {
+  const glovoMenu: GlovoMenu = await vbase.getJSON(GLOVO, MENU)
+
+  if (!glovoMenu[IdSku]) {
     logger.info({
       message: `Product with sku ${IdSku} is not part of the Glovo Catalog`,
       catalogUpdate,
@@ -281,62 +280,137 @@ export const updateGlovoProduct = async (
     return
   }
 
-  const { salesChannel, glovoStoreId } = affiliateInfo
-
-  let glovoPayload: GlovoUpdateProduct = {
-    available: false,
-    skuId: IdSku,
-    glovoStoreId,
-  }
-
-  if (IsActive) {
-    const simulationItem = createSimulationItem({ id: IdSku, quantity: 1 })
-
-    const simulation = await checkout.simulation(
-      ...createSimulationPayload({
-        items: [simulationItem],
-        affiliateId: IdAffiliate,
-        salesChannel,
-      })
+  for await (const store of affiliateConfig) {
+    const { affiliateId, glovoStoreId, salesChannel, postalCode } = store
+    const productRecord: ProductRecord = await vbase.getJSON(
+      affiliateId,
+      IdSku,
+      true
     )
 
-    const {
-      items: [item],
-    } = simulation
+    if (!productRecord) {
+      logger.warn({
+        message: `Record not found for product with sku ${IdSku}`,
+        catalogUpdate,
+      })
 
-    if (isSkuAvailable(item)) {
-      const { price, listPrice, unitMultiplier } = item
+      return
+    }
 
-      glovoPayload = {
-        ...glovoPayload,
-        price: (Math.max(price, listPrice) * unitMultiplier) / 100,
-        available: true,
+    let glovoPayload: GlovoUpdateProduct = {
+      glovoStoreId,
+      skuId: IdSku,
+      price: productRecord.price,
+      available: false,
+    }
+
+    // Check if product is active
+    if (IsActive) {
+      const simulationItem = createSimulationItem({ id: IdSku, quantity: 1 })
+
+      const simulation = await checkout.simulation(
+        ...createSimulationPayload({
+          items: [simulationItem],
+          affiliateId,
+          salesChannel,
+          postalCode,
+          country: 'ESP',
+        })
+      )
+
+      const {
+        items: [item],
+      } = simulation
+
+      if (isSkuAvailable(item)) {
+        const { price, listPrice, unitMultiplier } = item
+
+        glovoPayload = {
+          ...glovoPayload,
+          price: (Math.max(price, listPrice) * unitMultiplier) / 100,
+          available: true,
+        }
       }
     }
-  }
 
-  try {
-    const updatedProduct = await glovo.updateProducts(ctx, glovoPayload)
+    if (
+      productRecord.price === glovoPayload.price &&
+      productRecord.available === glovoPayload.available
+    ) {
+      logger.info({
+        message: `Product with sku ${IdSku} already up to date`,
+        productRecord,
+      })
 
-    logger.info({
-      message: `Product with sku ${IdSku} from store ${glovoStoreId} has been updated`,
-      updatedProduct,
-    })
+      continue
+    }
 
-    return updatedProduct
-  } catch (error) {
-    logger.error({
-      message: `Product with sku ${IdSku} from store ${glovoStoreId} could not be updated`,
-      data: error,
-    })
+    try {
+      const updatedProductRecord: ProductRecord = {
+        id: IdSku,
+        price: glovoPayload.price,
+        available: glovoPayload.available,
+      }
 
-    return error
+      // Update product record
+      vbase.saveJSON(affiliateId, IdSku, updatedProductRecord)
+
+      // Get Menu Updates Record
+      const menuUpdates: MenuUpdatesItem[] = await vbase.getJSON(
+        affiliateId,
+        MENU,
+        true
+      )
+
+      if (!menuUpdates) {
+        logger.warn({
+          message: `Unable to get Menu Updates record`,
+          data: glovoPayload,
+        })
+
+        return
+      }
+
+      const currentUpdateItemsIds = menuUpdates[
+        menuUpdates.length - 1
+      ].items.map((item) => item.id)
+
+      if (!currentUpdateItemsIds.includes(IdSku)) {
+        menuUpdates[menuUpdates.length - 1].items.push(updatedProductRecord)
+      } else {
+        menuUpdates[menuUpdates.length - 1].items.map((item) => {
+          if (item.id === IdSku) {
+            item.id = IdSku
+            item.price = updatedProductRecord.price
+            item.available = updatedProductRecord.available
+          }
+
+          return item
+        })
+      }
+
+      vbase.saveJSON(affiliateId, MENU, menuUpdates)
+
+      logger.info({
+        message: `Product with sku ${IdSku} from store ${glovoStoreId} has been updated`,
+        updatedProductRecord,
+      })
+
+      return updatedProductRecord
+    } catch (error) {
+      logger.error({
+        message: `Product with sku ${IdSku} from store ${glovoStoreId} could not be updated`,
+        data: error,
+      })
+
+      return error
+    }
   }
 }
 
-export const updateGlovoCatalog = async (ctx: Context) => {
+export const updateGlovoMenuAll = async (ctx: Context) => {
   const {
-    clients: { apps, glovo, checkout },
+    clients: { apps, checkout, glovo, vbase },
     vtex: { logger },
   } = ctx
 
@@ -350,31 +424,32 @@ export const updateGlovoCatalog = async (ctx: Context) => {
     return
   }
 
-  const { affiliateConfig } = appConfig
+  const { affiliateConfig }: { affiliateConfig: AffiliateInfo[] } = appConfig
 
   if (!affiliateConfig.length) {
     logger.warn({
-      message: 'Missing or invalid affiliates information',
+      message: 'Missing or invalid stores information',
     })
 
     return
   }
 
-  // Send bulk product update for each store
-  for (const store of affiliateConfig) {
+  const glovoMenu: GlovoMenu = await vbase.getJSON(GLOVO, MENU)
+
+  // Send a complete bulk product update for each store
+  for await (const store of affiliateConfig) {
     const { affiliateId, salesChannel, glovoStoreId } = store
 
     const glovoPayload: GlovoBulkUpdateProduct = {
       products: [],
     }
 
-    for (const product of glovoCatalogIds) {
+    for await (const sku of Object.keys(glovoMenu)) {
       const simulationItem = createSimulationItem({
-        id: product.skuId,
+        id: sku,
         quantity: 1,
       })
 
-      // eslint-disable-next-line no-await-in-loop
       const simulation = await checkout.simulation(
         ...createSimulationPayload({
           items: [simulationItem],
@@ -398,7 +473,7 @@ export const updateGlovoCatalog = async (ctx: Context) => {
         glovoPayload.products.push(payloadProduct)
       } else {
         const payloadProduct: GlovoPatchProduct = {
-          id: product.skuId,
+          id: sku,
           available: false,
         }
 
@@ -407,7 +482,6 @@ export const updateGlovoCatalog = async (ctx: Context) => {
     }
 
     try {
-      // eslint-disable-next-line no-await-in-loop
       const glovoResponse = await glovo.bulkUpdateProducts(
         ctx,
         glovoPayload,
@@ -422,6 +496,78 @@ export const updateGlovoCatalog = async (ctx: Context) => {
     } catch (error) {
       logger.error({
         message: `Catalog for store ${glovoStoreId} could not be updated`,
+        data: error,
+      })
+    }
+  }
+}
+
+export const updateGlovoMenuPartial = async (ctx: Context) => {
+  const {
+    clients: { apps, glovo, vbase },
+    vtex: { logger },
+  } = ctx
+
+  const appConfig = await apps.getAppSettings(process.env.VTEX_APP_ID as string)
+
+  if (!appConfig.glovoToken) {
+    logger.warn({
+      message: 'Missing or invalid Glovo token. Please check app settings',
+    })
+
+    return
+  }
+
+  const { affiliateConfig }: { affiliateConfig: AffiliateInfo[] } = appConfig
+
+  if (!affiliateConfig.length) {
+    logger.warn({
+      message: 'Missing or invalid stores information',
+    })
+
+    return
+  }
+
+  // Send a partial bulk product update for each store
+  for await (const store of affiliateConfig) {
+    const { affiliateId, glovoStoreId } = store
+
+    let menuUpdates: MenuUpdatesItem[] = await vbase.getJSON(affiliateId, MENU)
+    const currentUpdate: MenuUpdatesItem = menuUpdates[menuUpdates.length - 1]
+
+    const glovoPayload: GlovoBulkUpdateProduct = {
+      products: currentUpdate.items,
+    }
+
+    try {
+      const glovoResponse: GlovoBulkUpdateResponse = await glovo.bulkUpdateProducts(
+        ctx,
+        glovoPayload,
+        glovoStoreId
+      )
+
+      const newUpdate: MenuUpdatesItem = {
+        requestId: ctx.headers.requestId,
+        responseId: null,
+        createdAt: new Date().toString(),
+        storeId: affiliateId,
+        glovoStoreId,
+        items: [],
+      }
+
+      currentUpdate.responseId = glovoResponse.transaction_id
+      menuUpdates.splice(-1, 1, currentUpdate)
+      menuUpdates = [...menuUpdates, newUpdate]
+
+      vbase.saveJSON(affiliateId, MENU, menuUpdates)
+
+      logger.info({
+        message: `Menu for store ${affiliateId} was updated`,
+        data: menuUpdates,
+      })
+    } catch (error) {
+      logger.error({
+        message: `Partial Catalog for store ${glovoStoreId} could not be updated`,
         data: error,
       })
     }

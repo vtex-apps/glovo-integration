@@ -14,3 +14,7 @@ export const INVOICED = 'invoiced'
 /** Glovo order status */
 export const ACCEPTED = 'ACCEPTED'
 export const READY_FOR_PICKUP = 'READY_FOR_PICKUP'
+
+/** VBase */
+export const GLOVO = 'Glovo'
+export const MENU = 'Menu'

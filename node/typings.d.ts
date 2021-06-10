@@ -175,9 +175,9 @@ interface GlovoOrderCancellation {
 }
 
 interface GlovoUpdateProduct {
-  price?: number
-  available: boolean
   skuId: string
+  price: number
+  available: boolean
   glovoStoreId: string
 }
 
@@ -189,6 +189,10 @@ interface GlovoPatchProduct {
 
 interface GlovoBulkUpdateProduct {
   products: GlovoPatchProduct[]
+}
+
+interface GlovoBulkUpdateResponse {
+  transaction_id: string
 }
 
 interface GlovoUpdatedProduct {
@@ -418,4 +422,23 @@ interface AppConfig {
   glovoToken: string
   affiliateConfig: AffiliateInfo[]
   clientProfileData: ClientProfileData
+}
+
+interface GlovoMenu {
+  [key: string]: boolean
+}
+
+interface ProductRecord {
+  id: string
+  price: number
+  available: boolean
+}
+
+interface MenuUpdatesItem {
+  requestId: string
+  responseId: string | null
+  createdAt: string
+  storeId: string
+  glovoStoreId: string
+  items: ProductRecord[]
 }
