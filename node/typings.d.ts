@@ -407,3 +407,9 @@ interface ComparisonObject {
     purchased_product_id: string
   }
 }
+
+interface AppConfig {
+  glovoToken: strings
+  affiliateConfig: AffiliateInfo[]
+  clientProfileData: ClientProfileData
+}

@@ -8,6 +8,7 @@ export const ESP = 'ESP'
 /** VTEX Order status */
 export const READY_FOR_HANDLING = 'ready-for-handling'
 export const START_HANDLING = 'start-handling'
+export const HANDLING = 'handling'
 export const INVOICED = 'invoiced'
 
 /** Glovo order status */

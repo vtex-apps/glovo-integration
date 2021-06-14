@@ -12,7 +12,7 @@ export default class Glovo extends ExternalClient {
     super('glovoapp.com', context, {
       ...options,
       headers: {
-        'Content-Type': 'application/json',
+        contentType: 'application/json',
         Accept: 'application/json',
       },
     })
@@ -28,12 +28,19 @@ export default class Glovo extends ExternalClient {
     )
 
     const enviroment = production ? 'PRODUCTION' : 'STAGING'
+    const {
+      vtex: { logger },
+    } = ctx
 
     const payload: GlovoPatchProduct = {
       available,
     }
 
     if (price) payload.price = price
+
+    logger.info({
+      message: `Sending product ${skuId} update to Glovo for ${glovoStoreId}`,
+    })
 
     return this.http.patch(
       `${BASE_URL[enviroment]}/webhook/stores/${glovoStoreId}/products/${skuId}`,
