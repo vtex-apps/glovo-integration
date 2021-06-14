@@ -14,7 +14,7 @@ import {
   ESP,
   HANDLING,
 } from './constants'
-import glovoIds from './glovoCatalog'
+import glovoCatalogIds from './glovoCatalog'
 
 export const isSkuAvailable = (item: OrderFormItem | undefined): boolean => {
   if (!item) {
@@ -61,6 +61,12 @@ export const getAffilateFromStoreId = (
   affiliateConfig: AffiliateInfo[]
 ): AffiliateInfo | undefined =>
   affiliateConfig.find(({ glovoStoreId }) => glovoStoreId === storeId)
+
+export const getAffiliateFromAffiliateId = (
+  id: string,
+  affiliateConfig: AffiliateInfo[]
+): AffiliateInfo | undefined =>
+  affiliateConfig.find(({ affiliateId }) => affiliateId === id)
 
 export const convertGlovoProductToItems = (
   glovoProducts: GlovoProduct[] = []
@@ -253,8 +259,9 @@ export const updateGlovoProduct = async (
 
   const { affiliateConfig } = appConfig
   const { IdSku, IdAffiliate, IsActive } = catalogUpdate
-  const affiliateInfo = affiliateConfig.find(
-    ({ affiliateId }: { affiliateId: string }) => affiliateId === IdAffiliate
+  const affiliateInfo = getAffiliateFromAffiliateId(
+    IdAffiliate,
+    affiliateConfig
   )
 
   if (!affiliateInfo) {
@@ -266,7 +273,7 @@ export const updateGlovoProduct = async (
     return
   }
 
-  if (!glovoIds.includes({ skuId: IdSku })) {
+  if (!glovoCatalogIds.includes({ skuId: IdSku })) {
     logger.info({
       message: `Product with sku ${IdSku} is not part of the Glovo Catalog`,
       catalogUpdate,
@@ -309,12 +316,21 @@ export const updateGlovoProduct = async (
     }
   }
 
-  const updatedProduct = await glovo.updateProducts(ctx, glovoPayload)
+  try {
+    const updatedProduct = await glovo.updateProducts(ctx, glovoPayload)
 
-  logger.info({
-    message: `Product with sku ${IdSku} from store ${glovoStoreId} has been updated`,
-    updatedProduct,
-  })
+    logger.info({
+      message: `Product with sku ${IdSku} from store ${glovoStoreId} has been updated`,
+      updatedProduct,
+    })
 
-  return updatedProduct
+    return updatedProduct
+  } catch (error) {
+    logger.error({
+      message: `Product with sku ${IdSku} from store ${glovoStoreId} could not be updated`,
+      data: error,
+    })
+
+    return error
+  }
 }
