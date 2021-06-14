@@ -48,7 +48,10 @@ export async function updateProduct(ctx: Context) {
 
     await glovo.updateProducts(ctx, glovoPayload)
 
-    logger.info({ message: 'Product updated', glovoPayload })
+    logger.info({
+      message: `Product with sku ${glovoPayload.skuId} from store ${glovoPayload.glovoStoreId} has been updated`,
+      glovoPayload,
+    })
     ctx.status = 204
   } catch (error) {
     throw new Error(error)

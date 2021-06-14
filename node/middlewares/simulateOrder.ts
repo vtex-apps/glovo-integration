@@ -1,3 +1,4 @@
+import { UserInputError } from '@vtex/api'
 import { json } from 'co-body'
 
 import {
@@ -15,51 +16,44 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
 
   const glovoOrder: GlovoOrder = await json(ctx.req)
 
+  ctx.state.glovoOrder = glovoOrder
+
   const affiliateInfo = getAffilateFromStoreId(
     glovoOrder.store_id,
     affiliateConfig
   ) as AffiliateInfo
 
-  /**
-   * If the order received doesn't match any affilate on settings, we end the process.
-   * We also log it to Splunk, since there might be something wrong in the configuration.
-   */
   if (!affiliateInfo) {
-    const message = `Order not handled. Couldn't find any affiliate with Glovo Store Id ${glovoOrder.store_id}`
-
-    logger.warn({
-      message,
-      glovoOrder,
-    })
-
-    ctx.body = message
-
-    return
+    throw new UserInputError(
+      `Order not handled. Missing or invalid affiliate with Glovo Store Id ${glovoOrder.store_id}`
+    )
   }
 
   const { salesChannel, affiliateId, postalCode } = affiliateInfo
 
-  const simulationItems = convertGlovoProductToItems(glovoOrder.products)
+  try {
+    const simulationItems = convertGlovoProductToItems(glovoOrder.products)
+    const simulation = await checkout.simulation(
+      ...createSimulationPayload({
+        items: simulationItems,
+        postalCode,
+        country: 'ESP',
+        salesChannel,
+        affiliateId,
+      })
+    )
 
-  const simulation = await checkout.simulation(
-    ...createSimulationPayload({
-      items: simulationItems,
-      postalCode,
-      country: 'ESP',
-      salesChannel,
-      affiliateId,
+    logger.info({
+      message: `Simulation for order ${glovoOrder.order_id}`,
+      simulationResult: simulation,
+      glovoOrder,
     })
-  )
 
-  logger.info({
-    message: `Simulation for order ${glovoOrder.order_id}`,
-    simulationResult: simulation,
-    glovoOrder,
-  })
+    ctx.state.orderSimulation = simulation
+    ctx.state.affiliateInfo = affiliateInfo
 
-  ctx.state.orderSimulation = simulation
-  ctx.state.glovoOrder = glovoOrder
-  ctx.state.affiliateInfo = affiliateInfo
-
-  await next()
+    await next()
+  } catch (error) {
+    throw new Error(error)
+  }
 }
