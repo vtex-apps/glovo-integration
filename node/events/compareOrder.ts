@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { convertGlovoProductsToCompare } from '../utils'
+import {
+  convertGlovoProductsToCompare,
+  getAffiliateFromAffiliateId,
+} from '../utils'
 import { ORDERS } from '../constants'
 
 export async function compareOrder(
@@ -15,11 +18,12 @@ export async function compareOrder(
 
   try {
     const orderAffiliate = orderId.slice(0, 3)
-    const affiliatesIds = affiliateConfig.map(
-      ({ affiliateId }: { affiliateId: string }) => affiliateId
+    const affiliate = getAffiliateFromAffiliateId(
+      orderAffiliate,
+      affiliateConfig
     )
 
-    if (!affiliatesIds.includes(orderAffiliate)) {
+    if (!affiliate) {
       return
     }
 

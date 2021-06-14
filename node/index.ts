@@ -21,15 +21,16 @@ import {
   createOrder,
   errorHandler,
   getOrderRecord,
+  glovoCatalogUpdate,
+  glovoProductUpdate,
   saveOrderRecord,
   sendResponse,
   simulateOrder,
-  glovoProductUpdate,
   validateSettings,
   validateGlovoToken,
 } from './middlewares'
 
-const TIMEOUT_MS = 800
+const TIMEOUT_MS = 5000
 
 // Create a LRU memory cache for the Status client.
 // The @vtex/api HttpClient respects Cache-Control headers and uses the provided cache.
@@ -84,7 +85,10 @@ export default new Service<Clients, State, ParamsContext>({
   clients,
   routes: {
     updateProduct: method({
-      POST: [errorHandler, glovoProductUpdate, sendResponse],
+      POST: [glovoProductUpdate, sendResponse],
+    }),
+    updateCatalog: method({
+      GET: [glovoCatalogUpdate, sendResponse],
     }),
     createOrder: method({
       POST: [

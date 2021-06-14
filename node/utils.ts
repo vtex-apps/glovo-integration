@@ -56,7 +56,7 @@ export const createSimulationPayload = ({
   return [simulationPayload, queryString]
 }
 
-export const getAffilateFromStoreId = (
+export const getAffiliateFromStoreId = (
   storeId: string,
   affiliateConfig: AffiliateInfo[]
 ): AffiliateInfo | undefined =>
@@ -246,7 +246,6 @@ export const updateGlovoProduct = async (
     vtex: { logger },
   } = ctx
 
-  // Get app configuration
   const appConfig = await apps.getAppSettings(process.env.VTEX_APP_ID as string)
 
   if (!appConfig.glovoToken) {
@@ -273,7 +272,7 @@ export const updateGlovoProduct = async (
     return
   }
 
-  if (!glovoCatalogIds.includes({ skuId: IdSku })) {
+  if (!glovoCatalogIds.some((item) => item.skuId === IdSku)) {
     logger.info({
       message: `Product with sku ${IdSku} is not part of the Glovo Catalog`,
       catalogUpdate,
@@ -332,5 +331,99 @@ export const updateGlovoProduct = async (
     })
 
     return error
+  }
+}
+
+export const updateGlovoCatalog = async (ctx: Context) => {
+  const {
+    clients: { apps, glovo, checkout },
+    vtex: { logger },
+  } = ctx
+
+  const appConfig = await apps.getAppSettings(process.env.VTEX_APP_ID as string)
+
+  if (!appConfig.glovoToken) {
+    logger.warn({
+      message: 'Missing or invalid Glovo token. Please check app settings',
+    })
+
+    return
+  }
+
+  const { affiliateConfig } = appConfig
+
+  if (!affiliateConfig.length) {
+    logger.warn({
+      message: 'Missing or invalid affiliates information',
+    })
+
+    return
+  }
+
+  // Send bulk product update for each store
+  for (const store of affiliateConfig) {
+    const { affiliateId, salesChannel, glovoStoreId } = store
+
+    const glovoPayload: GlovoBulkUpdateProduct = {
+      products: [],
+    }
+
+    for (const product of glovoCatalogIds) {
+      const simulationItem = createSimulationItem({
+        id: product.skuId,
+        quantity: 1,
+      })
+
+      // eslint-disable-next-line no-await-in-loop
+      const simulation = await checkout.simulation(
+        ...createSimulationPayload({
+          items: [simulationItem],
+          affiliateId,
+          salesChannel,
+        })
+      )
+
+      if (simulation.items.length) {
+        const {
+          items: [item],
+        } = simulation
+
+        const { id, price, listPrice, unitMultiplier, availability } = item
+        const payloadProduct: GlovoPatchProduct = {
+          id,
+          price: (Math.max(price, listPrice) * unitMultiplier) / 100,
+          available: availability === 'available',
+        }
+
+        glovoPayload.products.push(payloadProduct)
+      } else {
+        const payloadProduct: GlovoPatchProduct = {
+          id: product.skuId,
+          available: false,
+        }
+
+        glovoPayload.products.push(payloadProduct)
+      }
+    }
+
+    try {
+      // eslint-disable-next-line no-await-in-loop
+      const glovoResponse = await glovo.bulkUpdateProducts(
+        ctx,
+        glovoPayload,
+        glovoStoreId
+      )
+
+      logger.info({
+        message: `Catalog for store ${glovoStoreId} has been updated`,
+        glovoResponse,
+        glovoPayload,
+      })
+    } catch (error) {
+      logger.error({
+        message: `Catalog for store ${glovoStoreId} could not be updated`,
+        data: error,
+      })
+    }
   }
 }

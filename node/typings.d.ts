@@ -183,7 +183,12 @@ interface GlovoUpdateProduct {
 
 interface GlovoPatchProduct {
   available: boolean
+  id?: string
   price?: number
+}
+
+interface GlovoBulkUpdateProduct {
+  products: GlovoPatchProduct[]
 }
 
 interface GlovoUpdatedProduct {
@@ -196,6 +201,7 @@ interface GlovoUpdateOrderStatus {
   glovoOrderId: string
   status: string
 }
+
 interface MarketplaceOrder {
   marketplaceOrderId: string
   marketplaceServicesEndpoint: string
@@ -409,7 +415,7 @@ interface ComparisonObject {
 }
 
 interface AppConfig {
-  glovoToken: strings
+  glovoToken: string
   affiliateConfig: AffiliateInfo[]
   clientProfileData: ClientProfileData
 }
