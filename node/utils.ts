@@ -8,11 +8,9 @@ import type {
 import {
   ACCEPTED,
   ESP,
-  GLOVO,
   HANDLING,
   HOME,
   INVOICED,
-  MENU,
   READY_FOR_PICKUP,
   RESIDENTIAL,
 } from './constants'
@@ -243,7 +241,7 @@ export const updateGlovoProduct = async (
   catalogUpdate: CatalogChange
 ) => {
   const {
-    clients: { apps, checkout, vbase },
+    clients: { apps, checkout, recordsManager },
     vtex: { logger },
   } = ctx
 
@@ -269,7 +267,7 @@ export const updateGlovoProduct = async (
     return
   }
 
-  const glovoMenu: GlovoMenu = await vbase.getJSON(GLOVO, MENU)
+  const glovoMenu = await recordsManager.getGlovoMenu()
 
   if (!glovoMenu[IdSku]) {
     logger.info({
@@ -282,10 +280,9 @@ export const updateGlovoProduct = async (
 
   for await (const store of affiliateConfig) {
     const { affiliateId, glovoStoreId, salesChannel, postalCode } = store
-    const productRecord: ProductRecord = await vbase.getJSON(
+    const productRecord = await recordsManager.getProductRecord(
       affiliateId,
-      IdSku,
-      true
+      IdSku
     )
 
     if (!productRecord) {
@@ -353,14 +350,10 @@ export const updateGlovoProduct = async (
       }
 
       // Update product record
-      vbase.saveJSON(affiliateId, IdSku, updatedProductRecord)
+      recordsManager.saveProductRecord(affiliateId, IdSku, updatedProductRecord)
 
       // Get Menu Updates Record
-      const menuUpdates: MenuUpdatesItem[] = await vbase.getJSON(
-        affiliateId,
-        MENU,
-        true
-      )
+      const menuUpdates = await recordsManager.getStoreMenuUpdates(affiliateId)
 
       if (!menuUpdates) {
         logger.warn({
@@ -389,7 +382,7 @@ export const updateGlovoProduct = async (
         })
       }
 
-      vbase.saveJSON(affiliateId, MENU, menuUpdates)
+      recordsManager.saveStoreMenuUpdates(affiliateId, menuUpdates)
 
       logger.info({
         message: `Product with sku ${IdSku} from store ${glovoStoreId} has been updated`,
@@ -410,7 +403,7 @@ export const updateGlovoProduct = async (
 
 export const updateGlovoMenuAll = async (ctx: Context) => {
   const {
-    clients: { apps, checkout, glovo, vbase },
+    clients: { apps, checkout, glovo, recordsManager },
     vtex: { logger },
   } = ctx
 
@@ -434,7 +427,7 @@ export const updateGlovoMenuAll = async (ctx: Context) => {
     return
   }
 
-  const glovoMenu: GlovoMenu = await vbase.getJSON(GLOVO, MENU)
+  const glovoMenu = await recordsManager.getGlovoMenu()
 
   // Send a complete bulk product update for each store
   for await (const store of affiliateConfig) {
@@ -504,7 +497,7 @@ export const updateGlovoMenuAll = async (ctx: Context) => {
 
 export const updateGlovoMenuPartial = async (ctx: Context) => {
   const {
-    clients: { apps, glovo, vbase },
+    clients: { apps, glovo, recordsManager },
     vtex: { logger },
   } = ctx
 
@@ -532,34 +525,34 @@ export const updateGlovoMenuPartial = async (ctx: Context) => {
   for await (const store of affiliateConfig) {
     const { affiliateId, glovoStoreId } = store
 
-    let menuUpdates: MenuUpdatesItem[] = await vbase.getJSON(affiliateId, MENU)
-    const currentUpdate: MenuUpdatesItem = menuUpdates[menuUpdates.length - 1]
-
-    const glovoPayload: GlovoBulkUpdateProduct = {
-      products: currentUpdate.items,
-    }
-
     try {
-      const glovoResponse: GlovoBulkUpdateResponse = await glovo.bulkUpdateProducts(
-        ctx,
-        glovoPayload,
-        glovoStoreId
-      )
+      const menuUpdates = await recordsManager.getStoreMenuUpdates(affiliateId)
+
+      const { 1: currentUpdate } = menuUpdates
+
+      const glovoPayload: GlovoBulkUpdateProduct = {
+        products: currentUpdate.items,
+      }
 
       const newUpdate: MenuUpdatesItem = {
-        requestId: ctx.headers.requestId,
         responseId: null,
-        createdAt: new Date().toString(),
+        createdAt: new Date().getTime(),
         storeId: affiliateId,
         glovoStoreId,
         items: [],
       }
 
-      currentUpdate.responseId = glovoResponse.transaction_id
-      menuUpdates.splice(-1, 1, currentUpdate)
-      menuUpdates = [...menuUpdates, newUpdate]
+      const glovoResponse = await glovo.bulkUpdateProducts(
+        ctx,
+        glovoPayload,
+        glovoStoreId
+      )
 
-      vbase.saveJSON(affiliateId, MENU, menuUpdates)
+      currentUpdate.responseId = glovoResponse.transaction_id
+      menuUpdates[0] = currentUpdate
+      menuUpdates[1] = newUpdate
+
+      recordsManager.saveStoreMenuUpdates(affiliateId, menuUpdates)
 
       logger.info({
         message: `Menu for store ${affiliateId} was updated`,

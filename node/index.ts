@@ -18,16 +18,19 @@ import {
 } from './events'
 import {
   authorizeOrder,
-  createGlovoMenuRecord,
   createOrder,
   errorHandler,
-  getJSON,
-  saveJSON,
+  getGlovoMenu,
   getOrderRecord,
+  getProductRecord,
+  getStoreMenuUpdates,
   glovoMenuUpdateAll,
   glovoMenuUpdatePartial,
   glovoProductUpdate,
+  saveGlovoMenu,
   saveOrderRecord,
+  saveProductRecord,
+  saveStoreMenuUpdates,
   sendResponse,
   simulateOrder,
   validateSettings,
@@ -102,15 +105,6 @@ export default new Service<Clients, State, ParamsContext>({
     cancelOrder: method({
       POST: [errorHandler, validateSettings, validateGlovoToken, cancelOrder],
     }),
-    getJSON: method({
-      GET: [errorHandler, validateSettings, getJSON],
-    }),
-    saveJSON: method({
-      POST: [errorHandler, validateSettings, saveJSON],
-    }),
-    getOrderRecord: method({
-      GET: [errorHandler, validateSettings, getOrderRecord],
-    }),
     updateProduct: method({
       POST: [glovoProductUpdate, sendResponse],
     }),
@@ -120,13 +114,29 @@ export default new Service<Clients, State, ParamsContext>({
     updateMenuPartial: method({
       POST: [glovoMenuUpdatePartial, sendResponse],
     }),
-    createGlovoMenuRecord: method({
-      POST: [
-        errorHandler,
-        validateSettings,
-        createGlovoMenuRecord,
-        sendResponse,
-      ],
+    saveGlovoMenu: method({
+      POST: [errorHandler, saveGlovoMenu],
+    }),
+    getGlovoMenu: method({
+      GET: [errorHandler, getGlovoMenu],
+    }),
+    saveStoreMenuUpdates: method({
+      POST: [errorHandler, saveStoreMenuUpdates],
+    }),
+    getStoreMenuUpdates: method({
+      GET: [errorHandler, getStoreMenuUpdates],
+    }),
+    saveProductRecord: method({
+      POST: [errorHandler, saveProductRecord],
+    }),
+    getProductRecord: method({
+      GET: [errorHandler, getProductRecord],
+    }),
+    saveOrderRecord: method({
+      POST: [errorHandler, saveOrderRecord],
+    }),
+    getOrderRecord: method({
+      GET: [errorHandler, getOrderRecord],
     }),
   },
   events: {

@@ -1,8 +1,6 @@
-import { ORDERS } from '../constants'
-
 export async function saveOrderRecord(ctx: Context) {
   const {
-    clients: { vbase },
+    clients: { recordsManager },
     state: { glovoOrder, vtexOrder },
   } = ctx
 
@@ -13,11 +11,11 @@ export async function saveOrderRecord(ctx: Context) {
     glovoOrder,
     invoiced: null,
     hasChanged: false,
-    createdAt: currentDate.toISOString(),
+    createdAt: currentDate.getTime(),
   }
 
   try {
-    await vbase.saveJSON(ORDERS, orderId, data)
+    await recordsManager.saveOrderRecord(orderId, data)
 
     ctx.status = 201
   } catch (error) {

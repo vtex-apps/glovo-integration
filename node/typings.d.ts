@@ -383,9 +383,9 @@ interface OrderRecord {
   glovoOrder: GlovoOrder
   invoiced: any | null
   hasChanged: boolean
-  createdAt?: string
+  createdAt?: number
   startHandlingAt?: string
-  invoicedAt?: string
+  invoicedAt?: number
 }
 
 interface GlovoModifyOrderPayload {
@@ -435,9 +435,8 @@ interface ProductRecord {
 }
 
 interface MenuUpdatesItem {
-  requestId: string
   responseId: string | null
-  createdAt: string
+  createdAt: number
   storeId: string
   glovoStoreId: string
   items: ProductRecord[]

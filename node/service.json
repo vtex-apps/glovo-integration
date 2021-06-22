@@ -14,33 +14,49 @@
       "path": "/_v/glovo/orders/delete",
       "public": true
     },
-    "getJSON": {
-      "path": "/_v/glovo/json/get",
-      "public": false
-    },
-    "saveJSON": {
-      "path": "/_v/glovo/json/save",
-      "public": false
-    },
-    "getOrderRecord": {
-      "path": "/_v/glovo/order-records/get",
-      "public": false
-    },
     "updateProduct": {
       "path": "/_v/glovo/products/update",
-      "public": true
-    },
-    "updateMenuPartial": {
-      "path": "/_v/glovo/menu/update-partial",
       "public": true
     },
     "updateMenuAll": {
       "path": "/_v/glovo/menu/update-all",
       "public": true
     },
-    "createGlovoMenuRecord": {
-      "path": "/_v/glovo/menu-record/create",
+    "updateMenuPartial": {
+      "path": "/_v/glovo/menu/update-partial",
       "public": true
+    },
+    "saveGlovoMenu": {
+      "path": "/_v/glovo/glovo-menu/save",
+      "public": false
+    },
+    "getGlovoMenu": {
+      "path": "/_v/glovo/glovo-menu/get",
+      "public": false
+    },
+    "saveStoreMenuUpdates": {
+      "path": "/_v/glovo/menu-updates/save",
+      "public": false
+    },
+    "getStoreMenuUpdates": {
+      "path": "/_v/glovo/menu-updates/get",
+      "public": false
+    },
+    "saveProductRecord": {
+      "path": "/_v/glovo/product-record/save",
+      "public": false
+    },
+    "getProductRecord": {
+      "path": "/_v/glovo/product-record/get",
+      "public": false
+    },
+    "saveOrderRecord": {
+      "path": "/_v/glovo/order-record/save",
+      "public": false
+    },
+    "getOrderRecord": {
+      "path": "/_v/glovo/order-record/get",
+      "public": false
     }
   },
   "events": {
