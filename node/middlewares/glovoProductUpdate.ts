@@ -22,7 +22,7 @@ export async function glovoProductUpdate(
     ctx.body = updatedProduct
   } catch (error) {
     logger.error({
-      message: `There was a problem updating ${catalogUpdate}`,
+      message: `There was a problem updating product with sku ${catalogUpdate.IdSku} on store with ID ${catalogUpdate.IdAffiliate}`,
       data: error,
     })
 
