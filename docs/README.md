@@ -40,15 +40,15 @@ curl --request POST \
      --url https://app.io.vtex.com/vtex.glovo-integration/v0/vtexspain/clerkiofeed/_v/glovo/glovo-menu/save \
      --header 'VtexIdClientAutCookie: {authToken}' \
      --data '
-        {
-            "productId": true,
-            "productId": true,
-            "productId": true,
+        [
+            "productId",
+            "productId",
+            "productId",
             .
             .
             .
-            "productId": true,
-        }
+            "productId",
+        ]
      '
 ```
 
