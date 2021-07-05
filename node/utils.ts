@@ -8,7 +8,6 @@ import type {
 
 import {
   ACCEPTED,
-  ESP,
   HANDLING,
   HOME,
   INVOICED,
@@ -61,7 +60,7 @@ const simulateItem = async (
   store: AffiliateInfo,
   checkout: Checkout
 ): Promise<{ price: number; available: boolean }> => {
-  const { affiliateId, salesChannel, postalCode } = store
+  const { affiliateId, salesChannel, postalCode, country } = store
   const simulationItem = createSimulationItem({ id: IdSku, quantity: 1 })
 
   const simulation = await checkout.simulation(
@@ -70,7 +69,7 @@ const simulateItem = async (
       affiliateId,
       salesChannel,
       postalCode,
-      country: 'ESP',
+      country,
     })
   )
 
@@ -256,7 +255,7 @@ export const createVtexOrderData = (
         postalCode,
         city: pickupPoints[0].address.city,
         state: pickupPoints[0].address.state,
-        country: ESP,
+        country: pickupPoints[0].address.country,
         street: pickupPoints[0].address.street,
         number: null,
         neighborhood: null,

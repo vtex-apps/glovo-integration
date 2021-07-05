@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 export const RESIDENTIAL = 'Residential'
 export const HOME = 'Home'
-export const ESP = 'ESP'
 
 /** VTEX Order status */
 export const READY_FOR_HANDLING = 'ready-for-handling'

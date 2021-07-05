@@ -24,6 +24,7 @@ interface AffiliateInfo {
   affiliateId: string
   salesChannel: string
   postalCode: string
+  country: string
   glovoStoreId: string
 }
 

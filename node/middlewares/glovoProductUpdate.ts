@@ -12,6 +12,9 @@ export async function glovoProductUpdate(
 
   const catalogUpdate: CatalogChange = await json(ctx.req)
 
+  // eslint-disable-next-line no-console
+  console.log('CatalogChange', catalogUpdate)
+
   // Send response to VTEX Notificator to avoid retries.
   await next()
 

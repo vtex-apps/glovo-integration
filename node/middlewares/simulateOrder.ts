@@ -35,7 +35,7 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
     )
   }
 
-  const { salesChannel, affiliateId, postalCode } = affiliateInfo
+  const { salesChannel, affiliateId, postalCode, country } = affiliateInfo
 
   try {
     const simulationItems = convertGlovoProductToItems(glovoOrder.products)
@@ -43,7 +43,7 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
       ...createSimulationPayload({
         items: simulationItems,
         postalCode,
-        country: 'ESP',
+        country,
         salesChannel,
         affiliateId,
       })
