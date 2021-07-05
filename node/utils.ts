@@ -3,6 +3,7 @@ import type {
   OrderFormItem,
   SimulationPayload,
   PayloadItem,
+  Checkout,
 } from '@vtex/clients'
 
 import {
@@ -53,6 +54,45 @@ export const createSimulationPayload = ({
   const queryString = `?affiliateId=${affiliateId}&sc=${salesChannel}`
 
   return [simulationPayload, queryString]
+}
+
+const simulateItem = async (
+  IdSku: string,
+  store: AffiliateInfo,
+  checkout: Checkout
+): Promise<{ price: number; available: boolean }> => {
+  const { affiliateId, salesChannel, postalCode } = store
+  const simulationItem = createSimulationItem({ id: IdSku, quantity: 1 })
+
+  const simulation = await checkout.simulation(
+    ...createSimulationPayload({
+      items: [simulationItem],
+      affiliateId,
+      salesChannel,
+      postalCode,
+      country: 'ESP',
+    })
+  )
+
+  const {
+    items: [item],
+  } = simulation
+
+  let itemInfo = {
+    price: 0,
+    available: false,
+  }
+
+  if (isSkuAvailable(item)) {
+    const { price, listPrice, unitMultiplier } = item
+
+    itemInfo = {
+      price: (Math.max(price, listPrice) * unitMultiplier) / 100,
+      available: true,
+    }
+  }
+
+  return itemInfo
 }
 
 export const getAffiliateFromStoreId = (
@@ -279,7 +319,7 @@ export const updateGlovoProduct = async (
   }
 
   for await (const store of affiliateConfig) {
-    const { affiliateId, glovoStoreId, salesChannel, postalCode } = store
+    const { affiliateId, glovoStoreId } = store
     const productRecord = await recordsManager.getProductRecord(
       affiliateId,
       IdSku
@@ -291,7 +331,20 @@ export const updateGlovoProduct = async (
         catalogUpdate,
       })
 
-      return
+      if (IsActive) {
+        const itemInfo = await simulateItem(IdSku, store, checkout)
+
+        const newProductRecord: ProductRecord = {
+          id: IdSku,
+          price: itemInfo.price,
+          available: itemInfo.available,
+        }
+
+        // Update product record
+        recordsManager.saveProductRecord(affiliateId, IdSku, newProductRecord)
+      }
+
+      continue
     }
 
     let glovoPayload: GlovoUpdateProduct = {
@@ -303,30 +356,12 @@ export const updateGlovoProduct = async (
 
     // Check if product is active
     if (IsActive) {
-      const simulationItem = createSimulationItem({ id: IdSku, quantity: 1 })
+      const itemInfo = await simulateItem(IdSku, store, checkout)
 
-      const simulation = await checkout.simulation(
-        ...createSimulationPayload({
-          items: [simulationItem],
-          affiliateId,
-          salesChannel,
-          postalCode,
-          country: 'ESP',
-        })
-      )
-
-      const {
-        items: [item],
-      } = simulation
-
-      if (isSkuAvailable(item)) {
-        const { price, listPrice, unitMultiplier } = item
-
-        glovoPayload = {
-          ...glovoPayload,
-          price: (Math.max(price, listPrice) * unitMultiplier) / 100,
-          available: true,
-        }
+      glovoPayload = {
+        ...glovoPayload,
+        price: itemInfo.price,
+        available: itemInfo.available,
       }
     }
 
@@ -364,14 +399,12 @@ export const updateGlovoProduct = async (
         return
       }
 
-      const currentUpdateItemsIds = menuUpdates[
-        menuUpdates.length - 1
-      ].items.map((item) => item.id)
+      const currentUpdateItemsIds = menuUpdates[1].items.map((item) => item.id)
 
       if (!currentUpdateItemsIds.includes(IdSku)) {
-        menuUpdates[menuUpdates.length - 1].items.push(updatedProductRecord)
+        menuUpdates[1].items.push(updatedProductRecord)
       } else {
-        menuUpdates[menuUpdates.length - 1].items.map((item) => {
+        menuUpdates[1].items.map((item) => {
           if (item.id === IdSku) {
             item.id = IdSku
             item.price = updatedProductRecord.price
