@@ -4,7 +4,7 @@ import { json } from 'co-body'
 import {
   convertGlovoProductToItems,
   createSimulationPayload,
-  getAffilateFromStoreId,
+  getAffiliateFromStoreId,
 } from '../utils'
 
 export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
@@ -18,7 +18,13 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
 
   ctx.state.glovoOrder = glovoOrder
 
-  const affiliateInfo = getAffilateFromStoreId(
+  // Log the order received from Glovo
+  logger.info({
+    message: `Received order ${glovoOrder.order_id} from store ${glovoOrder.store_id} from Glovo`,
+    glovoOrder,
+  })
+
+  const affiliateInfo = getAffiliateFromStoreId(
     glovoOrder.store_id,
     affiliateConfig
   ) as AffiliateInfo
@@ -29,7 +35,7 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
     )
   }
 
-  const { salesChannel, affiliateId, postalCode } = affiliateInfo
+  const { salesChannel, affiliateId, postalCode, country } = affiliateInfo
 
   try {
     const simulationItems = convertGlovoProductToItems(glovoOrder.products)
@@ -37,7 +43,7 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
       ...createSimulationPayload({
         items: simulationItems,
         postalCode,
-        country: 'ESP',
+        country,
         salesChannel,
         affiliateId,
       })
@@ -45,7 +51,7 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
 
     logger.info({
       message: `Simulation for order ${glovoOrder.order_id}`,
-      simulationResult: simulation,
+      simulation,
       glovoOrder,
     })
 

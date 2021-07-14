@@ -1,7 +1,7 @@
 {
   "name": "glovo-integration",
   "vendor": "vtex",
-  "version": "0.2.1-beta",
+  "version": "0.2.5",
   "title": "Glovo Integration",
   "description": "Glovo Integration",
   "mustUpdateAt": "2018-01-04",
@@ -41,14 +41,17 @@
       "name": "OMSViewer"
     },
     {
+      "name": "vbase-read-write"
+    },
+    {
+      "name": "ADMIN_DS"
+    },
+    {
       "name": "outbound-access",
       "attrs": {
         "host": "portal.vtexcommercestable.com.br",
         "path": "/api/*"
       }
-    },
-    {
-      "name": "vbase-read-write"
     }
   ],
   "settingsSchema": {
@@ -68,8 +71,8 @@
         "type": "boolean"
       },
       "affiliateConfig": {
-        "title": "Affiliate Settings",
-        "description": "Affiliate ID and Glovo Store ID",
+        "title": "Store Settings",
+        "description": "Store ID and Glovo Store ID",
         "type": "array",
         "items": {
           "type": "object",
@@ -77,29 +80,37 @@
             "affiliateId",
             "salesChannel",
             "postalCode",
+            "country",
             "glovoStoreId"
           ],
           "properties": {
             "affiliateId": {
-              "title": "Affiliate ID",
-              "description": "Three letters id generated when creating a new affiliate. Format 'YXZ'",
+              "title": "Store ID",
+              "description": "Three letters id might be paired with a created affiliateId (not mandatory)",
               "type": "string",
               "maxLength": 3,
               "minLength": 3
             },
             "salesChannel": {
               "title": "Sales Channel",
-              "description": "Sales Channel associated to the affiliate ID",
+              "description": "Sales Channel associated to the store ID",
               "type": "string"
             },
             "postalCode": {
               "title": "Pickup Point's Postal Code",
-              "description": "The postal code for the store that fulfils this affiliate",
+              "description": "The postal code for the store that fulfills the orders.",
               "type": "string"
+            },
+            "country": {
+              "title": "Store country",
+              "description": "The country for the store.",
+              "type": "string",
+              "enum": ["ESP"],
+              "enumNames": ["Spain"]
             },
             "glovoStoreId": {
               "title": "Glovo Store ID",
-              "description": "Glovo Store ID registered in Glovo for the configured Affiliate ID",
+              "description": "Glovo Store ID registered in Glovo for the configured Store ID",
               "type": "string"
             }
           }

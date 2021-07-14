@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { convertGlovoProductsToCompare } from '../utils'
-import { ORDERS } from '../constants'
+import {
+  convertGlovoProductsToCompare,
+  getAffiliateFromAffiliateId,
+} from '../utils'
 
 export async function compareOrder(
   ctx: StatusChangeContext,
@@ -8,24 +10,25 @@ export async function compareOrder(
 ) {
   const {
     body: { orderId },
-    clients: { glovo, orders, vbase },
+    clients: { glovo, orders, recordsManager },
     state: { affiliateConfig },
     vtex: { logger },
   } = ctx
 
   try {
     const orderAffiliate = orderId.slice(0, 3)
-    const affiliatesIds = affiliateConfig.map(
-      ({ affiliateId }: { affiliateId: string }) => affiliateId
+    const affiliate = getAffiliateFromAffiliateId(
+      orderAffiliate,
+      affiliateConfig
     )
 
-    if (!affiliatesIds.includes(orderAffiliate)) {
+    if (!affiliate) {
       return
     }
 
     // fetch order's information
     const invoicedOrder = await orders.getOrder(orderId)
-    const orderRecord = await vbase.getJSON<OrderRecord>(ORDERS, orderId, true)
+    const orderRecord = await recordsManager.getOrderRecord(orderId)
 
     if (!orderRecord) {
       logger.warn({
@@ -113,10 +116,10 @@ export async function compareOrder(
       ...orderRecord,
       invoiced: invoicedOrder,
       hasChanged,
-      invoicedAt: currentDate.toISOString(),
+      invoicedAt: currentDate.getTime(),
     }
 
-    await vbase.saveJSON(ORDERS, orderId, data)
+    await recordsManager.saveOrderRecord(orderId, data)
 
     await next()
   } catch (error) {

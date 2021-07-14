@@ -1,13 +1,11 @@
-import { ORDERS } from '../constants'
-
 export async function getOrderRecord(ctx: Context) {
   const {
-    clients: { vbase },
+    clients: { recordsManager },
     query: { orderId },
   } = ctx
 
   try {
-    const orderRecord = await vbase.getJSON<OrderRecord>(ORDERS, orderId)
+    const orderRecord = await recordsManager.getOrderRecord(orderId)
 
     ctx.body = orderRecord
   } catch (error) {

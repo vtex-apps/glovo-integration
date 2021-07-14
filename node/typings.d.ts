@@ -24,6 +24,7 @@ interface AffiliateInfo {
   affiliateId: string
   salesChannel: string
   postalCode: string
+  country: string
   glovoStoreId: string
 }
 
@@ -175,15 +176,24 @@ interface GlovoOrderCancellation {
 }
 
 interface GlovoUpdateProduct {
-  price?: number
-  available: boolean
   skuId: string
+  price: number
+  available: boolean
   glovoStoreId: string
 }
 
 interface GlovoPatchProduct {
   available: boolean
+  id?: string
   price?: number
+}
+
+interface GlovoBulkUpdateProduct {
+  products: GlovoPatchProduct[]
+}
+
+interface GlovoBulkUpdateResponse {
+  transaction_id: string
 }
 
 interface GlovoUpdatedProduct {
@@ -196,6 +206,7 @@ interface GlovoUpdateOrderStatus {
   glovoOrderId: string
   status: string
 }
+
 interface MarketplaceOrder {
   marketplaceOrderId: string
   marketplaceServicesEndpoint: string
@@ -373,9 +384,9 @@ interface OrderRecord {
   glovoOrder: GlovoOrder
   invoiced: any | null
   hasChanged: boolean
-  createdAt?: string
+  createdAt?: number
   startHandlingAt?: string
-  invoicedAt?: string
+  invoicedAt?: number
 }
 
 interface GlovoModifyOrderPayload {
@@ -409,7 +420,25 @@ interface ComparisonObject {
 }
 
 interface AppConfig {
-  glovoToken: strings
+  glovoToken: string
   affiliateConfig: AffiliateInfo[]
   clientProfileData: ClientProfileData
+}
+
+interface GlovoMenu {
+  [key: string]: boolean
+}
+
+interface ProductRecord {
+  id: string
+  price: number
+  available: boolean
+}
+
+interface MenuUpdatesItem {
+  responseId: string | null
+  createdAt: number
+  storeId: string
+  glovoStoreId: string
+  items: ProductRecord[]
 }

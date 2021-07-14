@@ -27,10 +27,7 @@ export default class Glovo extends ExternalClient {
       ctx
     )
 
-    const enviroment = production ? 'PRODUCTION' : 'STAGING'
-    const {
-      vtex: { logger },
-    } = ctx
+    const environment = production ? 'PRODUCTION' : 'STAGING'
 
     const payload: GlovoPatchProduct = {
       available,
@@ -38,13 +35,34 @@ export default class Glovo extends ExternalClient {
 
     if (price) payload.price = price
 
-    logger.info({
-      message: `Sending product ${skuId} update to Glovo for ${glovoStoreId}`,
-    })
-
     return this.http.patch(
-      `${BASE_URL[enviroment]}/webhook/stores/${glovoStoreId}/products/${skuId}`,
+      `${BASE_URL[environment]}/webhook/stores/${glovoStoreId}/products/${skuId}`,
       payload,
+      {
+        headers: {
+          Authorization: glovoToken,
+        },
+      }
+    )
+  }
+
+  public bulkUpdateProducts = async (
+    ctx: Context,
+    data: GlovoBulkUpdateProduct,
+    glovoStoreId: string
+  ) => {
+    const {
+      glovoToken,
+      production,
+    }: { glovoToken: string; production: boolean } = await Glovo.getAppSettings(
+      ctx
+    )
+
+    const environment = production ? 'PRODUCTION' : 'STAGING'
+
+    return this.http.post<GlovoBulkUpdateResponse>(
+      `${BASE_URL[environment]}/webhook/stores/${glovoStoreId}/menu/updates`,
+      data,
       {
         headers: {
           Authorization: glovoToken,
@@ -65,14 +83,14 @@ export default class Glovo extends ExternalClient {
       ctx
     )
 
-    const enviroment = production ? 'PRODUCTION' : 'STAGING'
+    const environment = production ? 'PRODUCTION' : 'STAGING'
 
     const payload: { status: string } = {
       status,
     }
 
     return this.http.put(
-      `${BASE_URL[enviroment]}/webhook/stores/${glovoStoreId}/orders/${glovoOrderId}/status`,
+      `${BASE_URL[environment]}/webhook/stores/${glovoStoreId}/orders/${glovoOrderId}/status`,
       payload,
       {
         headers: {
@@ -90,7 +108,7 @@ export default class Glovo extends ExternalClient {
       ctx
     )
 
-    const enviroment = production ? 'PRODUCTION' : 'STAGING'
+    const environment = production ? 'PRODUCTION' : 'STAGING'
 
     const {
       storeId,
@@ -107,7 +125,7 @@ export default class Glovo extends ExternalClient {
     }
 
     return this.http.post(
-      `${BASE_URL[enviroment]}/webhook/stores/${storeId}/orders/${glovoOrderId}/replace_products`,
+      `${BASE_URL[environment]}/webhook/stores/${storeId}/orders/${glovoOrderId}/replace_products`,
       payload,
       {
         headers: {

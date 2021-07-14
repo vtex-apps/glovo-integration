@@ -20,16 +20,24 @@ import {
   authorizeOrder,
   createOrder,
   errorHandler,
+  getGlovoMenu,
   getOrderRecord,
+  getProductRecord,
+  getStoreMenuUpdates,
+  glovoMenuUpdateAll,
+  glovoMenuUpdatePartial,
+  glovoProductUpdate,
+  saveGlovoMenu,
   saveOrderRecord,
+  saveProductRecord,
+  saveStoreMenuUpdates,
   sendResponse,
   simulateOrder,
-  updateGlovoCatalog,
   validateSettings,
   validateGlovoToken,
 } from './middlewares'
 
-const TIMEOUT_MS = 800
+const TIMEOUT_MS = 5000
 
 // Create a LRU memory cache for the Status client.
 // The @vtex/api HttpClient respects Cache-Control headers and uses the provided cache.
@@ -83,9 +91,6 @@ declare global {
 export default new Service<Clients, State, ParamsContext>({
   clients,
   routes: {
-    updateProduct: method({
-      POST: [updateGlovoCatalog, sendResponse],
-    }),
     createOrder: method({
       POST: [
         errorHandler,
@@ -100,8 +105,38 @@ export default new Service<Clients, State, ParamsContext>({
     cancelOrder: method({
       POST: [errorHandler, validateSettings, validateGlovoToken, cancelOrder],
     }),
+    updateProduct: method({
+      POST: [glovoProductUpdate, sendResponse],
+    }),
+    updateMenuAll: method({
+      POST: [glovoMenuUpdateAll, sendResponse],
+    }),
+    updateMenuPartial: method({
+      POST: [glovoMenuUpdatePartial, sendResponse],
+    }),
+    saveGlovoMenu: method({
+      POST: [errorHandler, saveGlovoMenu],
+    }),
+    getGlovoMenu: method({
+      GET: [errorHandler, getGlovoMenu],
+    }),
+    saveStoreMenuUpdates: method({
+      POST: [errorHandler, saveStoreMenuUpdates],
+    }),
+    getStoreMenuUpdates: method({
+      GET: [errorHandler, getStoreMenuUpdates],
+    }),
+    saveProductRecord: method({
+      POST: [errorHandler, saveProductRecord],
+    }),
+    getProductRecord: method({
+      GET: [errorHandler, getProductRecord],
+    }),
+    saveOrderRecord: method({
+      POST: [errorHandler, saveOrderRecord],
+    }),
     getOrderRecord: method({
-      GET: [errorHandler, validateSettings, getOrderRecord],
+      GET: [errorHandler, getOrderRecord],
     }),
   },
   events: {
