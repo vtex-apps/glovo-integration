@@ -16,12 +16,12 @@ interface CreateSimulationArgs {
   items: PayloadItem[]
   postalCode?: string
   country?: string
-  affiliateId: string
+  storeId: string
   salesChannel: string
 }
 
-interface AffiliateInfo {
-  affiliateId: string
+interface StoreInfo {
+  storeId: string
   salesChannel: string
   postalCode: string
   country: string
@@ -421,7 +421,7 @@ interface ComparisonObject {
 
 interface AppConfig {
   glovoToken: string
-  affiliateConfig: AffiliateInfo[]
+  storesConfig: StoreInfo[]
   clientProfileData: ClientProfileData
 }
 
@@ -433,6 +433,11 @@ interface ProductRecord {
   id: string
   price: number
   available: boolean
+}
+
+interface StoreMenuUpdates {
+  current: MenuUpdatesItem
+  previous?: MenuUpdatesItem
 }
 
 interface MenuUpdatesItem {

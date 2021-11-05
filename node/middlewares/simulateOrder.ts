@@ -4,12 +4,12 @@ import { json } from 'co-body'
 import {
   convertGlovoProductToItems,
   createSimulationPayload,
-  getAffiliateFromStoreId,
+  getStoreInfoFormGlovoStoreId,
 } from '../utils'
 
 export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
   const {
-    state: { affiliateConfig },
+    state: { storesConfig },
     vtex: { logger },
     clients: { checkout },
   } = ctx
@@ -24,18 +24,18 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
     glovoOrder,
   })
 
-  const affiliateInfo = getAffiliateFromStoreId(
+  const storeInfo = getStoreInfoFormGlovoStoreId(
     glovoOrder.store_id,
-    affiliateConfig
-  ) as AffiliateInfo
+    storesConfig
+  ) as StoreInfo
 
-  if (!affiliateInfo) {
+  if (!storeInfo) {
     throw new UserInputError(
-      `Order not handled. Missing or invalid affiliate with Glovo Store Id ${glovoOrder.store_id}`
+      `Order not handled. Missing or invalid store with Glovo Store Id ${glovoOrder.store_id}`
     )
   }
 
-  const { salesChannel, affiliateId, postalCode, country } = affiliateInfo
+  const { salesChannel, storeId, postalCode, country } = storeInfo
 
   try {
     const simulationItems = convertGlovoProductToItems(glovoOrder.products)
@@ -45,7 +45,7 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
         postalCode,
         country,
         salesChannel,
-        affiliateId,
+        storeId,
       })
     )
 
@@ -56,7 +56,7 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
     })
 
     ctx.state.orderSimulation = simulation
-    ctx.state.affiliateInfo = affiliateInfo
+    ctx.state.storeInfo = storeInfo
 
     await next()
   } catch (error) {

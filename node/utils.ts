@@ -41,7 +41,7 @@ export const createSimulationPayload = ({
   items,
   postalCode,
   country,
-  affiliateId,
+  storeId,
   salesChannel,
 }: CreateSimulationArgs): [SimulationPayload, string] => {
   const simulationPayload = {
@@ -50,23 +50,23 @@ export const createSimulationPayload = ({
     country,
   }
 
-  const queryString = `?affiliateId=${affiliateId}&sc=${salesChannel}`
+  const queryString = `?storeId=${storeId}&sc=${salesChannel}`
 
   return [simulationPayload, queryString]
 }
 
 const simulateItem = async (
   IdSku: string,
-  store: AffiliateInfo,
+  store: StoreInfo,
   checkout: Checkout
 ): Promise<{ price: number; available: boolean }> => {
-  const { affiliateId, salesChannel, postalCode, country } = store
+  const { storeId, salesChannel, postalCode, country } = store
   const simulationItem = createSimulationItem({ id: IdSku, quantity: 1 })
 
   const simulation = await checkout.simulation(
     ...createSimulationPayload({
       items: [simulationItem],
-      affiliateId,
+      storeId,
       salesChannel,
       postalCode,
       country,
@@ -94,17 +94,16 @@ const simulateItem = async (
   return itemInfo
 }
 
-export const getAffiliateFromStoreId = (
-  storeId: string,
-  affiliateConfig: AffiliateInfo[]
-): AffiliateInfo | undefined =>
-  affiliateConfig.find(({ glovoStoreId }) => glovoStoreId === storeId)
-
-export const getAffiliateFromAffiliateId = (
+export const getStoreInfoFormGlovoStoreId = (
   id: string,
-  affiliateConfig: AffiliateInfo[]
-): AffiliateInfo | undefined =>
-  affiliateConfig.find(({ affiliateId }) => affiliateId === id)
+  storesConfig: StoreInfo[]
+): StoreInfo | undefined =>
+  storesConfig.find(({ glovoStoreId }) => glovoStoreId === id)
+
+export const getStoreInfoFromStoreId = (
+  id: string,
+  storesConfig: StoreInfo[]
+): StoreInfo | undefined => storesConfig.find(({ storeId }) => storeId === id)
 
 export const convertGlovoProductToItems = (
   glovoProducts: GlovoProduct[] = []
@@ -294,10 +293,10 @@ export const updateGlovoProduct = async (
     return
   }
 
-  const { affiliateConfig }: { affiliateConfig: AffiliateInfo[] } = appConfig
+  const { storesConfig }: { storesConfig: StoreInfo[] } = appConfig
   const { IdSku, IsActive } = catalogUpdate
 
-  if (!affiliateConfig) {
+  if (!storesConfig) {
     logger.warn({
       message: 'Missing or invalid store information',
       catalogUpdate,
@@ -317,12 +316,10 @@ export const updateGlovoProduct = async (
     return
   }
 
-  for await (const store of affiliateConfig) {
-    const { affiliateId, glovoStoreId } = store
-    const productRecord = await recordsManager.getProductRecord(
-      affiliateId,
-      IdSku
-    )
+  for await (const store of storesConfig) {
+    const { storeId, glovoStoreId } = store
+    let newProduct = false
+    let productRecord = await recordsManager.getProductRecord(storeId, IdSku)
 
     if (!productRecord) {
       logger.warn({
@@ -330,41 +327,42 @@ export const updateGlovoProduct = async (
         catalogUpdate,
       })
 
-      if (IsActive) {
-        const itemInfo = await simulateItem(IdSku, store, checkout)
-
-        const newProductRecord: ProductRecord = {
-          id: IdSku,
-          price: itemInfo.price,
-          available: itemInfo.available,
-        }
-
-        // Update product record
-        recordsManager.saveProductRecord(affiliateId, IdSku, newProductRecord)
+      if (!IsActive) {
+        continue
       }
 
-      continue
+      newProduct = true
+
+      const { price, available } = await simulateItem(IdSku, store, checkout)
+
+      const newProductRecord: ProductRecord = {
+        id: IdSku,
+        price,
+        available,
+      }
+
+      productRecord = newProductRecord
     }
 
     let glovoPayload: GlovoUpdateProduct = {
-      glovoStoreId,
       skuId: IdSku,
       price: productRecord.price,
       available: false,
+      glovoStoreId,
     }
 
-    // Check if product is active
     if (IsActive) {
-      const itemInfo = await simulateItem(IdSku, store, checkout)
+      const { price, available } = await simulateItem(IdSku, store, checkout)
 
       glovoPayload = {
         ...glovoPayload,
-        price: itemInfo.price,
-        available: itemInfo.available,
+        price,
+        available,
       }
     }
 
     if (
+      !newProduct &&
       productRecord.price === glovoPayload.price &&
       productRecord.available === glovoPayload.available
     ) {
@@ -383,27 +381,31 @@ export const updateGlovoProduct = async (
         available: glovoPayload.available,
       }
 
-      // Update product record
-      recordsManager.saveProductRecord(affiliateId, IdSku, updatedProductRecord)
+      recordsManager.saveProductRecord(storeId, IdSku, updatedProductRecord)
 
-      // Get Menu Updates Record
-      const menuUpdates = await recordsManager.getStoreMenuUpdates(affiliateId)
+      let storeMenuUpdates = await recordsManager.getStoreMenuUpdates(storeId)
 
-      if (!menuUpdates) {
-        logger.warn({
-          message: `Unable to get Menu Updates record`,
-          data: glovoPayload,
-        })
-
-        return
+      if (!storeMenuUpdates) {
+        // If the Store Menu Updates Record does not exist already, it is created.
+        storeMenuUpdates = {
+          current: {
+            responseId: null,
+            createdAt: Date.now(),
+            storeId,
+            glovoStoreId,
+            items: [],
+          },
+        }
       }
 
-      const currentUpdateItemsIds = menuUpdates[1].items.map((item) => item.id)
+      const currentUpdateItemsIds = storeMenuUpdates.current.items.map(
+        (item) => item.id
+      )
 
       if (!currentUpdateItemsIds.includes(IdSku)) {
-        menuUpdates[1].items.push(updatedProductRecord)
+        storeMenuUpdates.current.items.push(updatedProductRecord)
       } else {
-        menuUpdates[1].items.map((item) => {
+        storeMenuUpdates.current.items.map((item) => {
           if (item.id === IdSku) {
             item.id = IdSku
             item.price = updatedProductRecord.price
@@ -414,7 +416,12 @@ export const updateGlovoProduct = async (
         })
       }
 
-      recordsManager.saveStoreMenuUpdates(affiliateId, menuUpdates)
+      recordsManager.saveStoreMenuUpdates(storeId, storeMenuUpdates)
+
+      logger.info({
+        message: `Created new Menu Updates record for store ${storeId}`,
+        data: storeMenuUpdates,
+      })
 
       logger.info({
         message: `Product with sku ${IdSku} from store ${glovoStoreId} has been updated`,
@@ -449,9 +456,9 @@ export const updateGlovoMenuAll = async (ctx: Context) => {
     return
   }
 
-  const { affiliateConfig }: { affiliateConfig: AffiliateInfo[] } = appConfig
+  const { storesConfig }: { storesConfig: StoreInfo[] } = appConfig
 
-  if (!affiliateConfig.length) {
+  if (!storesConfig.length) {
     logger.warn({
       message: 'Missing or invalid stores information',
     })
@@ -462,8 +469,8 @@ export const updateGlovoMenuAll = async (ctx: Context) => {
   const glovoMenu = await recordsManager.getGlovoMenu()
 
   // Send a complete bulk product update for each store
-  for await (const store of affiliateConfig) {
-    const { affiliateId, salesChannel, glovoStoreId } = store
+  for await (const store of storesConfig) {
+    const { storeId, salesChannel, glovoStoreId } = store
 
     const glovoPayload: GlovoBulkUpdateProduct = {
       products: [],
@@ -478,7 +485,7 @@ export const updateGlovoMenuAll = async (ctx: Context) => {
       const simulation = await checkout.simulation(
         ...createSimulationPayload({
           items: [simulationItem],
-          affiliateId,
+          storeId,
           salesChannel,
         })
       )
@@ -543,9 +550,9 @@ export const updateGlovoMenuPartial = async (ctx: Context) => {
     return
   }
 
-  const { affiliateConfig }: { affiliateConfig: AffiliateInfo[] } = appConfig
+  const { storesConfig }: { storesConfig: StoreInfo[] } = appConfig
 
-  if (!affiliateConfig.length) {
+  if (!storesConfig.length) {
     logger.warn({
       message: 'Missing or invalid stores information',
     })
@@ -554,13 +561,13 @@ export const updateGlovoMenuPartial = async (ctx: Context) => {
   }
 
   // Send a partial bulk product update for each store
-  for await (const store of affiliateConfig) {
-    const { affiliateId, glovoStoreId } = store
+  for await (const store of storesConfig) {
+    const { storeId, glovoStoreId } = store
 
     try {
-      const menuUpdates = await recordsManager.getStoreMenuUpdates(affiliateId)
+      const menuUpdates = await recordsManager.getStoreMenuUpdates(storeId)
 
-      const { 1: currentUpdate } = menuUpdates
+      const { current: currentUpdate } = menuUpdates
 
       const glovoPayload: GlovoBulkUpdateProduct = {
         products: currentUpdate.items,
@@ -569,7 +576,7 @@ export const updateGlovoMenuPartial = async (ctx: Context) => {
       const newUpdate: MenuUpdatesItem = {
         responseId: null,
         createdAt: new Date().getTime(),
-        storeId: affiliateId,
+        storeId,
         glovoStoreId,
         items: [],
       }
@@ -581,13 +588,13 @@ export const updateGlovoMenuPartial = async (ctx: Context) => {
       )
 
       currentUpdate.responseId = glovoResponse.transaction_id
-      menuUpdates[0] = currentUpdate
-      menuUpdates[1] = newUpdate
+      menuUpdates.previous = currentUpdate
+      menuUpdates.current = newUpdate
 
-      recordsManager.saveStoreMenuUpdates(affiliateId, menuUpdates)
+      recordsManager.saveStoreMenuUpdates(storeId, menuUpdates)
 
       logger.info({
-        message: `Menu for store ${affiliateId} was updated`,
+        message: `Menu for store ${storeId} was updated`,
         data: menuUpdates,
       })
     } catch (error) {

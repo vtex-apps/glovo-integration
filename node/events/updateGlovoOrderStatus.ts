@@ -1,25 +1,25 @@
-import { getAffiliateFromAffiliateId, setGlovoStatus } from '../utils'
+import { getStoreInfoFromStoreId, setGlovoStatus } from '../utils'
 
 export async function updateGlovoOrderStatus(ctx: StatusChangeContext) {
   const {
     body: { orderId, currentState },
     clients: { glovo },
-    state: { affiliateConfig },
+    state: { storesConfig },
     vtex: { logger },
   } = ctx
 
   /**
-   * Check if the order comes from Glovo and remove the affiliateId (i.e. 'TST') from the VTEX orderId to get the glovoOrderId.
+   * Check if the order comes from Glovo and remove the storeId (i.e. 'TST') from the VTEX orderId to get the glovoOrderId.
    */
-  const orderAffiliate = orderId.slice(0, 3)
-  const affiliate = getAffiliateFromAffiliateId(orderAffiliate, affiliateConfig)
+  const storeId = orderId.slice(0, 3)
+  const storeInfo = getStoreInfoFromStoreId(storeId, storesConfig)
 
-  if (!affiliate) {
+  if (!storeInfo) {
     return
   }
 
   const glovoOrderId = orderId.split('-').slice(1).join(' ')
-  const { glovoStoreId } = affiliate
+  const { glovoStoreId } = storeInfo
   const status = setGlovoStatus(currentState)
 
   const glovoPayload: GlovoUpdateOrderStatus = {

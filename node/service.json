@@ -26,36 +26,8 @@
       "path": "/_v/glovo/menu/update-partial",
       "public": true
     },
-    "saveGlovoMenu": {
-      "path": "/_v/glovo/glovo-menu/save",
-      "public": false
-    },
-    "getGlovoMenu": {
-      "path": "/_v/glovo/glovo-menu/get",
-      "public": false
-    },
-    "saveStoreMenuUpdates": {
-      "path": "/_v/glovo/menu-updates/save",
-      "public": false
-    },
-    "getStoreMenuUpdates": {
-      "path": "/_v/glovo/menu-updates/get",
-      "public": false
-    },
-    "saveProductRecord": {
-      "path": "/_v/glovo/product-record/save",
-      "public": false
-    },
-    "getProductRecord": {
-      "path": "/_v/glovo/product-record/get",
-      "public": false
-    },
-    "saveOrderRecord": {
-      "path": "/_v/glovo/order-record/save",
-      "public": false
-    },
-    "getOrderRecord": {
-      "path": "/_v/glovo/order-record/get",
+    "glovoMenu": {
+      "path": "/_v/glovo/glovo-menu",
       "public": false
     }
   },
