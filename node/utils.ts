@@ -338,10 +338,7 @@ export const updateGlovoProduct = async (
       const newProductRecord: ProductRecord = {
         id: IdSku,
         available,
-      }
-
-      if (available) {
-        newProductRecord.price = price
+        price,
       }
 
       productRecord = newProductRecord
@@ -349,17 +346,20 @@ export const updateGlovoProduct = async (
 
     let glovoPayload: GlovoUpdateProduct = {
       skuId: IdSku,
-      available: false,
       glovoStoreId,
     }
 
     if (IsActive) {
       const { price, available } = await simulateItem(IdSku, store, checkout)
 
-      glovoPayload = { ...glovoPayload, available }
-
-      if (available) {
-        glovoPayload.price = price
+      if (price) {
+        glovoPayload = {
+          ...glovoPayload,
+          price,
+          available,
+        }
+      } else {
+        glovoPayload.available = false
       }
     }
 
@@ -398,6 +398,11 @@ export const updateGlovoProduct = async (
             items: [],
           },
         }
+
+        logger.info({
+          message: `Created new Menu Updates record for store ${storeId}`,
+          data: storeMenuUpdates,
+        })
       }
 
       const currentUpdateItemsIds = storeMenuUpdates.current.items.map(
@@ -419,11 +424,6 @@ export const updateGlovoProduct = async (
       }
 
       recordsManager.saveStoreMenuUpdates(storeId, storeMenuUpdates)
-
-      logger.info({
-        message: `Created new Menu Updates record for store ${storeId}`,
-        data: storeMenuUpdates,
-      })
 
       logger.info({
         message: `Product with sku ${IdSku} from store ${glovoStoreId} has been updated`,
