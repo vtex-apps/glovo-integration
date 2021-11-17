@@ -177,7 +177,7 @@ interface GlovoOrderCancellation {
 
 interface GlovoUpdateProduct {
   skuId: string
-  price: number
+  price?: number
   available: boolean
   glovoStoreId: string
 }
@@ -431,7 +431,7 @@ interface GlovoMenu {
 
 interface ProductRecord {
   id: string
-  price: number
+  price?: number
   available: boolean
 }
 

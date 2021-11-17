@@ -337,8 +337,11 @@ export const updateGlovoProduct = async (
 
       const newProductRecord: ProductRecord = {
         id: IdSku,
-        price,
         available,
+      }
+
+      if (available) {
+        newProductRecord.price = price
       }
 
       productRecord = newProductRecord
@@ -346,7 +349,6 @@ export const updateGlovoProduct = async (
 
     let glovoPayload: GlovoUpdateProduct = {
       skuId: IdSku,
-      price: productRecord.price,
       available: false,
       glovoStoreId,
     }
@@ -354,10 +356,10 @@ export const updateGlovoProduct = async (
     if (IsActive) {
       const { price, available } = await simulateItem(IdSku, store, checkout)
 
-      glovoPayload = {
-        ...glovoPayload,
-        price,
-        available,
+      glovoPayload = { ...glovoPayload, available }
+
+      if (available) {
+        glovoPayload.price = price
       }
     }
 
