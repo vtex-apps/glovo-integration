@@ -19,7 +19,7 @@ export default class Orders extends JanusClient {
     this.http.post<VTEXOrder[]>(`/api/fulfillment/pvt/orders`, [data], {
       params: {
         sc,
-        storeId,
+        affiliateId: storeId,
       },
     })
 
