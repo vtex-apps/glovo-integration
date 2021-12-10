@@ -60,6 +60,12 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
 
     await next()
   } catch (error) {
+    logger.error({
+      message: `There was a problem with the simulation for order ${glovoOrder.order_id}`,
+      order: glovoOrder,
+      error,
+    })
+
     throw new Error(error)
   }
 }
