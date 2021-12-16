@@ -39,15 +39,20 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
 
   try {
     const simulationItems = convertGlovoProductToItems(glovoOrder.products)
-    const simulation = await checkout.simulation(
-      ...createSimulationPayload({
-        items: simulationItems,
-        postalCode,
-        country,
-        salesChannel,
-        affiliateId,
-      })
-    )
+    const simulationPayload = createSimulationPayload({
+      items: simulationItems,
+      postalCode,
+      country,
+      salesChannel,
+      affiliateId,
+    })
+
+    logger.info({
+      message: `Simulation payload for order ${glovoOrder.order_id}`,
+      simulationPayload,
+    })
+
+    const simulation = await checkout.simulation(...simulationPayload)
 
     logger.info({
       message: `Simulation for order ${glovoOrder.order_id}`,

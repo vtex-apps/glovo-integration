@@ -62,16 +62,15 @@ const simulateItem = async (
 ): Promise<{ price: number; available: boolean }> => {
   const { affiliateId, salesChannel, postalCode, country } = store
   const simulationItem = createSimulationItem({ id: IdSku, quantity: 1 })
+  const simulationPayload = createSimulationPayload({
+    items: [simulationItem],
+    affiliateId,
+    salesChannel,
+    postalCode,
+    country,
+  })
 
-  const simulation = await checkout.simulation(
-    ...createSimulationPayload({
-      items: [simulationItem],
-      affiliateId,
-      salesChannel,
-      postalCode,
-      country,
-    })
-  )
+  const simulation = await checkout.simulation(...simulationPayload)
 
   const {
     items: [item],
@@ -230,6 +229,7 @@ export const createVtexOrderData = (
   return {
     marketplaceOrderId: order_id,
     marketplaceServicesEndpoint: 'https://api.glovoapp.com/',
+    isCreatedAsync: true,
     marketplacePaymentValue: estimated_total_price,
     items: updatedItems,
     clientProfileData: {
