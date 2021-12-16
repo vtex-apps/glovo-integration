@@ -2,11 +2,11 @@ import { createVtexOrderData } from '../utils'
 
 export async function createOrder(ctx: Context, next: () => Promise<void>) {
   const {
-    state: { glovoOrder, orderSimulation, affiliateInfo, clientProfileData },
+    state: { glovoOrder, orderSimulation, storeInfo, clientProfileData },
     clients: { orders },
   } = ctx
 
-  const { salesChannel, affiliateId } = affiliateInfo
+  const { salesChannel, storeId } = storeInfo
 
   try {
     const vtexOrderData = createVtexOrderData(
@@ -18,7 +18,7 @@ export async function createOrder(ctx: Context, next: () => Promise<void>) {
     const vtexOrder = await orders.createOrder(
       vtexOrderData,
       salesChannel,
-      affiliateId
+      storeId
     )
 
     ctx.state.vtexOrder = vtexOrder

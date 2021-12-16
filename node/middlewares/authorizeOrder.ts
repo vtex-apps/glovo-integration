@@ -1,12 +1,12 @@
 export async function authorizeOrder(ctx: Context, next: () => Promise<void>) {
   const {
-    state: { vtexOrder, affiliateInfo },
+    state: { vtexOrder, storeInfo },
     clients: { orders },
     vtex: { logger },
   } = ctx
 
   const [{ marketplaceOrderId, orderId }] = vtexOrder
-  const { salesChannel, affiliateId } = affiliateInfo
+  const { salesChannel, storeId } = storeInfo
 
   const payload = {
     marketplaceOrderId,
@@ -17,7 +17,7 @@ export async function authorizeOrder(ctx: Context, next: () => Promise<void>) {
       payload,
       orderId,
       salesChannel,
-      affiliateId
+      storeId
     )
 
     logger.info({

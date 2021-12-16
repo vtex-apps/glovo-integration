@@ -1,7 +1,7 @@
 {
   "name": "glovo-integration",
   "vendor": "vtex",
-  "version": "1.0.2",
+  "version": "2.0.5",
   "title": "Glovo Integration",
   "description": "Glovo Integration",
   "mustUpdateAt": "2018-01-04",
@@ -70,21 +70,21 @@
         "description": "Toggle between development and production environment",
         "type": "boolean"
       },
-      "affiliateConfig": {
+      "storesConfig": {
         "title": "Store Settings",
         "description": "Store ID and Glovo Store ID",
         "type": "array",
         "items": {
           "type": "object",
           "required": [
-            "affiliateId",
+            "storeId",
             "salesChannel",
             "postalCode",
             "country",
             "glovoStoreId"
           ],
           "properties": {
-            "affiliateId": {
+            "storeId": {
               "title": "Store ID",
               "description": "Three letters id might be paired with a created affiliateId (not mandatory)",
               "type": "string",

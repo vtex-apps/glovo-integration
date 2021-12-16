@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
   convertGlovoProductsToCompare,
-  getAffiliateFromAffiliateId,
+  getStoreInfoFromStoreId,
 } from '../utils'
 
 export async function compareOrder(
@@ -11,18 +11,15 @@ export async function compareOrder(
   const {
     body: { orderId },
     clients: { glovo, orders, recordsManager },
-    state: { affiliateConfig },
+    state: { storesConfig },
     vtex: { logger },
   } = ctx
 
   try {
-    const orderAffiliate = orderId.slice(0, 3)
-    const affiliate = getAffiliateFromAffiliateId(
-      orderAffiliate,
-      affiliateConfig
-    )
+    const orderStoreId = orderId.slice(0, 3)
+    const storeInfo = getStoreInfoFromStoreId(orderStoreId, storesConfig)
 
-    if (!affiliate) {
+    if (!storeInfo) {
       return
     }
 

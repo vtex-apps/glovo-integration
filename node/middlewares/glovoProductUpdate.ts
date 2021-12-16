@@ -12,9 +12,6 @@ export async function glovoProductUpdate(
 
   const catalogUpdate: CatalogChange = await json(ctx.req)
 
-  // eslint-disable-next-line no-console
-  console.log('CatalogChange', catalogUpdate)
-
   // Send response to VTEX Notificator to avoid retries.
   await next()
 
@@ -25,7 +22,7 @@ export async function glovoProductUpdate(
     ctx.body = updatedProduct
   } catch (error) {
     logger.error({
-      message: `There was a problem updating ${catalogUpdate}`,
+      message: `There was a problem updating ${catalogUpdate.IdSku} for store ${catalogUpdate.IdAffiliate}`,
       data: error,
     })
 
