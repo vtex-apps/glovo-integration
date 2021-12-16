@@ -131,7 +131,7 @@
             "type": "string"
           },
           "lastName": {
-            "title": "Last name",
+            "title": "Last name...",
             "type": "string"
           },
           "documentType": {
