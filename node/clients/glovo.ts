@@ -27,7 +27,6 @@ export default class Glovo extends ExternalClient {
       ctx
     )
 
-    // Comentario
     const environment = production ? 'PRODUCTION' : 'STAGING'
 
     const payload: GlovoPatchProduct = {
