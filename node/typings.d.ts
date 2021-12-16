@@ -210,6 +210,7 @@ interface GlovoUpdateOrderStatus {
 interface MarketplaceOrder {
   marketplaceOrderId: string
   marketplaceServicesEndpoint: string
+  isCreatedAsync: boolean
   marketplacePaymentValue: number
   items: OrderItem[]
   clientProfileData: ClientProfileData
