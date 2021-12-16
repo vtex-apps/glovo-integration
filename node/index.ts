@@ -21,16 +21,11 @@ import {
   createOrder,
   errorHandler,
   getGlovoMenu,
-  getOrderRecord,
-  getProductRecord,
-  getStoreMenuUpdates,
   glovoMenuUpdateAll,
   glovoMenuUpdatePartial,
   glovoProductUpdate,
   saveGlovoMenu,
   saveOrderRecord,
-  saveProductRecord,
-  saveStoreMenuUpdates,
   sendResponse,
   simulateOrder,
   validateSettings,
@@ -69,8 +64,8 @@ declare global {
     glovoOrder: GlovoOrder
     glovoToken: string
     catalogUpdate: CatalogChange
-    affiliateConfig: AffiliateInfo[]
-    affiliateInfo: AffiliateInfo
+    storesConfig: StoreInfo[]
+    storeInfo: StoreInfo
     clientProfileData: ClientProfileData
     orderSimulation: SimulationOrderForm
   }
@@ -114,29 +109,9 @@ export default new Service<Clients, State, ParamsContext>({
     updateMenuPartial: method({
       POST: [glovoMenuUpdatePartial, sendResponse],
     }),
-    saveGlovoMenu: method({
-      POST: [errorHandler, saveGlovoMenu],
-    }),
-    getGlovoMenu: method({
+    glovoMenu: method({
       GET: [errorHandler, getGlovoMenu],
-    }),
-    saveStoreMenuUpdates: method({
-      POST: [errorHandler, saveStoreMenuUpdates],
-    }),
-    getStoreMenuUpdates: method({
-      GET: [errorHandler, getStoreMenuUpdates],
-    }),
-    saveProductRecord: method({
-      POST: [errorHandler, saveProductRecord],
-    }),
-    getProductRecord: method({
-      GET: [errorHandler, getProductRecord],
-    }),
-    saveOrderRecord: method({
-      POST: [errorHandler, saveOrderRecord],
-    }),
-    getOrderRecord: method({
-      GET: [errorHandler, getOrderRecord],
+      POST: [errorHandler, saveGlovoMenu],
     }),
   },
   events: {

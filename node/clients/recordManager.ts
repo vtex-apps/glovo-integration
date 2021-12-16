@@ -17,11 +17,11 @@ export default class RecordsManager extends VBase {
   public getGlovoMenu = () => this.getJSON<GlovoMenu>(GLOVO, MENU, true)
 
   // Store's Menu Updates Records
-  public saveStoreMenuUpdates = (storeId: string, data: MenuUpdatesItem[]) =>
-    this.saveJSON<MenuUpdatesItem[]>(storeId, MENU, data)
+  public saveStoreMenuUpdates = (storeId: string, data: StoreMenuUpdates) =>
+    this.saveJSON<StoreMenuUpdates>(storeId, MENU, data)
 
   public getStoreMenuUpdates = (storeId: string) =>
-    this.getJSON<MenuUpdatesItem[]>(storeId, MENU, true)
+    this.getJSON<StoreMenuUpdates>(storeId, MENU, true)
 
   // Product's Records
   public saveProductRecord = (

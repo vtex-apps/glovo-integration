@@ -16,7 +16,7 @@ export async function validateEventSettings(
     )
   }
 
-  ctx.state.affiliateConfig = appConfig.affiliateConfig
+  ctx.state.storesConfig = appConfig.storesConfig
 
   await next()
 }
