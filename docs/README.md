@@ -16,16 +16,16 @@ _Prior to the following steps, you should have already reached out to Glovo to c
 
 To configure this App please follow these steps:
 
-1.  Run the following command in your store's CLI: `vtex install vtex.glovo-integration@0.x`
+1.  Run the following command in your store's CLI: `vtex install vtex.glovo-integration@2.x`
 2.  Make sure you have at least one (1) pick-up-point configured on the salesChannel you want to offer the integration.
 3.  In your Store's Admin dashboard, on the side menu browse to _Apps -> My Apps_ and look for the "Glovo Integration" box and then click on it to open the settings for the app.\
     Fill in the settings as described on each field. - Glovo Token: enter the Token Provided by Glovo - Production Environment: you can switch between Glovo's Test environment and the production environment - Store Settings: Array of stores to be offered on Glovo. - Store ID: Three letter field to identify each store. Should not contain vocals - SalesChannel: input sales channel for this store - Pick Up Point Postal Code: input the postal code configured on the previously defined Pick Up Point - Glovo Store ID: input the Provided Glovo ID for this specific Store - Client Information: fill in the details of a Fake Glovo Customer, all orders will be created using this information for the costumer fields.
 
-4.  Using the following endpoint, upload the catalog of your store's products that will be available on Glovo (include all the products from every store).
+4.  Using the example shown below, upload the catalog of your store's products that will be available on Glovo (include all the products from every store) by making a POST request to the following endopoint.
 
 ```
 curl --request POST \
-     --url https://app.io.vtex.com/vtex.glovo-integration/v0/{{account}}/{{workspace}}/_v/glovo/glovo-menu/ \
+     --url https://app.io.vtex.com/vtex.glovo-integration/v2/{{account}}/{{workspace}}/_v/glovo/glovo-menu/ \
      --header 'VtexIdClientAutCookie: {authToken}' \
      --data '
         [
@@ -50,7 +50,8 @@ curl --request POST \
      --header 'VtexIdClientAutCookie: {authToken}' \
 ```
 
-- Partial update
+- Partial update\
+  _The partial update requires the affiliate configuration described on step 5_
 
 ```
 curl --request POST \
