@@ -218,9 +218,10 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
         settings: JSON.stringify(dataSettings),
       },
     }).then(() => {
+      const validate = settingsState.affiliation.length !== dataSettings.affiliation.length
       setSettingsState(dataSettings)
       setAlertDialog(false)
-      if (isOpenModal) {
+      if (isOpenModal || validate) {
         setAlertAff(true)
         setTimeout(() => setAlertAff(false), 5000)
       } else {
@@ -229,6 +230,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
       }
 
       setIsOpenModal(false)
+
     })
   }
 
@@ -286,6 +288,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
   }
 
   const deleteAffiliation = () => {
+
     const tempDataDelete = [...settingsState.affiliation]
 
     const newData = tempDataDelete.filter((item) => item.id !== itemDelete)
@@ -384,7 +387,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
               isDangerous: true,
             }}
             cancelation={{
-              onClick: () => {},
+              onClick: () => setAlertDialog(false),
               label: formatIOMessage({
                 id: messageUI.dialogCancel.id,
                 intl,
