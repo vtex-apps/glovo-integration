@@ -1,0 +1,6 @@
+{
+  "admin.app.glovo": {
+    "component": "GlovoAdmin",
+    "path": "/admin/app/glovo"
+  }
+}
