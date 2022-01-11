@@ -49,5 +49,6 @@
   "admin/glovo.dialog.body.title": "¿Estás seguro que deseas eliminar la afiliación?",
   "admin/glovo.dialog.body.subtitle": "Esta acción es irreversible, usted eliminará una afiliación",
   "admin/glovo.alert.success": "Los datos se han guardado correctamente",
-  "admin/glovo.collapsible.checkbox": "Ambiente de producción"
+  "admin/glovo.collapsible.checkbox": "Ambiente de producción",
+  "admin/glovo.card.empty": "No hay datos de afiliaciones para mostrar"
 }

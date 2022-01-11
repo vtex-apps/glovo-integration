@@ -17,7 +17,9 @@ import {
   Alert,
   ModalDialog,
   Button,
+  Card,
 } from 'vtex.styleguide'
+import styles from './GlovoAdmin.css'
 
 import Modal from './components/ModalGlovo'
 import APP_SETTINGS from './graphql/appSettings.graphql'
@@ -35,12 +37,14 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
   const add = <IconAdd />
 
   const [isOpen, setIsOpen] = useState(false)
+  const [cards, setCards] = useState([])
   const [alertConfig, setAlertConfig] = useState(false)
   const [alertAff, setAlertAff] = useState(false)
   const [itemDelete, setItemDelete] = useState('')
   const [alertDialog, setAlertDialog] = useState(false)
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [typeModal, setTypeModal] = useState(NameFields.TYPENEW)
+  const [fromMobile, setFromMobile] = useState(false)
   const [dataEdit, setDataEdit] = useState<AffiliationType>({
     id: '',
     nameAffiliation: '',
@@ -89,10 +93,66 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
   })
 
   useEffect(() => {
+
     if (!data?.appSettings?.message || data.appSettings.message === '{}') return
     const parsedSettings = JSON.parse(data.appSettings.message)
 
     setSettingsState(parsedSettings)
+
+    const cardMoviles = parsedSettings.affiliation.map((affiliation: AffiliationType) => (
+      <div key={affiliation.id} className='mb3'>
+        <Card> 
+          <div>
+            <div><p><b>{formatIOMessage({
+              id: messageUI.affiliationName.id,
+              intl,
+            }).toString()} :</b> {affiliation.nameAffiliation}</p></div>
+            <div><p><b>{formatIOMessage({
+              id: messageUI.salesChannel.id,
+              intl,
+            }).toString()} :</b> {affiliation.salesChannel}</p></div>
+            <div><p><b>{formatIOMessage({
+              id: messageUI.pickupPoints.id,
+              intl,
+            }).toString()} :</b> {affiliation.pickupPoints}</p></div>
+            <div className='flex'>
+              <div className='w-100'>
+                <div style={{float:'right'}}>
+                  <ButtonWithIcon
+                    icon={edit}
+                    variation={NameFields.SECONDARY}
+                    onClick={() => {
+                      const getItem = parsedSettings.affiliation.find(
+                        (item: AffiliationType) => item.id === affiliation.id
+                      )
+        
+                      setTypeModal(NameFields.TYPEDIT)
+                      setIsOpenModal(true)
+                      setFromMobile(true)
+                      if (getItem) setDataEdit(getItem)
+                    }}
+                  />
+                </div>
+              </div>
+              <div className='ml5'>
+                <ButtonWithIcon
+                  icon={deleteItem}
+                  variation={NameFields.DANGER}
+                  onClick={() => {
+                    setFromMobile(true)
+                    setAlertDialog(true)
+                    setItemDelete(affiliation.id)
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+    ))
+
+    setCards(cardMoviles)
+
   }, [data])
 
   const changeValueAdmin = (e: { id: string; value: string }) => {
@@ -229,8 +289,9 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
         setTimeout(() => setAlertConfig(false), 5000)
       }
 
-      setIsOpenModal(false)
+      setIsOpenModal(false) 
 
+      if(fromMobile) setTimeout(() => window.location.reload(), 2000)
     })
   }
 
@@ -269,6 +330,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
 
               setTypeModal(NameFields.TYPEDIT)
               setIsOpenModal(true)
+              setFromMobile(false)
               if (getItem) setDataEdit(getItem)
             }}
           />
@@ -279,6 +341,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
             variation={NameFields.DANGER}
             onClick={() => {
               setAlertDialog(true)
+              setFromMobile(false)
               setItemDelete(e.rowData.id)
             }}
           />
@@ -288,7 +351,6 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
   }
 
   const deleteAffiliation = () => {
-
     const tempDataDelete = [...settingsState.affiliation]
 
     const newData = tempDataDelete.filter((item) => item.id !== itemDelete)
@@ -358,81 +420,129 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
         editData={editData}
         affiliation={dataEdit}
       />
-      <PageBlock>
-        <div style={{ height: '500px' }}>
-          <img src={iconGlovo} style={{ width: '80px' }} alt="" />
-          <div style={{ float: 'right' }} className="mb5">
-            <ButtonWithIcon
-              icon={add}
-              variation={NameFields.SECONDARY}
-              onClick={() => {
-                setIsOpenModal(true)
-                setTypeModal(NameFields.TYPENEW)
-              }}
-            >
-              {formatIOMessage({
-                id: messageUI.addMore.id,
-                intl,
-              }).toString()}
-            </ButtonWithIcon>
-          </div>
-          <ModalDialog
-            centered
-            confirmation={{
-              onClick: () => deleteAffiliation(),
-              label: formatIOMessage({
-                id: messageUI.dialogConfirmation.id,
-                intl,
-              }).toString(),
-              isDangerous: true,
-            }}
-            cancelation={{
-              onClick: () => setAlertDialog(false),
-              label: formatIOMessage({
-                id: messageUI.dialogCancel.id,
-                intl,
-              }).toString(),
-            }}
-            isOpen={alertDialog}
-            onClose={() => setAlertDialog(false)}
-          >
-            <div className="">
-              <p className="f3 f3-ns fw3 gray">
+      <div className={styles.tableDesktop}>
+        <PageBlock>
+          <div style={{ height: '500px' }}>
+            <img src={iconGlovo} style={{ width: '80px' }} alt="" />
+            <div style={{ float: 'right' }} className="mb5">
+              <ButtonWithIcon
+                icon={add}
+                variation={NameFields.SECONDARY}
+                onClick={() => {
+                  setIsOpenModal(true)
+                  setFromMobile(false)
+                  setTypeModal(NameFields.TYPENEW)
+                }}
+              >
                 {formatIOMessage({
-                  id: messageUI.dialogTitle.id,
+                  id: messageUI.addMore.id,
                   intl,
                 }).toString()}
-              </p>
-              <p>
-                {formatIOMessage({
-                  id: messageUI.dialogSubtitle.id,
-                  intl,
-                }).toString()}
-              </p>
+              </ButtonWithIcon>
             </div>
-          </ModalDialog>
-          <div className="mb4">
-            {alertAff ? (
-              <div className="mb2">
-                <Alert
-                  type={NameFields.SUCCESS}
-                  onClose={() => {
-                    setAlertAff(false)
-                  }}
-                >
+            <ModalDialog
+              centered
+              confirmation={{
+                onClick: () => deleteAffiliation(),
+                label: formatIOMessage({
+                  id: messageUI.dialogConfirmation.id,
+                  intl,
+                }).toString(),
+                isDangerous: true,
+              }}
+              cancelation={{
+                onClick: () => {},
+                label: formatIOMessage({
+                  id: messageUI.dialogCancel.id,
+                  intl,
+                }).toString(),
+              }}
+              isOpen={alertDialog}
+              onClose={() => setAlertDialog(false)}
+            >
+              <div className="">
+                <p className="f3 f3-ns fw3 gray">
                   {formatIOMessage({
-                    id: messageUI.alertSuccess.id,
+                    id: messageUI.dialogTitle.id,
                     intl,
                   }).toString()}
-                </Alert>
+                </p>
+                <p>
+                  {formatIOMessage({
+                    id: messageUI.dialogSubtitle.id,
+                    intl,
+                  }).toString()}
+                </p>
               </div>
-            ) : (
-              <div />
-            )}
+            </ModalDialog>
+            <div className="mb4">
+              {alertAff ? (
+                <div className="mb2">
+                  <Alert
+                    type={NameFields.SUCCESS}
+                    onClose={() => {
+                      setAlertAff(false)
+                    }}
+                  >
+                    {formatIOMessage({
+                      id: messageUI.alertSuccess.id,
+                      intl,
+                    }).toString()}
+                  </Alert>
+                </div>
+              ) : (
+                <div />
+              )}
+            </div>
+            <Table schema={customSchema} items={settingsState.affiliation} fullWidth={true}/>
           </div>
-          <Table schema={customSchema} items={settingsState.affiliation} fullWidth={true}/>
+        </PageBlock>
+      </div>
+      <div className={styles.cardMobile}>
+        <div className='flex mb5'>
+          <img src={iconGlovo} style={{ width: '80px' }} alt="" />
+          <div className="mb5 mt5 w-100">
+            <div style={{ float: 'right' ,marginRight: '10px' }}>
+              <ButtonWithIcon
+                variation={NameFields.PRIMARY}
+                onClick={() => {
+                  setIsOpenModal(true)
+                  setFromMobile(true)
+                  setTypeModal(NameFields.TYPENEW)
+                }}
+              >
+                {formatIOMessage({
+                  id: messageUI.addMore.id,
+                  intl,
+                }).toString()}
+              </ButtonWithIcon>
+            </div>
+          </div>
         </div>
-      </PageBlock>
+        <div className="mb4">
+          {alertAff ? (
+            <div className="mb2">
+              <Alert
+                type={NameFields.SUCCESS}
+                onClose={() => {
+                  setAlertAff(false)
+                }}
+              >
+                {formatIOMessage({
+                  id: messageUI.alertSuccess.id,
+                  intl,
+                }).toString()}
+              </Alert>
+            </div>
+          ) : (
+            <div />
+          )}
+        </div>
+        {settingsState.affiliation.length <= 0 ? <Card> <p style={{textAlign: 'center'}}>{formatIOMessage({
+                  id: messageUI.emptyData.id,
+                  intl,
+                }).toString()}</p> </Card> :cards}
+      </div>
       <div className="mt4">
         <Collapsible
           header={

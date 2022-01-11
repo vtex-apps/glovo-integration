@@ -49,5 +49,6 @@
   "admin/glovo.dialog.body.title": "Sigur doriți să ștergeți afilierea?",
   "admin/glovo.dialog.body.subtitle": "Această acțiune este ireversibilă, veți șterge afilierea",
   "admin/glovo.alert.success": "Datele au fost salvate cu succes",
-  "admin/glovo.collapsible.checkbox": "Mediu de productie"
+  "admin/glovo.collapsible.checkbox": "Mediu de productie",
+  "admin/glovo.card.empty": "Nu există date despre afilieri care să vă arate"
 }

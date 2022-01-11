@@ -206,4 +206,8 @@ export const messageUI = defineMessages({
     defaultMessage: '',
     id: 'admin/glovo.collapsible.checkbox',
   },
+  emptyData: {
+    defaultMessage: '',
+    id: 'admin/glovo.card.empty',
+  },
 })

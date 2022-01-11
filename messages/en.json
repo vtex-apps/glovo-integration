@@ -49,5 +49,6 @@
   "admin/glovo.dialog.body.title": "Are you sure you want to delete the affiliation?",
   "admin/glovo.dialog.body.subtitle": "This action is irreversible, you will delete de affiliation",
   "admin/glovo.alert.success": "Data saved successfully",
-  "admin/glovo.collapsible.checkbox": "Production enviroment"
+  "admin/glovo.collapsible.checkbox": "Production enviroment",
+  "admin/glovo.card.empty": "Nothing to show"
 }
