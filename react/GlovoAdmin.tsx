@@ -451,7 +451,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
                 isDangerous: true,
               }}
               cancelation={{
-                onClick: () => {},
+                onClick: () => setAlertDialog(false),
                 label: formatIOMessage({
                   id: messageUI.dialogCancel.id,
                   intl,

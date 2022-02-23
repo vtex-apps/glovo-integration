@@ -98,7 +98,7 @@ export const messageUI = defineMessages({
     defaultMessage: '',
     id: 'admin/glovo.modal.description-name',
   },
-  affiliateId: {
+  storeId: {
     defaultMessage: '',
     id: 'admin/glovo.modal.affiliate-id',
   },

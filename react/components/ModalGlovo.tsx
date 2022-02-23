@@ -30,7 +30,7 @@ const ModalGlovo: FC<ModalGlovoProps & InjectedIntlProps> = (props) => {
   const [msgError, setMsgError] = useState({
     id: '',
     affiliationName: '',
-    affiliateId: '',
+    storeId: '',
     salesChannel: '',
     pickupPoints: '',
     glovoId: '',
@@ -42,7 +42,7 @@ const ModalGlovo: FC<ModalGlovoProps & InjectedIntlProps> = (props) => {
       setMsgError({ ...msgError, affiliationName: '' })
     } else if (e.id === NameFields.IDAFFILIATION) {
       setIdAffiliation(e.value)
-      setMsgError({ ...msgError, affiliateId: '' })
+      setMsgError({ ...msgError, storeId: '' })
     } else if (e.id === NameFields.SALESCHANNEL) {
       setSalesChannel(e.value)
       setMsgError({ ...msgError, salesChannel: '' })
@@ -78,7 +78,7 @@ const ModalGlovo: FC<ModalGlovoProps & InjectedIntlProps> = (props) => {
     } else if (!idAffiliation) {
       setMsgError({
         ...msgError,
-        affiliateId: formatIOMessage({
+        storeId: formatIOMessage({
           id: messageUI.fieldModalId.id,
           intl: props.intl,
         }).toString(),
@@ -162,7 +162,7 @@ const ModalGlovo: FC<ModalGlovoProps & InjectedIntlProps> = (props) => {
         <div>
           <p>
             {formatIOMessage({
-              id: messageUI.affiliateId.id,
+              id: messageUI.storeId.id,
               intl: props.intl,
             }).toString()}
           </p>
@@ -177,7 +177,7 @@ const ModalGlovo: FC<ModalGlovoProps & InjectedIntlProps> = (props) => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               changeValueInput({ id: e.target.id, value: e.target.value })
             }
-            errorMessage={msgError.affiliateId}
+            errorMessage={msgError.storeId}
           />
         </div>
         <div>
