@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 export type AffiliationType = {
   id: string
   nameAffiliation: string

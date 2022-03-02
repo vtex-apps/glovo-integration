@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { defineMessages } from 'react-intl'
 
 export const messageUI = defineMessages({

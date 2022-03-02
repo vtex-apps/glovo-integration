@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import type PropTypes from 'prop-types'
 import type React from 'react'
 import 'vtex.styleguide'
