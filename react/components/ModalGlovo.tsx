@@ -22,7 +22,7 @@ interface ModalGlovoProps {
 const ModalGlovo: FC<ModalGlovoProps & InjectedIntlProps> = (props) => {
   const [idEdit, setIdEdit] = useState('')
   const [nameAffiliation, setNameAffiliation] = useState('')
-  const [idAffiliation, setIdAffiliation] = useState('')
+  const [storeId, setStoreId] = useState('')
   const [salesChannel, setSalesChannel] = useState('')
   const [pickupPoints, setPickupPoints] = useState('')
   const [glovoId, setGlovoId] = useState('')
@@ -40,8 +40,8 @@ const ModalGlovo: FC<ModalGlovoProps & InjectedIntlProps> = (props) => {
     if (e.id === NameFields.NAMEAFFILIATION) {
       setNameAffiliation(e.value)
       setMsgError({ ...msgError, affiliationName: '' })
-    } else if (e.id === NameFields.IDAFFILIATION) {
-      setIdAffiliation(e.value)
+    } else if (e.id === NameFields.STOREID) {
+      setStoreId(e.value)
       setMsgError({ ...msgError, storeId: '' })
     } else if (e.id === NameFields.SALESCHANNEL) {
       setSalesChannel(e.value)
@@ -59,7 +59,7 @@ const ModalGlovo: FC<ModalGlovoProps & InjectedIntlProps> = (props) => {
     return {
       id: idItem,
       nameAffiliation,
-      idAffiliation,
+      storeId,
       salesChannel,
       pickupPoints,
       glovoId,
@@ -75,7 +75,7 @@ const ModalGlovo: FC<ModalGlovoProps & InjectedIntlProps> = (props) => {
           intl: props.intl,
         }).toString(),
       })
-    } else if (!idAffiliation) {
+    } else if (!storeId) {
       setMsgError({
         ...msgError,
         storeId: formatIOMessage({
@@ -123,10 +123,10 @@ const ModalGlovo: FC<ModalGlovoProps & InjectedIntlProps> = (props) => {
       setSalesChannel('')
       setPickupPoints('')
       setGlovoId('')
-      setIdAffiliation('')
+      setStoreId('')
     } else {
       setIdEdit(props.affiliation.id)
-      setIdAffiliation(props.affiliation.idAffiliation)
+      setStoreId(props.affiliation.storeId)
       setNameAffiliation(props.affiliation.nameAffiliation)
       setSalesChannel(props.affiliation.salesChannel)
       setPickupPoints(props.affiliation.pickupPoints)
@@ -172,8 +172,8 @@ const ModalGlovo: FC<ModalGlovoProps & InjectedIntlProps> = (props) => {
               id: messageUI.affiliateDescription.id,
               intl: props.intl,
             }).toString()}
-            value={idAffiliation}
-            id={NameFields.IDAFFILIATION}
+            value={storeId}
+            id={NameFields.STOREID}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               changeValueInput({ id: e.target.id, value: e.target.value })
             }

@@ -48,7 +48,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
   const [dataEdit, setDataEdit] = useState<AffiliationType>({
     id: '',
     nameAffiliation: '',
-    idAffiliation: '',
+    storeId: '',
     salesChannel: '',
     pickupPoints: '',
     glovoId: '',
@@ -396,7 +396,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
     tempData.map((item) => {
       if (item.id === itemEdit.id) {
         item.nameAffiliation = itemEdit.nameAffiliation
-        item.idAffiliation = itemEdit.idAffiliation
+        item.storeId = itemEdit.storeId
         item.salesChannel = itemEdit.salesChannel
         item.pickupPoints = itemEdit.pickupPoints
         item.glovoId = itemEdit.glovoId

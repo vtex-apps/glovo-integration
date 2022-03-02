@@ -2,7 +2,7 @@
 export type AffiliationType = {
   id: string
   nameAffiliation: string
-  idAffiliation: string
+  storeId: string
   salesChannel: string
   pickupPoints: string
   glovoId: string
@@ -44,7 +44,7 @@ export enum NameFields {
   PRIMARY = 'primary',
   SUCCESS = 'success',
   NAMEAFFILIATION = 'nameAffiliation',
-  IDAFFILIATION = 'idAffiliation',
+  STOREID = 'storeId',
   SALESCHANNEL = 'salesChannel',
   PICKUPPOINTS = 'pickupPoints',
   GLOVOID = 'glovoId',
