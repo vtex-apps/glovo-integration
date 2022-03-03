@@ -1,7 +1,7 @@
 {
   "name": "glovo-integration",
   "vendor": "vtex",
-  "version": "2.0.7",
+  "version": "2.0.6",
   "title": "Glovo Integration",
   "description": "Glovo Integration",
   "mustUpdateAt": "2018-01-04",
@@ -23,9 +23,7 @@
       "url": "https://support.vtex.com/hc/requests"
     },
     "type": "free",
-    "availableCountries": [
-      "*"
-    ]
+    "availableCountries": ["*"]
   },
   "scripts": {
     "prereleasy": "bash lint.sh"
@@ -67,9 +65,7 @@
     "title": "Glovo Integration",
     "description": "Glovo integration settings",
     "type": "object",
-    "required": [
-      "glovoToken"
-    ],
+    "required": ["glovoToken"],
     "properties": {
       "glovoToken": {
         "title": "Glovo Token",
@@ -116,12 +112,8 @@
               "title": "Store country",
               "description": "The country for the store.",
               "type": "string",
-              "enum": [
-                "ESP"
-              ],
-              "enumNames": [
-                "Spain"
-              ]
+              "enum": ["ESP"],
+              "enumNames": ["Spain"]
             },
             "glovoStoreId": {
               "title": "Glovo Store ID",
@@ -135,11 +127,7 @@
         "title": "Client information",
         "description": "Information about the client from Glovo",
         "type": "object",
-        "required": [
-          "email",
-          "firstName",
-          "lastName"
-        ],
+        "required": ["email", "firstName", "lastName"],
         "properties": {
           "email": {
             "title": "Email",
