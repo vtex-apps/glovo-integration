@@ -20,17 +20,17 @@ import {
 } from 'vtex.styleguide'
 
 import styles from './GlovoAdmin.css'
-import Modal from './components/ModalGlovo'
-import APP_SETTINGS from './graphql/appSettings.graphql'
-import SAVE_APP_SETTINGS from './graphql/saveAppSettings.graphql'
-import iconGlovo from './icons/GlovoLogo.png'
-import IconAdd from './icons/IconAdd'
-import IconDelete from './icons/IconDelete'
-import IconEdit from './icons/IconEdit'
-import { NameFields } from './shared'
-import type { SettingDataType, AffiliationType, TableItem } from './shared'
+import Modal from './ModalGlovo'
+import APP_SETTINGS from '../../graphql/appSettings.graphql'
+import SAVE_APP_SETTINGS from '../../graphql/saveAppSettings.graphql'
+import iconGlovo from '../../icons/GlovoLogo.png'
+import IconAdd from '../../icons/IconAdd'
+import IconDelete from '../../icons/IconDelete'
+import IconEdit from '../../icons/IconEdit'
+import { NameFields } from '../../shared'
+import type { SettingDataType, AffiliationType, TableItem } from '../../shared'
 
-const GlovoAdmin: FC<InjectedIntlProps> = () => {
+const AdminPanel: FC<InjectedIntlProps> = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [cards, setCards] = useState([])
   const [alertConfig, setAlertConfig] = useState(false)
@@ -759,4 +759,4 @@ const GlovoAdmin: FC<InjectedIntlProps> = () => {
   )
 }
 
-export default GlovoAdmin
+export { AdminPanel }

@@ -6,9 +6,9 @@ import { formatIOMessage } from 'vtex.native-types'
 import { Button, Input, Modal } from 'vtex.styleguide'
 import { v4 as uuidv4 } from 'uuid'
 
-import iconGlovo from '../icons/GlovoLogo.png'
-import { messageUI, NameFields } from '../shared'
-import type { AffiliationType } from '../shared'
+import iconGlovo from '../../icons/GlovoLogo.png'
+import { messageUI, NameFields } from '../../shared'
+import type { AffiliationType } from '../../shared'
 
 interface ModalGlovoProps {
   isOpen: boolean
