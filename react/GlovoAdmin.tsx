@@ -2,8 +2,7 @@ import type { FC } from 'react'
 import React, { useEffect, useState } from 'react'
 import { useMutation, useQuery } from 'react-apollo'
 import type { InjectedIntlProps } from 'react-intl'
-import { injectIntl } from 'react-intl'
-import { formatIOMessage } from 'vtex.native-types'
+import { FormattedMessage } from 'react-intl'
 import {
   ButtonWithIcon,
   Checkbox,
@@ -24,18 +23,14 @@ import styles from './GlovoAdmin.css'
 import Modal from './components/ModalGlovo'
 import APP_SETTINGS from './graphql/appSettings.graphql'
 import SAVE_APP_SETTINGS from './graphql/saveAppSettings.graphql'
-import iconGlovo from './icons/icon.png'
+import iconGlovo from './icons/GlovoLogo.png'
 import IconAdd from './icons/IconAdd'
 import IconDelete from './icons/IconDelete'
 import IconEdit from './icons/IconEdit'
-import { messageUI, NameFields } from './shared'
+import { NameFields } from './shared'
 import type { SettingDataType, AffiliationType, TableItem } from './shared'
 
-const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
-  const edit = <IconEdit />
-  const deleteItem = <IconDelete />
-  const add = <IconAdd />
-
+const GlovoAdmin: FC<InjectedIntlProps> = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [cards, setCards] = useState([])
   const [alertConfig, setAlertConfig] = useState(false)
@@ -69,7 +64,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
 
   const [saveSettings] = useMutation(SAVE_APP_SETTINGS)
 
-  const [msgError, setMsgError] = useState({
+  const [msgError, setMsgError] = useState<{ [key: string]: any }>({
     token: '',
     email: '',
     firstName: '',
@@ -106,10 +101,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
               <div>
                 <p>
                   <b>
-                    {formatIOMessage({
-                      id: messageUI.affiliationName.id,
-                      intl,
-                    }).toString()}{' '}
+                    <FormattedMessage id="admin/glovo-integration.store-name" />
                     :
                   </b>{' '}
                   {affiliation.nameAffiliation}
@@ -118,10 +110,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
               <div>
                 <p>
                   <b>
-                    {formatIOMessage({
-                      id: messageUI.salesChannel.id,
-                      intl,
-                    }).toString()}{' '}
+                    <FormattedMessage id="admin/glovo-integration.sales-channel" />
                     :
                   </b>{' '}
                   {affiliation.salesChannel}
@@ -130,10 +119,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
               <div>
                 <p>
                   <b>
-                    {formatIOMessage({
-                      id: messageUI.pickupPoints.id,
-                      intl,
-                    }).toString()}{' '}
+                    <FormattedMessage id="admin/glovo-integration.postal-code" />
                     :
                   </b>{' '}
                   {affiliation.pickupPoints}
@@ -143,7 +129,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
                 <div className="w-100">
                   <div style={{ float: 'right' }}>
                     <ButtonWithIcon
-                      icon={edit}
+                      icon={<IconEdit />}
                       variation={NameFields.SECONDARY}
                       onClick={() => {
                         const getItem = parsedSettings.affiliation.find(
@@ -160,7 +146,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
                 </div>
                 <div className="ml5">
                   <ButtonWithIcon
-                    icon={deleteItem}
+                    icon={<IconDelete />}
                     variation={NameFields.DANGER}
                     onClick={() => {
                       setFromMobile(true)
@@ -213,66 +199,58 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
     if (!settingsState.glovoToken) {
       setMsgError({
         ...msgError,
-        token: formatIOMessage({
-          id: messageUI.fieldToken.id,
-          intl,
-        }).toString(),
+        token: (
+          <FormattedMessage id="admin/glovo-integration.field.config.token" />
+        ),
       })
     } else if (!settingsState.email) {
       setMsgError({
         ...msgError,
-        email: formatIOMessage({
-          id: messageUI.fieldEmail.id,
-          intl,
-        }).toString(),
+        email: (
+          <FormattedMessage id="admin/glovo-integration.field.config.email" />
+        ),
       })
     } else if (!settingsState.firstName) {
       setMsgError({
         ...msgError,
-        firstName: formatIOMessage({
-          id: messageUI.fieldName.id,
-          intl,
-        }).toString(),
+        firstName: (
+          <FormattedMessage id="admin/glovo-integration.field.config.first-name" />
+        ),
       })
     } else if (!settingsState.lastName) {
       setMsgError({
         ...msgError,
-        lastName: formatIOMessage({
-          id: messageUI.fieldLast.id,
-          intl,
-        }).toString(),
+        lastName: (
+          <FormattedMessage id="admin/glovo-integration.field.config.last-name" />
+        ),
       })
     } else if (!settingsState.selectDocument) {
       setMsgError({
         ...msgError,
-        typeDocument: formatIOMessage({
-          id: messageUI.fieldDocumentType.id,
-          intl,
-        }).toString(),
+        typeDocument: (
+          <FormattedMessage id="admin/glovo-integration.field.config.document-type" />
+        ),
       })
     } else if (!settingsState.document) {
       setMsgError({
         ...msgError,
-        document: formatIOMessage({
-          id: messageUI.fieldDocument.id,
-          intl,
-        }).toString(),
+        document: (
+          <FormattedMessage id="admin/glovo-integration.field.config.document" />
+        ),
       })
     } else if (!settingsState.phoneNumber) {
       setMsgError({
         ...msgError,
-        phoneNumber: formatIOMessage({
-          id: messageUI.fieldNumber.id,
-          intl,
-        }).toString(),
+        phoneNumber: (
+          <FormattedMessage id="admin/glovo-integration.field.config.phone-number" />
+        ),
       })
     } else if (!settingsState.corporateName) {
       setMsgError({
         ...msgError,
-        corporateName: formatIOMessage({
-          id: messageUI.fieldCorporate.id,
-          intl,
-        }).toString(),
+        corporateName: (
+          <FormattedMessage id="admin/glovo-integration.field.config.corporate-name" />
+        ),
       })
     } else {
       validate = true
@@ -348,7 +326,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
       <div className="flex">
         <div>
           <ButtonWithIcon
-            icon={edit}
+            icon={<IconEdit />}
             variation={NameFields.SECONDARY}
             onClick={() => {
               const getItem = settingsState.affiliation.find(
@@ -364,7 +342,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
         </div>
         <div>
           <ButtonWithIcon
-            icon={deleteItem}
+            icon={<IconDelete />}
             variation={NameFields.DANGER}
             onClick={() => {
               setAlertDialog(true)
@@ -390,28 +368,16 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
   const customSchema = {
     properties: {
       nameAffiliation: {
-        title: formatIOMessage({
-          id: messageUI.affiliationName.id,
-          intl,
-        }).toString(),
+        title: <FormattedMessage id="admin/glovo-integration.store-name" />,
       },
       salesChannel: {
-        title: formatIOMessage({
-          id: messageUI.salesChannel.id,
-          intl,
-        }).toString(),
+        title: <FormattedMessage id="admin/glovo-integration.sales-channel" />,
       },
       pickupPoints: {
-        title: formatIOMessage({
-          id: messageUI.pickupPoints.id,
-          intl,
-        }).toString(),
+        title: <FormattedMessage id="admin/glovo-integration.postal-code" />,
       },
       actions: {
-        title: formatIOMessage({
-          id: messageUI.actions.id,
-          intl,
-        }).toString(),
+        title: <FormattedMessage id="admin/glovo-integration.table.actions" />,
         cellRenderer: (e: TableItem) => cellComponent(e),
       },
     },
@@ -453,7 +419,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
             <img src={iconGlovo} style={{ width: '80px' }} alt="" />
             <div style={{ float: 'right' }} className="mb5">
               <ButtonWithIcon
-                icon={add}
+                icon={<IconAdd />}
                 variation={NameFields.SECONDARY}
                 onClick={() => {
                   setIsOpenModal(true)
@@ -461,44 +427,33 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
                   setTypeModal(NameFields.TYPENEW)
                 }}
               >
-                {formatIOMessage({
-                  id: messageUI.addMore.id,
-                  intl,
-                }).toString()}
+                <FormattedMessage id="admin/glovo-integration.add-more" />
               </ButtonWithIcon>
             </div>
             <ModalDialog
               centered
               confirmation={{
                 onClick: () => deleteAffiliation(),
-                label: formatIOMessage({
-                  id: messageUI.dialogConfirmation.id,
-                  intl,
-                }).toString(),
+                label: (
+                  <FormattedMessage id="admin/glovo-integration.delete-store-dialog.confirmation" />
+                ),
                 isDangerous: true,
               }}
               cancelation={{
                 onClick: () => setAlertDialog(false),
-                label: formatIOMessage({
-                  id: messageUI.dialogCancel.id,
-                  intl,
-                }).toString(),
+                label: (
+                  <FormattedMessage id="admin/glovo-integration.delete-store-dialog.cancel" />
+                ),
               }}
               isOpen={alertDialog}
               onClose={() => setAlertDialog(false)}
             >
               <div className="">
                 <p className="f3 f3-ns fw3 gray">
-                  {formatIOMessage({
-                    id: messageUI.dialogTitle.id,
-                    intl,
-                  }).toString()}
+                  <FormattedMessage id="admin/glovo-integration.delete-store-dialog.title" />
                 </p>
                 <p>
-                  {formatIOMessage({
-                    id: messageUI.dialogSubtitle.id,
-                    intl,
-                  }).toString()}
+                  <FormattedMessage id="admin/glovo-integration.delete-store-dialog.subtitle" />
                 </p>
               </div>
             </ModalDialog>
@@ -511,10 +466,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
                       setAlertAff(false)
                     }}
                   >
-                    {formatIOMessage({
-                      id: messageUI.alertSuccess.id,
-                      intl,
-                    }).toString()}
+                    <FormattedMessage id="admin/glovo-integration.alert.success" />
                   </Alert>
                 </div>
               ) : (
@@ -542,10 +494,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
                   setTypeModal(NameFields.TYPENEW)
                 }}
               >
-                {formatIOMessage({
-                  id: messageUI.addMore.id,
-                  intl,
-                }).toString()}
+                <FormattedMessage id="admin/glovo-integration.add-more" />
               </ButtonWithIcon>
             </div>
           </div>
@@ -559,10 +508,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
                   setAlertAff(false)
                 }}
               >
-                {formatIOMessage({
-                  id: messageUI.alertSuccess.id,
-                  intl,
-                }).toString()}
+                <FormattedMessage id="admin/glovo-integration.alert.success" />
               </Alert>
             </div>
           ) : (
@@ -573,10 +519,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
           <Card>
             {' '}
             <p style={{ textAlign: 'center' }}>
-              {formatIOMessage({
-                id: messageUI.emptyData.id,
-                intl,
-              }).toString()}
+              <FormattedMessage id="admin/glovo-integration.table.empty" />
             </p>{' '}
           </Card>
         ) : (
@@ -587,10 +530,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
         <Collapsible
           header={
             <span className="c-action-primary hover-c-action-primary fw5">
-              {formatIOMessage({
-                id: messageUI.configuration.id,
-                intl,
-              }).toString()}
+              <FormattedMessage id="admin/glovo-integration.collapsible.header" />
             </span>
           }
           onClick={() => setIsOpen(!isOpen)}
@@ -605,10 +545,8 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
                     setAlertConfig(false)
                   }}
                 >
-                  {formatIOMessage({
-                    id: messageUI.alertSuccess.id,
-                    intl,
-                  }).toString()}
+                  <FormattedMessage id="admin/glovo-integration.alert.success" />
+                  ,
                 </Alert>
               </div>
             ) : (
@@ -617,10 +555,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
             <PageBlock variation="half">
               <div style={{ height: '568px' }}>
                 <h2>
-                  {formatIOMessage({
-                    id: messageUI.settings.id,
-                    intl,
-                  }).toString()}
+                  <FormattedMessage id="admin/glovo-integration.integration-settings.title" />
                 </h2>
                 <p
                   style={{
@@ -629,26 +564,19 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
                     fontStyle: 'italic',
                   }}
                 >
-                  {formatIOMessage({
-                    id: messageUI.integrationSettings.id,
-                    intl,
-                  }).toString()}
+                  <FormattedMessage id="admin/glovo-integration.integration-settings.subtitle" />
                 </p>
 
                 <div className="mt10">
                   <p>
-                    {formatIOMessage({
-                      id: messageUI.glovoToken.id,
-                      intl,
-                    }).toString()}
+                    <FormattedMessage id="admin/glovo-integration.integration-settings.glovo-token" />
                   </p>
                   <InputPassword
                     id={NameFields.GLOVOTOKEN}
                     value={settingsState.glovoToken}
-                    label={formatIOMessage({
-                      id: messageUI.subtitleSettings.id,
-                      intl,
-                    }).toString()}
+                    label={
+                      <FormattedMessage id="admin/glovo-integration.integration-settings.glovo-token.description" />
+                    }
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       changeValueAdmin({
                         id: e.target.id,
@@ -666,18 +594,14 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
                       fontStyle: 'italic',
                     }}
                   >
-                    {formatIOMessage({
-                      id: messageUI.infoSettings.id,
-                      intl,
-                    }).toString()}
+                    <FormattedMessage id="admin/glovo-integration.integration-settings.production.description" />
                   </p>
                   <Checkbox
                     checked={settingsState.production}
                     id="option-0"
-                    label={formatIOMessage({
-                      id: messageUI.checkbox.id,
-                      intl,
-                    }).toString()}
+                    label={
+                      <FormattedMessage id="admin/glovo-integration.integration-settings.production.label" />
+                    }
                     name="production"
                     value="option-0"
                     onChange={() =>
@@ -691,10 +615,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
               </div>
               <div style={{ height: '568px' }}>
                 <h2>
-                  {formatIOMessage({
-                    id: messageUI.titleInformation.id,
-                    intl,
-                  }).toString()}
+                  <FormattedMessage id="admin/glovo-integration.client-info.title" />
                 </h2>
                 <p
                   style={{
@@ -703,19 +624,15 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
                     fontStyle: 'italic',
                   }}
                 >
-                  {formatIOMessage({
-                    id: messageUI.infoGlovo.id,
-                    intl,
-                  }).toString()}
+                  <FormattedMessage id="admin/glovo-integration.client-info.subtitle" />
                 </p>
                 <div className="mt7">
                   <Input
                     id={NameFields.EMAIL}
                     value={settingsState.email}
-                    label={formatIOMessage({
-                      id: messageUI.email.id,
-                      intl,
-                    }).toString()}
+                    label={
+                      <FormattedMessage id="admin/glovo-integration.client-info.email" />
+                    }
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       changeValueAdmin({
                         id: e.target.id,
@@ -729,10 +646,9 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
                       <Input
                         id={NameFields.FIRSTNAME}
                         value={settingsState.firstName}
-                        label={formatIOMessage({
-                          id: messageUI.firstName.id,
-                          intl,
-                        }).toString()}
+                        label={
+                          <FormattedMessage id="admin/glovo-integration.client-info.first-name" />
+                        }
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                           changeValueAdmin({
                             id: e.target.id,
@@ -746,10 +662,9 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
                       <Input
                         id={NameFields.LASTNAME}
                         value={settingsState.lastName}
-                        label={formatIOMessage({
-                          id: messageUI.lastName.id,
-                          intl,
-                        }).toString()}
+                        label={
+                          <FormattedMessage id="admin/glovo-integration.client-info.last-name" />
+                        }
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                           changeValueAdmin({
                             id: e.target.id,
@@ -765,10 +680,9 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
                       <Input
                         id={NameFields.TYPEDOCUMENT}
                         value={settingsState.selectDocument}
-                        label={formatIOMessage({
-                          id: messageUI.typeDocument.id,
-                          intl,
-                        }).toString()}
+                        label={
+                          <FormattedMessage id="admin/glovo-integration.client-info.document-type" />
+                        }
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                           changeValueAdmin({
                             id: e.target.id,
@@ -782,10 +696,9 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
                       <Input
                         id={NameFields.DOCUMENT}
                         value={settingsState.document}
-                        label={formatIOMessage({
-                          id: messageUI.document.id,
-                          intl,
-                        }).toString()}
+                        label={
+                          <FormattedMessage id="admin/glovo-integration.client-info.document" />
+                        }
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                           changeValueAdmin({
                             id: e.target.id,
@@ -800,10 +713,9 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
                     <Input
                       id={NameFields.PHONENUMBER}
                       value={settingsState.phoneNumber}
-                      label={formatIOMessage({
-                        id: messageUI.phoneNumber.id,
-                        intl,
-                      }).toString()}
+                      label={
+                        <FormattedMessage id="admin/glovo-integration.client-info.phone-number" />
+                      }
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                         changeValueAdmin({
                           id: e.target.id,
@@ -817,10 +729,9 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
                     <Input
                       id={NameFields.CORPORATENAME}
                       value={settingsState.corporateName}
-                      label={formatIOMessage({
-                        id: messageUI.corporateName.id,
-                        intl,
-                      }).toString()}
+                      label={
+                        <FormattedMessage id="admin/glovo-integration.client-info.corporate-name" />
+                      }
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                         changeValueAdmin({
                           id: e.target.id,
@@ -836,10 +747,7 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
                     variation={NameFields.PRIMARY}
                     onClick={() => handleSaveSettings()}
                   >
-                    {formatIOMessage({
-                      id: messageUI.save.id,
-                      intl,
-                    }).toString()}
+                    {<FormattedMessage id="admin/glovo-integration.save" />}
                   </Button>
                 </div>
               </div>
@@ -851,4 +759,4 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
   )
 }
 
-export default injectIntl(GlovoAdmin)
+export default GlovoAdmin

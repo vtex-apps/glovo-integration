@@ -11,7 +11,7 @@ export const messageUI = defineMessages({
   },
   salesChannel: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.table.sales-channel',
+    id: 'admin/glovo-integration.sales-channel',
   },
   pickupPoints: {
     defaultMessage: '',
@@ -23,95 +23,95 @@ export const messageUI = defineMessages({
   },
   addMore: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.table.add-more',
+    id: 'admin/glovo-integration.add-more',
   },
   configuration: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.collapsible.configuration',
+    id: 'admin/glovo-integration.collapsible.header',
   },
   settings: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.collapsible.settings',
+    id: 'admin/glovo-integration.integration-settings.title',
   },
   integrationSettings: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.collapsible.integration-settings',
+    id: 'admin/glovo-integration.integration-settings',
   },
   subtitleSettings: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.collapsible.subtitle-settings',
+    id: 'admin/glovo-integration.integration-settings.glovo-token.description',
   },
   glovoToken: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.collapsible.glovo-token',
+    id: 'admin/glovo-integration.integration-settings.glovo-token',
   },
   infoSettings: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.collapsible.info-settings',
+    id: 'admin/glovo-integration.integration-settings.production.description',
   },
   infoGlovo: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.collapsible.info-glovo',
+    id: 'admin/glovo-integration.client-info.subtitle',
   },
   checkboxLabel: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.collapsible.checkbox-label',
+    id: 'admin/glovo-integration.integration-settings.production.label',
   },
   titleInformation: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.collapsible.title-information',
+    id: 'admin/glovo-integration.client-info.title',
   },
   email: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.collapsible.email',
+    id: 'admin/glovo-integration.client-info.email',
   },
   firstName: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.collapsible.first-name',
+    id: 'admin/glovo-integration.client-info.first-name',
   },
   lastName: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.collapsible.last-name',
+    id: 'admin/glovo-integration.client-info.last-name',
   },
   typeDocument: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.collapsible.type-document',
+    id: 'admin/glovo-integration.type-document',
   },
   document: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.collapsible.document',
+    id: 'admin/glovo-integration.client-info.document',
   },
   phoneNumber: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.collapsible.phone-number',
+    id: 'admin/glovo-integration.client-info.phone-number',
   },
   corporateName: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.collapsible.corporate-name',
+    id: 'admin/glovo-integration.client-info.corporate-name',
   },
   save: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.floating.save',
+    id: 'admin/glovo-integration.save',
   },
   descriptionName: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.modal.description-name',
+    id: 'admin/glovo-integration.modal.store-name.description',
   },
   storeId: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.modal.affiliate-id',
+    id: 'admin/glovo-integration.store-id',
   },
   affiliateDescription: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.modal.affiliate-description',
+    id: 'admin/glovo-integration.modal.store-id.description',
   },
   salesModal: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.modal.sales',
+    id: 'admin/glovo-integration.sales-channel',
   },
   descriptionSales: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.modal.description-sales',
+    id: 'admin/glovo-integration.modal.sales-channel.description',
   },
   pickupModal: {
     defaultMessage: '',
@@ -119,7 +119,7 @@ export const messageUI = defineMessages({
   },
   pickupDescription: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.modal.pickup-description',
+    id: 'admin/glovo-integration.modal.postal-code.description',
   },
   glovoId: {
     defaultMessage: '',
@@ -127,7 +127,7 @@ export const messageUI = defineMessages({
   },
   descriptionGlovoId: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.modal.description-id',
+    id: 'admin/glovo-integration.modal.glovo-store-id.description',
   },
   fieldToken: {
     defaultMessage: '',
@@ -183,19 +183,19 @@ export const messageUI = defineMessages({
   },
   dialogConfirmation: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.dialog.confirmation.label',
+    id: 'admin/glovo-integration.delete-store-dialog.confirmation',
   },
   dialogCancel: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.dialog.cancel.label',
+    id: 'admin/glovo-integration.delete-store-dialog.cancel',
   },
   dialogTitle: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.dialog.body.title',
+    id: 'admin/glovo-integration.delete-store-dialog.title',
   },
   dialogSubtitle: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.dialog.body.subtitle',
+    id: 'admin/glovo-integration.delete-store-dialog.subtitle',
   },
   alertSuccess: {
     defaultMessage: '',
@@ -203,10 +203,10 @@ export const messageUI = defineMessages({
   },
   checkbox: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.collapsible.checkbox',
+    id: 'admin/glovo-integration.integration-settings.production.label',
   },
   emptyData: {
     defaultMessage: '',
-    id: 'admin/glovo-integration.card.empty',
+    id: 'admin/glovo-integration.table.empty',
   },
 })
