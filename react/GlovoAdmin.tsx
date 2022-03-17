@@ -19,8 +19,8 @@ import {
   Button,
   Card,
 } from 'vtex.styleguide'
-import styles from './GlovoAdmin.css'
 
+import styles from './GlovoAdmin.css'
 import Modal from './components/ModalGlovo'
 import APP_SETTINGS from './graphql/appSettings.graphql'
 import SAVE_APP_SETTINGS from './graphql/saveAppSettings.graphql'
@@ -93,66 +93,91 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
   })
 
   useEffect(() => {
-
     if (!data?.appSettings?.message || data.appSettings.message === '{}') return
     const parsedSettings = JSON.parse(data.appSettings.message)
 
     setSettingsState(parsedSettings)
 
-    const cardMoviles = parsedSettings.affiliation.map((affiliation: AffiliationType) => (
-      <div key={affiliation.id} className='mb3'>
-        <Card> 
-          <div>
-            <div><p><b>{formatIOMessage({
-              id: messageUI.affiliationName.id,
-              intl,
-            }).toString()} :</b> {affiliation.nameAffiliation}</p></div>
-            <div><p><b>{formatIOMessage({
-              id: messageUI.salesChannel.id,
-              intl,
-            }).toString()} :</b> {affiliation.salesChannel}</p></div>
-            <div><p><b>{formatIOMessage({
-              id: messageUI.pickupPoints.id,
-              intl,
-            }).toString()} :</b> {affiliation.pickupPoints}</p></div>
-            <div className='flex'>
-              <div className='w-100'>
-                <div style={{float:'right'}}>
+    const cardMoviles = parsedSettings.affiliation.map(
+      (affiliation: AffiliationType) => (
+        <div key={affiliation.id} className="mb3">
+          <Card>
+            <div>
+              <div>
+                <p>
+                  <b>
+                    {formatIOMessage({
+                      id: messageUI.affiliationName.id,
+                      intl,
+                    }).toString()}{' '}
+                    :
+                  </b>{' '}
+                  {affiliation.nameAffiliation}
+                </p>
+              </div>
+              <div>
+                <p>
+                  <b>
+                    {formatIOMessage({
+                      id: messageUI.salesChannel.id,
+                      intl,
+                    }).toString()}{' '}
+                    :
+                  </b>{' '}
+                  {affiliation.salesChannel}
+                </p>
+              </div>
+              <div>
+                <p>
+                  <b>
+                    {formatIOMessage({
+                      id: messageUI.pickupPoints.id,
+                      intl,
+                    }).toString()}{' '}
+                    :
+                  </b>{' '}
+                  {affiliation.pickupPoints}
+                </p>
+              </div>
+              <div className="flex">
+                <div className="w-100">
+                  <div style={{ float: 'right' }}>
+                    <ButtonWithIcon
+                      icon={edit}
+                      variation={NameFields.SECONDARY}
+                      onClick={() => {
+                        const getItem = parsedSettings.affiliation.find(
+                          (item: AffiliationType) => item.id === affiliation.id
+                        )
+
+                        setTypeModal(NameFields.TYPEDIT)
+                        setIsOpenModal(true)
+                        setFromMobile(true)
+                        if (getItem) setDataEdit(getItem)
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="ml5">
                   <ButtonWithIcon
-                    icon={edit}
-                    variation={NameFields.SECONDARY}
+                    icon={deleteItem}
+                    variation={NameFields.DANGER}
                     onClick={() => {
-                      const getItem = parsedSettings.affiliation.find(
-                        (item: AffiliationType) => item.id === affiliation.id
-                      )
-        
-                      setTypeModal(NameFields.TYPEDIT)
-                      setIsOpenModal(true)
                       setFromMobile(true)
-                      if (getItem) setDataEdit(getItem)
+                      setAlertDialog(true)
+                      setItemDelete(affiliation.id)
                     }}
                   />
                 </div>
               </div>
-              <div className='ml5'>
-                <ButtonWithIcon
-                  icon={deleteItem}
-                  variation={NameFields.DANGER}
-                  onClick={() => {
-                    setFromMobile(true)
-                    setAlertDialog(true)
-                    setItemDelete(affiliation.id)
-                  }}
-                />
-              </div>
             </div>
-          </div>
-        </Card>
-      </div>
-    ))
+          </Card>
+        </div>
+      )
+    )
 
     setCards(cardMoviles)
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
   const changeValueAdmin = (e: { id: string; value: string }) => {
@@ -278,7 +303,9 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
         settings: JSON.stringify(dataSettings),
       },
     }).then(() => {
-      const validate = settingsState.affiliation.length !== dataSettings.affiliation.length
+      const validate =
+        settingsState.affiliation.length !== dataSettings.affiliation.length
+
       setSettingsState(dataSettings)
       setAlertDialog(false)
       if (isOpenModal || validate) {
@@ -289,9 +316,9 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
         setTimeout(() => setAlertConfig(false), 5000)
       }
 
-      setIsOpenModal(false) 
+      setIsOpenModal(false)
 
-      if(fromMobile) setTimeout(() => window.location.reload(), 2000)
+      if (fromMobile) setTimeout(() => window.location.reload(), 2000)
     })
   }
 
@@ -494,15 +521,19 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
                 <div />
               )}
             </div>
-            <Table schema={customSchema} items={settingsState.affiliation} fullWidth={true}/>
+            <Table
+              schema={customSchema}
+              items={settingsState.affiliation}
+              fullWidth
+            />
           </div>
         </PageBlock>
       </div>
       <div className={styles.cardMobile}>
-        <div className='flex mb5'>
+        <div className="flex mb5">
           <img src={iconGlovo} style={{ width: '80px' }} alt="" />
           <div className="mb5 mt5 w-100">
-            <div style={{ float: 'right' ,marginRight: '10px' }}>
+            <div style={{ float: 'right', marginRight: '10px' }}>
               <ButtonWithIcon
                 variation={NameFields.PRIMARY}
                 onClick={() => {
@@ -538,10 +569,19 @@ const GlovoAdmin: FC<InjectedIntlProps> = ({ intl }) => {
             <div />
           )}
         </div>
-        {settingsState.affiliation.length <= 0 ? <Card> <p style={{textAlign: 'center'}}>{formatIOMessage({
-                  id: messageUI.emptyData.id,
-                  intl,
-                }).toString()}</p> </Card> :cards}
+        {settingsState.affiliation.length <= 0 ? (
+          <Card>
+            {' '}
+            <p style={{ textAlign: 'center' }}>
+              {formatIOMessage({
+                id: messageUI.emptyData.id,
+                intl,
+              }).toString()}
+            </p>{' '}
+          </Card>
+        ) : (
+          cards
+        )}
       </div>
       <div className="mt4">
         <Collapsible

@@ -1,5 +1,5 @@
 {
   "section": "accountSettings",
-  "titleId": "admin/glovo.navigation.label-group",
-  "path": "/admin/glovo"
+  "titleId": "admin/glovo-integration.settings-title",
+  "path": "/admin/glovo-integration"
 }
