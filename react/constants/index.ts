@@ -1,0 +1,23 @@
+export const GLOVO_TOKEN = 'glovoToken'
+
+export const STORE_NAME = 'storeName'
+export const STORE_ID = 'storeId'
+export const SALES_CHANNEL = 'salesChannel'
+export const POSTAL_CODE = 'postalCode'
+export const COUNTRY = 'country'
+export const GLOVO_STORE_ID = 'glovoStoreId'
+
+export const EMAIL = 'email'
+export const FIRST_NAME = 'firstName'
+export const LAST_NAME = 'lastName'
+export const CORPORATE_NAME = 'corporateName'
+export const DOCUMENT_TYPE = 'documentType'
+export const DOCUMENT = 'document'
+export const PHONE_NUMBER = 'phone'
+
+export const TYPE_NEW = 'new'
+export const TYPE_EDIT = 'edit'
+export const DANGER = 'danger'
+export const SECONDARY = 'secondary'
+export const PRIMARY = 'primary'
+export const SUCCESS = 'success'

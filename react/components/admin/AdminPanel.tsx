@@ -27,8 +27,23 @@ import iconGlovo from '../../icons/GlovoLogo.png'
 import IconAdd from '../../icons/IconAdd'
 import IconDelete from '../../icons/IconDelete'
 import IconEdit from '../../icons/IconEdit'
-import { NameFields } from '../../shared'
 import type { SettingDataType, AffiliationType, TableItem } from '../../shared'
+import {
+  CORPORATE_NAME,
+  DANGER,
+  DOCUMENT,
+  DOCUMENT_TYPE,
+  EMAIL,
+  FIRST_NAME,
+  GLOVO_TOKEN,
+  LAST_NAME,
+  PHONE_NUMBER,
+  PRIMARY,
+  SECONDARY,
+  SUCCESS,
+  TYPE_EDIT,
+  TYPE_NEW,
+} from '../../constants'
 
 const AdminPanel: FC<InjectedIntlProps> = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -38,7 +53,7 @@ const AdminPanel: FC<InjectedIntlProps> = () => {
   const [itemDelete, setItemDelete] = useState('')
   const [alertDialog, setAlertDialog] = useState(false)
   const [isOpenModal, setIsOpenModal] = useState(false)
-  const [typeModal, setTypeModal] = useState(NameFields.TYPENEW)
+  const [typeModal, setTypeModal] = useState(TYPE_NEW)
   const [fromMobile, setFromMobile] = useState(false)
   const [dataEdit, setDataEdit] = useState<AffiliationType>({
     id: '',
@@ -77,7 +92,7 @@ const AdminPanel: FC<InjectedIntlProps> = () => {
 
   const changeIsOpen = () => {
     setIsOpenModal(!isOpenModal)
-    setTypeModal(NameFields.TYPENEW)
+    setTypeModal(TYPE_NEW)
   }
 
   const { data } = useQuery(APP_SETTINGS, {
@@ -130,13 +145,13 @@ const AdminPanel: FC<InjectedIntlProps> = () => {
                   <div style={{ float: 'right' }}>
                     <ButtonWithIcon
                       icon={<IconEdit />}
-                      variation={NameFields.SECONDARY}
+                      variation={SECONDARY}
                       onClick={() => {
                         const getItem = parsedSettings.affiliation.find(
                           (item: AffiliationType) => item.id === affiliation.id
                         )
 
-                        setTypeModal(NameFields.TYPEDIT)
+                        setTypeModal(TYPE_EDIT)
                         setIsOpenModal(true)
                         setFromMobile(true)
                         if (getItem) setDataEdit(getItem)
@@ -147,7 +162,7 @@ const AdminPanel: FC<InjectedIntlProps> = () => {
                 <div className="ml5">
                   <ButtonWithIcon
                     icon={<IconDelete />}
-                    variation={NameFields.DANGER}
+                    variation={DANGER}
                     onClick={() => {
                       setFromMobile(true)
                       setAlertDialog(true)
@@ -167,25 +182,25 @@ const AdminPanel: FC<InjectedIntlProps> = () => {
   }, [data])
 
   const changeValueAdmin = (e: { id: string; value: string }) => {
-    if (e.id === NameFields.GLOVOTOKEN) {
+    if (e.id === GLOVO_TOKEN) {
       setSettingsState({ ...settingsState, glovoToken: e.value })
       setMsgError({ ...msgError, token: '' })
-    } else if (e.id === NameFields.EMAIL) {
+    } else if (e.id === EMAIL) {
       setSettingsState({ ...settingsState, email: e.value })
       setMsgError({ ...msgError, email: '' })
-    } else if (e.id === NameFields.FIRSTNAME) {
+    } else if (e.id === FIRST_NAME) {
       setSettingsState({ ...settingsState, firstName: e.value })
       setMsgError({ ...msgError, firstName: '' })
-    } else if (e.id === NameFields.CORPORATENAME) {
+    } else if (e.id === CORPORATE_NAME) {
       setSettingsState({ ...settingsState, corporateName: e.value })
       setMsgError({ ...msgError, corporateName: '' })
-    } else if (e.id === NameFields.DOCUMENT) {
+    } else if (e.id === DOCUMENT) {
       setSettingsState({ ...settingsState, document: e.value })
       setMsgError({ ...msgError, document: '' })
-    } else if (e.id === NameFields.LASTNAME) {
+    } else if (e.id === LAST_NAME) {
       setSettingsState({ ...settingsState, lastName: e.value })
       setMsgError({ ...msgError, lastName: '' })
-    } else if (e.id === NameFields.PHONENUMBER) {
+    } else if (e.id === PHONE_NUMBER) {
       setSettingsState({ ...settingsState, phoneNumber: e.value })
       setMsgError({ ...msgError, phoneNumber: '' })
     } else {
@@ -327,13 +342,13 @@ const AdminPanel: FC<InjectedIntlProps> = () => {
         <div>
           <ButtonWithIcon
             icon={<IconEdit />}
-            variation={NameFields.SECONDARY}
+            variation={SECONDARY}
             onClick={() => {
               const getItem = settingsState.affiliation.find(
                 (item) => item.id === e.rowData.id
               )
 
-              setTypeModal(NameFields.TYPEDIT)
+              setTypeModal(TYPE_EDIT)
               setIsOpenModal(true)
               setFromMobile(false)
               if (getItem) setDataEdit(getItem)
@@ -343,7 +358,7 @@ const AdminPanel: FC<InjectedIntlProps> = () => {
         <div>
           <ButtonWithIcon
             icon={<IconDelete />}
-            variation={NameFields.DANGER}
+            variation={DANGER}
             onClick={() => {
               setAlertDialog(true)
               setFromMobile(false)
@@ -420,11 +435,11 @@ const AdminPanel: FC<InjectedIntlProps> = () => {
             <div style={{ float: 'right' }} className="mb5">
               <ButtonWithIcon
                 icon={<IconAdd />}
-                variation={NameFields.SECONDARY}
+                variation={SECONDARY}
                 onClick={() => {
                   setIsOpenModal(true)
                   setFromMobile(false)
-                  setTypeModal(NameFields.TYPENEW)
+                  setTypeModal(TYPE_NEW)
                 }}
               >
                 <FormattedMessage id="admin/glovo-integration.add-more" />
@@ -461,7 +476,7 @@ const AdminPanel: FC<InjectedIntlProps> = () => {
               {alertAff ? (
                 <div className="mb2">
                   <Alert
-                    type={NameFields.SUCCESS}
+                    type={SUCCESS}
                     onClose={() => {
                       setAlertAff(false)
                     }}
@@ -487,11 +502,11 @@ const AdminPanel: FC<InjectedIntlProps> = () => {
           <div className="mb5 mt5 w-100">
             <div style={{ float: 'right', marginRight: '10px' }}>
               <ButtonWithIcon
-                variation={NameFields.PRIMARY}
+                variation={PRIMARY}
                 onClick={() => {
                   setIsOpenModal(true)
                   setFromMobile(true)
-                  setTypeModal(NameFields.TYPENEW)
+                  setTypeModal(TYPE_NEW)
                 }}
               >
                 <FormattedMessage id="admin/glovo-integration.add-more" />
@@ -503,7 +518,7 @@ const AdminPanel: FC<InjectedIntlProps> = () => {
           {alertAff ? (
             <div className="mb2">
               <Alert
-                type={NameFields.SUCCESS}
+                type={SUCCESS}
                 onClose={() => {
                   setAlertAff(false)
                 }}
@@ -540,7 +555,7 @@ const AdminPanel: FC<InjectedIntlProps> = () => {
             {alertConfig ? (
               <div className="mb2">
                 <Alert
-                  type={NameFields.SUCCESS}
+                  type={SUCCESS}
                   onClose={() => {
                     setAlertConfig(false)
                   }}
@@ -572,7 +587,7 @@ const AdminPanel: FC<InjectedIntlProps> = () => {
                     <FormattedMessage id="admin/glovo-integration.integration-settings.glovo-token" />
                   </p>
                   <InputPassword
-                    id={NameFields.GLOVOTOKEN}
+                    id={GLOVO_TOKEN}
                     value={settingsState.glovoToken}
                     label={
                       <FormattedMessage id="admin/glovo-integration.integration-settings.glovo-token.description" />
@@ -628,7 +643,7 @@ const AdminPanel: FC<InjectedIntlProps> = () => {
                 </p>
                 <div className="mt7">
                   <Input
-                    id={NameFields.EMAIL}
+                    id={EMAIL}
                     value={settingsState.email}
                     label={
                       <FormattedMessage id="admin/glovo-integration.client-info.email" />
@@ -644,7 +659,7 @@ const AdminPanel: FC<InjectedIntlProps> = () => {
                   <div className="flex">
                     <div className="w-50 pr5 pt5">
                       <Input
-                        id={NameFields.FIRSTNAME}
+                        id={FIRST_NAME}
                         value={settingsState.firstName}
                         label={
                           <FormattedMessage id="admin/glovo-integration.client-info.first-name" />
@@ -660,7 +675,7 @@ const AdminPanel: FC<InjectedIntlProps> = () => {
                     </div>
                     <div className="w-50 pt5">
                       <Input
-                        id={NameFields.LASTNAME}
+                        id={LAST_NAME}
                         value={settingsState.lastName}
                         label={
                           <FormattedMessage id="admin/glovo-integration.client-info.last-name" />
@@ -678,7 +693,7 @@ const AdminPanel: FC<InjectedIntlProps> = () => {
                   <div className="flex">
                     <div className="w-50 pr5 pt5">
                       <Input
-                        id={NameFields.TYPEDOCUMENT}
+                        id={DOCUMENT_TYPE}
                         value={settingsState.selectDocument}
                         label={
                           <FormattedMessage id="admin/glovo-integration.client-info.document-type" />
@@ -694,7 +709,7 @@ const AdminPanel: FC<InjectedIntlProps> = () => {
                     </div>
                     <div className="w-50 pt5">
                       <Input
-                        id={NameFields.DOCUMENT}
+                        id={DOCUMENT}
                         value={settingsState.document}
                         label={
                           <FormattedMessage id="admin/glovo-integration.client-info.document" />
@@ -711,7 +726,7 @@ const AdminPanel: FC<InjectedIntlProps> = () => {
                   </div>
                   <div className="pt5">
                     <Input
-                      id={NameFields.PHONENUMBER}
+                      id={PHONE_NUMBER}
                       value={settingsState.phoneNumber}
                       label={
                         <FormattedMessage id="admin/glovo-integration.client-info.phone-number" />
@@ -727,7 +742,7 @@ const AdminPanel: FC<InjectedIntlProps> = () => {
                   </div>
                   <div className="pt5">
                     <Input
-                      id={NameFields.CORPORATENAME}
+                      id={CORPORATE_NAME}
                       value={settingsState.corporateName}
                       label={
                         <FormattedMessage id="admin/glovo-integration.client-info.corporate-name" />
@@ -744,7 +759,7 @@ const AdminPanel: FC<InjectedIntlProps> = () => {
                 </div>
                 <div className="mt5" style={{ float: 'right' }}>
                   <Button
-                    variation={NameFields.PRIMARY}
+                    variation={PRIMARY}
                     onClick={() => handleSaveSettings()}
                   >
                     {<FormattedMessage id="admin/glovo-integration.save" />}
