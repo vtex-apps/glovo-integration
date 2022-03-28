@@ -36,4 +36,4 @@ const IconDelete: FC = () => {
   )
 }
 
-export default IconDelete
+export { IconDelete }

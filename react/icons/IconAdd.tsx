@@ -16,4 +16,4 @@ const IconAdd: FC = () => {
   )
 }
 
-export default IconAdd
+export { IconAdd }

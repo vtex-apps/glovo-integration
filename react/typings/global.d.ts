@@ -10,8 +10,9 @@ interface AppConfig {
   clientProfileData: ClientProfileData
 }
 interface StoreInfo {
+  id: string
   storeName: string
-  storeId: string
+  affiliateId: string
   salesChannel: string
   postalCode: string
   country: string
@@ -33,3 +34,5 @@ interface TableItem {
   rowData: StoreInfo
   updateCellMeasurements: () => void
 }
+
+type AlertType = 'success' | 'warning' | 'error'

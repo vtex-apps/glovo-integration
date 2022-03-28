@@ -21,4 +21,4 @@ const IconEdit: FC = () => {
   )
 }
 
-export default IconEdit
+export { IconEdit }
