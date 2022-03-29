@@ -41,6 +41,6 @@
   "admin/glovo-integration.inputs.error-message": "This field is mandatory",
   "admin/glovo-integration.alert.success": "Settings saved successfully",
   "admin/glovo-integration.alert.error": "Something went wrong",
-  "admin/glovo-integration.add-more": "ADD MORE",
-  "admin/glovo-integration.save": "SAVE"
+  "admin/glovo-integration.add-more": "ADD STORE",
+  "admin/glovo-integration.save": "SAVE SETTINGS"
 }

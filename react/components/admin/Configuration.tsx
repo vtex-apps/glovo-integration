@@ -19,7 +19,6 @@ import {
   GLOVO_TOKEN,
   LAST_NAME,
   PHONE_NUMBER,
-  PRIMARY,
   PRODUCTION,
 } from '../../constants'
 import { validateInputs } from '../../utils'
@@ -295,11 +294,7 @@ const Configuration: FC<SettingsSection> = ({
               </div>
             </div>
             <div className="flex justify-end mt8">
-              <Button
-                variation={PRIMARY}
-                isLoading={savingSettings}
-                onClick={handleSaveSettings}
-              >
+              <Button isLoading={savingSettings} onClick={handleSaveSettings}>
                 {<FormattedMessage id="admin/glovo-integration.save" />}
               </Button>
             </div>

@@ -1,11 +1,15 @@
 import type { FC } from 'react'
 import React, { useState, Fragment } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { ButtonWithIcon, ModalDialog, PageBlock, Table } from 'vtex.styleguide'
+import {
+  ButtonWithIcon,
+  ModalDialog,
+  PageBlock,
+  Table,
+  IconPlusLines,
+} from 'vtex.styleguide'
 
-import { SECONDARY } from '../../constants'
 import { IconGlovo } from '../../icons/IconGlovo'
-import { IconAdd } from '../../icons/IconAdd'
 import { countries } from '../../utils'
 import { StoreModal } from './StoreModal'
 import type { AlertProps } from './AlertBanner'
@@ -237,8 +241,7 @@ const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
             <IconGlovo />
             <div className="mb5">
               <ButtonWithIcon
-                icon={<IconAdd />}
-                variation={SECONDARY}
+                icon={<IconPlusLines />}
                 onClick={handleOpenStoreModal}
               >
                 <FormattedMessage id="admin/glovo-integration.add-more" />

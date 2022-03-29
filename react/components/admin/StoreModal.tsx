@@ -13,7 +13,6 @@ import {
   COUNTRY,
   GLOVO_STORE_ID,
   POSTAL_CODE,
-  PRIMARY,
   SALES_CHANNEL,
   AFFILIATE_ID,
   STORE_NAME,
@@ -283,7 +282,6 @@ const StoreModal: FC<Props> = ({
       </div>
       <div className="flex justify-end mt8">
         <Button
-          variation={PRIMARY}
           isLoading={saving}
           onClick={!store ? handleAddStore : handleEditStore}
         >
