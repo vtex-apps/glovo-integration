@@ -127,9 +127,7 @@ const StoreModal: FC<Props> = ({
   }
 
   const handleAddStore = () => {
-    const validated = validate()
-
-    if (validated) {
+    if (validate()) {
       addStore(storeInfo)
     }
 
@@ -138,9 +136,7 @@ const StoreModal: FC<Props> = ({
   }
 
   const handleEditStore = () => {
-    const validated = validate()
-
-    if (validated) {
+    if (validate()) {
       editStore(storeInfo)
     }
 

@@ -108,7 +108,7 @@ const Configuration: FC<SettingsSection> = ({
         <h2>
           <FormattedMessage id="admin/glovo-integration.integration-settings.title" />
         </h2>
-        <p className="i mt0 gray">
+        <p className="i mt0 mb7 gray">
           <FormattedMessage id="admin/glovo-integration.integration-settings.subtitle" />
         </p>
 
@@ -154,7 +154,7 @@ const Configuration: FC<SettingsSection> = ({
         <h2>
           <FormattedMessage id="admin/glovo-integration.client-info.title" />
         </h2>
-        <p className="i mt0 gray">
+        <p className="i mt0 mb7 gray">
           <FormattedMessage id="admin/glovo-integration.client-info.subtitle" />
         </p>
         <div className="mt4">
