@@ -280,6 +280,7 @@ const StoreModal: FC<Props> = ({
         <Button
           isLoading={saving}
           onClick={!store ? handleAddStore : handleEditStore}
+          block
         >
           <FormattedMessage id="admin/glovo-integration.save" />
         </Button>
