@@ -70,6 +70,7 @@ const Configuration: FC<SettingsSection> = ({
 
     if (!validation) {
       setError(true)
+      setSavingSettings(false)
 
       return
     }
