@@ -42,5 +42,5 @@
   "admin/glovo-integration.alert.success": "Settings saved successfully",
   "admin/glovo-integration.alert.error": "Something went wrong",
   "admin/glovo-integration.add-more": "ADD STORE",
-  "admin/glovo-integration.save": "SAVE SETTINGS"
+  "admin/glovo-integration.save": "SAVE"
 }

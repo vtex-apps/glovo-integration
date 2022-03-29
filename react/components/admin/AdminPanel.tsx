@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useMutation, useQuery } from 'react-apollo'
 import { FormattedMessage } from 'react-intl'
 import {
@@ -91,31 +91,29 @@ const AdminPanel: FC = () => {
       }
     >
       {loading ? (
-        <PageBlock>
-          <EmptyState height={300}>
-            <h5 className="t-heading-5">
-              <FormattedMessage id="admin/glovo-integration.settings.loading" />
-            </h5>
-            <Spinner size={60} />
-          </EmptyState>
-        </PageBlock>
+        <EmptyState height={300}>
+          <h5 className="t-heading-5">
+            <FormattedMessage id="admin/glovo-integration.settings.loading" />
+          </h5>
+          <Spinner size={60} />
+        </EmptyState>
       ) : (
-        <Fragment>
-          <div className="mt2">
+        <PageBlock variation="aside">
+          <div>
             <Stores
               settings={settings}
               setSettings={setSettings}
               saveSettings={updateSettings}
             />
           </div>
-          <div className="mt6">
+          <div>
             <Configuration
               settings={settings}
               setSettings={setSettings}
               saveSettings={updateSettings}
             />
           </div>
-        </Fragment>
+        </PageBlock>
       )}
     </Layout>
   )

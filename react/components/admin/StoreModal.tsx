@@ -86,7 +86,7 @@ const StoreModal: FC<Props> = ({
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value =
       e.target.id === AFFILIATE_ID
-        ? e.target.value.toUpperCase().replace(/[AEIOU]/, '')
+        ? e.target.value.toUpperCase().replace(/[AEIOU0-9]/, '')
         : e.target.value
 
     setStoreInfo({

@@ -4,7 +4,6 @@ import { FormattedMessage } from 'react-intl'
 import {
   ButtonWithIcon,
   ModalDialog,
-  PageBlock,
   Table,
   IconPlusLines,
 } from 'vtex.styleguide'
@@ -223,7 +222,7 @@ const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
           ),
         }}
       >
-        <div className="">
+        <div>
           <p className="f3 f3-ns fw3 gray">
             <FormattedMessage id="admin/glovo-integration.delete-store-dialog.title" />
           </p>
@@ -235,36 +234,32 @@ const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
 
       <AlertBanner show={alert.show} type={alert.type} onClose={setAlert} />
 
-      <PageBlock>
-        <div style={{ minHeight: '300px' }}>
-          <div className="flex justify-between items-center">
-            <IconGlovo />
-            <div className="mb5">
-              <ButtonWithIcon
-                icon={<IconPlusLines />}
-                onClick={handleOpenStoreModal}
-              >
-                <FormattedMessage id="admin/glovo-integration.add-more" />
-              </ButtonWithIcon>
-            </div>
-          </div>
-
-          <Table
-            schema={schema}
-            items={settings.storesConfig}
-            lineActions={lineActions}
-            fullWidth
-            emptyStateLabel=""
-            emptyStateChildren={
-              <div className="">
-                <h4 className="t-heading-4 pt8">
-                  <FormattedMessage id="admin/glovo-integration.table.empty" />
-                </h4>
-              </div>
-            }
-          />
+      <div>
+        <div className="flex justify-between items-center">
+          <IconGlovo />
+          <ButtonWithIcon
+            icon={<IconPlusLines />}
+            onClick={handleOpenStoreModal}
+          >
+            <FormattedMessage id="admin/glovo-integration.add-more" />
+          </ButtonWithIcon>
         </div>
-      </PageBlock>
+
+        <Table
+          schema={schema}
+          items={settings.storesConfig}
+          lineActions={lineActions}
+          fullWidth
+          emptyStateLabel=""
+          emptyStateChildren={
+            <div className="">
+              <h4 className="t-heading-4 pt8">
+                <FormattedMessage id="admin/glovo-integration.table.empty" />
+              </h4>
+            </div>
+          }
+        />
+      </div>
     </Fragment>
   )
 }
