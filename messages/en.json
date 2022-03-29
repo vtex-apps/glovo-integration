@@ -8,6 +8,8 @@
   "admin/glovo-integration.country": "Country",
   "admin/glovo-integration.glovo-store-id": "Glovo Store ID",
   "admin/glovo-integration.table.actions": "Actions",
+  "admin/glovo-integration.table.edit-store": "Edit store",
+  "admin/glovo-integration.table.remove-store": "Remove store",
   "admin/glovo-integration.table.empty": "There are no stores configured",
   "admin/glovo-integration.collapsible.header": "Configuration",
   "admin/glovo-integration.integration-settings.title": "Integration Settings",

@@ -163,7 +163,9 @@ const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
 
   const lineActions = [
     {
-      label: ({ rowData: store }: TableItem) => `Edit store ${store.storeName}`,
+      label: () => (
+        <FormattedMessage id="admin/glovo-integration.table.edit-store" />
+      ),
       onClick: ({ rowData: store }: TableItem) => {
         setAddOrEditStore({
           ...addOrEditStore,
@@ -173,8 +175,9 @@ const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
       },
     },
     {
-      label: ({ rowData: store }: TableItem) =>
-        `Delete store ${store.storeName}`,
+      label: () => (
+        <FormattedMessage id="admin/glovo-integration.table.remove-store" />
+      ),
       isDangerous: true,
       onClick: ({ rowData: { id } }: TableItem) => {
         setRemoveStore({
