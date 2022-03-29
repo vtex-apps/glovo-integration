@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import React, { useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { useMutation, useQuery } from 'react-apollo'
 import { FormattedMessage } from 'react-intl'
 import {
@@ -13,7 +13,6 @@ import {
 import APP_SETTINGS from '../../graphql/appSettings.graphql'
 import SAVE_APP_SETTINGS from '../../graphql/saveAppSettings.graphql'
 import { Configuration } from './Configuration'
-import { SettingsContext } from '../../context/settings'
 import { Stores } from './Stores'
 
 const AdminPanel: FC = () => {
@@ -101,7 +100,7 @@ const AdminPanel: FC = () => {
           </EmptyState>
         </PageBlock>
       ) : (
-        <SettingsContext.Provider value={{ settings, setSettings }}>
+        <Fragment>
           <div className="mt2">
             <Stores
               settings={settings}
@@ -116,7 +115,7 @@ const AdminPanel: FC = () => {
               saveSettings={updateSettings}
             />
           </div>
-        </SettingsContext.Provider>
+        </Fragment>
       )}
     </Layout>
   )

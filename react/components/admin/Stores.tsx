@@ -47,6 +47,7 @@ const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
     setAddOrEditStore({
       ...addOrEditStore,
       isOpen: true,
+      store: null,
     })
   }
 
@@ -58,17 +59,10 @@ const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
     })
   }
 
-  const handleAddStore = async (store: StoreInfo) => {
-    const updatedStores = [...settings.storesConfig, store]
-
+  const updateSettings = async (storesConfig: StoreInfo[]) => {
     const successfulUpdate = await saveSettings({
       ...settings,
-      storesConfig: updatedStores,
-    })
-
-    setAddOrEditStore({
-      ...addOrEditStore,
-      isOpen: false,
+      storesConfig,
     })
 
     if (!successfulUpdate) {
@@ -86,6 +80,17 @@ const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
     })
   }
 
+  const handleAddStore = async (store: StoreInfo) => {
+    const updatedStores = [...settings.storesConfig, store]
+
+    updateSettings(updatedStores)
+
+    setAddOrEditStore({
+      ...addOrEditStore,
+      isOpen: false,
+    })
+  }
+
   const handleEditStore = async (editedStore: StoreInfo) => {
     const filteredStores = settings.storesConfig.filter(
       ({ id }: StoreInfo) => id !== editedStore.id
@@ -93,29 +98,12 @@ const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
 
     const updatedStores = [...filteredStores, editedStore]
 
-    const successfulUpdate = await saveSettings({
-      ...settings,
-      storesConfig: updatedStores,
-    })
+    updateSettings(updatedStores)
 
     setAddOrEditStore({
       isOpen: false,
       loading: false,
       store: null,
-    })
-
-    if (!successfulUpdate) {
-      setAlert({
-        show: true,
-        type: 'error',
-      })
-
-      return
-    }
-
-    setAlert({
-      show: true,
-      type: 'success',
     })
   }
 
@@ -129,28 +117,20 @@ const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
       (store: StoreInfo) => store.id !== removeStore.storeId
     )
 
-    if (
-      !updatedStores ||
-      updatedStores.length === settings.storesConfig.length
-    ) {
+    if (updatedStores.length === settings.storesConfig.length) {
       setAlert({
         show: true,
         type: 'error',
       })
     }
 
-    const updated = await saveSettings({
-      ...settings,
-      storesConfig: updatedStores,
-    })
+    updateSettings(updatedStores)
 
-    if (updated) {
-      setRemoveStore({
-        isOpen: false,
-        loading: false,
-        storeId: '',
-      })
-    }
+    setRemoveStore({
+      isOpen: false,
+      loading: false,
+      storeId: '',
+    })
   }
 
   const schema = {

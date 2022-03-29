@@ -133,6 +133,9 @@ const StoreModal: FC<Props> = ({
     if (validated) {
       addStore(storeInfo)
     }
+
+    setStoreInfo({} as StoreInfo)
+    setSelectedCountry(null)
   }
 
   const handleEditStore = () => {
@@ -141,6 +144,9 @@ const StoreModal: FC<Props> = ({
     if (validated) {
       editStore(storeInfo)
     }
+
+    setStoreInfo({} as StoreInfo)
+    setSelectedCountry(null)
   }
 
   return (
