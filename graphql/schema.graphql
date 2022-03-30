@@ -1,0 +1,7 @@
+type Query {
+  getAppSettings: AppSettings @cacheControl(scope: PUBLIC, maxAge: SHORT)
+}
+
+type Mutation {
+  saveAppSettings(settings: SaveAppSettings): Boolean
+}

@@ -16,7 +16,8 @@
     "docs": "0.x",
     "admin": "0.x",
     "react": "3.x",
-    "messages": "1.x"
+    "messages": "1.x",
+    "graphql": "1.x"
   },
   "billingOptions": {
     "support": {
@@ -43,6 +44,9 @@
         "host": "api.glovoapp.com",
         "path": "*"
       }
+    },
+    {
+      "name": "graphql-query"
     },
     {
       "name": "OMSViewer"

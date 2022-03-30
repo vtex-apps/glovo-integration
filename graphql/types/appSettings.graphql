@@ -1,0 +1,9 @@
+type AppSettings {
+  glovoToken: String
+  production: Boolean
+}
+
+input SaveAppSettings {
+  glovoToken: String
+  production: Boolean
+}
