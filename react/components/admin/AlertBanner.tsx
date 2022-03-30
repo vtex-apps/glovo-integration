@@ -28,7 +28,11 @@ const AlertBanner: FC<Props> = ({ show, type, onClose, autoClose = 5000 }) => {
   return (
     <div className="mb4">
       <Alert type={type} onClose={handleClose} autoClose={autoClose}>
-        <FormattedMessage id={`admin/glovo-integration.alert.${type}`} />
+        {type === 'success' ? (
+          <FormattedMessage id="admin/glovo-integration.alert.success" />
+        ) : (
+          <FormattedMessage id="admin/glovo-integration.alert.error" />
+        )}
       </Alert>
     </div>
   )

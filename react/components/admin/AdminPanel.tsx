@@ -4,6 +4,7 @@ import { useMutation, useQuery } from 'react-apollo'
 import { FormattedMessage } from 'react-intl'
 import {
   EmptyState,
+  IconFailure,
   Layout,
   PageBlock,
   PageHeader,
@@ -75,10 +76,6 @@ const AdminPanel: FC = () => {
     }
   }
 
-  if (error) {
-    return null
-  }
-
   return (
     <Layout
       fullWidth
@@ -91,11 +88,18 @@ const AdminPanel: FC = () => {
       }
     >
       {loading ? (
-        <EmptyState height={300}>
+        <EmptyState height={500}>
           <h5 className="t-heading-5">
             <FormattedMessage id="admin/glovo-integration.settings.loading" />
           </h5>
           <Spinner size={60} />
+        </EmptyState>
+      ) : error ? (
+        <EmptyState height={500}>
+          <h5 className="t-heading-5 gray mt0">
+            <FormattedMessage id="admin/glovo-integration.settings.error" />
+          </h5>
+          <IconFailure size={60} />
         </EmptyState>
       ) : (
         <PageBlock variation="aside">

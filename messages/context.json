@@ -1,6 +1,7 @@
 {
   "admin/glovo-integration.settings-title": "Glovo Settings",
   "admin/glovo-integration.settings.loading": "Loading application settings...",
+  "admin/glovo-integration.settings.error": "Unable to retrieve application settings",
   "admin/glovo-integration.store-name": "Store name",
   "admin/glovo-integration.affiliate-id": "Affiliate ID",
   "admin/glovo-integration.sales-channel": "Sales Channel",
