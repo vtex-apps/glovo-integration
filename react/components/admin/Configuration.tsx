@@ -14,7 +14,7 @@ import {
   PHONE_NUMBER,
   PRODUCTION,
 } from '../../constants'
-import { validateInputs } from '../../utils'
+import { validateInputs } from '../../../common/utils'
 import type { AlertProps } from './AlertBanner'
 import { AlertBanner } from './AlertBanner'
 import type { SettingsSection } from '../../typings/settingsSections'

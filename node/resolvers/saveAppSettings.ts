@@ -1,4 +1,4 @@
-import { validateInputs } from '../utils'
+import { validateInputs } from '../../common/utils'
 
 export const saveGlovoIntegrationSettings = async (
   _: unknown,
