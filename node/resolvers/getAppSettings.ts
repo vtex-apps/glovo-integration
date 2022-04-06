@@ -1,8 +1,8 @@
-export const getAppSettings = async (
+export const getGlovoIntegrationSettings = async (
   _: unknown,
   __: unknown,
   ctx: Context
-): Promise<AppConfig> => {
+): Promise<AppSettings> => {
   const {
     clients: { apps },
   } = ctx

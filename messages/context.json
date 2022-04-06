@@ -1,5 +1,5 @@
 {
-  "admin/glovo-integration.settings-title": "Glovo Settings",
+  "admin/glovo-integration.settings-title": "Glovo Integration",
   "admin/glovo-integration.settings.loading": "Loading application settings...",
   "admin/glovo-integration.settings.error": "Unable to retrieve application settings",
   "admin/glovo-integration.store-name": "Store name",

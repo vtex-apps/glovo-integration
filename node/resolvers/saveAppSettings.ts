@@ -1,8 +1,19 @@
-export const saveAppSettings = async (
+import { validateInputs } from '../utils'
+
+export const saveGlovoIntegrationSettings = async (
   _: unknown,
-  settings: AppConfig,
-  { clients: { apps }, vtex: { logger } }: Context
+  { settings }: { settings: AppSettings },
+  ctx: Context
 ): Promise<boolean> => {
+  const {
+    clients: { apps },
+    vtex: { logger },
+  } = ctx
+
+  if (!validateInputs(settings)) {
+    return false
+  }
+
   try {
     await apps.saveAppSettings(process.env.VTEX_APP_ID as string, settings)
 
@@ -10,7 +21,7 @@ export const saveAppSettings = async (
   } catch (error) {
     logger.error({
       message: `Unable to save apps settings`,
-      error,
+      error: error.response,
     })
 
     return false

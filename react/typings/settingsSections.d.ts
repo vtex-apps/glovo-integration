@@ -1,7 +1,7 @@
 import type { Dispatch, SetStateAction } from 'react'
 
 export interface SettingsSection {
-  settings: AppConfig
-  setSettings: Dispatch<SetStateAction<AppConfig>>
-  saveSettings: (settings: AppConfig) => Promise<boolean>
+  settings: AppSettings
+  setSettings: Dispatch<SetStateAction<AppSettings>>
+  saveSettings: (settings: AppSettings) => Promise<boolean>
 }

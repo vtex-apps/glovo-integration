@@ -4,8 +4,6 @@
   "version": "2.0.6",
   "title": "Glovo Integration",
   "description": "Glovo Integration",
-  "mustUpdateAt": "2018-01-04",
-  "categories": [],
   "dependencies": {
     "vtex.styleguide": "9.x",
     "vtex.native-types": "0.x",
@@ -56,6 +54,9 @@
     },
     {
       "name": "ADMIN_DS"
+    },
+    {
+      "name": "update-app-settings"
     },
     {
       "name": "outbound-access",

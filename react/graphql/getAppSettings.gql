@@ -1,0 +1,24 @@
+query getGlovoIntegrationSettings {
+  settings: getGlovoIntegrationSettings {
+    glovoToken
+    production
+    stores {
+      id
+      storeName
+      affiliateId
+      salesChannel
+      postalCode
+      country
+      glovoStoreId
+    }
+    clientProfileData {
+      email
+      firstName
+      lastName
+      documentType
+      document
+      phone
+      corporateName
+    }
+  }
+}

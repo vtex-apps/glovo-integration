@@ -420,9 +420,9 @@ interface ComparisonObject {
   }
 }
 
-interface AppConfig {
+interface AppSettings {
   glovoToken: string
-  storesConfig: StoreInfo[]
+  stores: StoreInfo[]
   clientProfileData: ClientProfileData
 }
 

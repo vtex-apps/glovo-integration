@@ -62,10 +62,10 @@ const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
     })
   }
 
-  const updateSettings = async (storesConfig: StoreInfo[]) => {
+  const updateSettings = async (stores: StoreInfo[]) => {
     const successfulUpdate = await saveSettings({
       ...settings,
-      storesConfig,
+      stores,
     })
 
     if (!successfulUpdate) {
@@ -84,7 +84,7 @@ const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
   }
 
   const handleAddStore = async (store: StoreInfo) => {
-    const updatedStores = [...settings.storesConfig, store]
+    const updatedStores = [...settings.stores, store]
 
     updateSettings(updatedStores)
 
@@ -95,7 +95,7 @@ const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
   }
 
   const handleEditStore = async (editedStore: StoreInfo) => {
-    const filteredStores = settings.storesConfig.filter(
+    const filteredStores = settings.stores.filter(
       ({ id }: StoreInfo) => id !== editedStore.id
     )
 
@@ -116,11 +116,11 @@ const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
       loading: true,
     })
 
-    const updatedStores = settings.storesConfig.filter(
+    const updatedStores = settings.stores.filter(
       (store: StoreInfo) => store.id !== removeStore.storeId
     )
 
-    if (updatedStores.length === settings.storesConfig.length) {
+    if (updatedStores.length === settings.stores.length) {
       setAlert({
         show: true,
         type: 'error',
@@ -247,7 +247,7 @@ const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
 
         <Table
           schema={schema}
-          items={settings.storesConfig}
+          items={settings.stores}
           lineActions={lineActions}
           fullWidth
           emptyStateLabel=""

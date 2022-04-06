@@ -1,9 +1,13 @@
-type AppSettings {
+type GlovoIntegrationSettings {
   glovoToken: String
   production: Boolean
+  stores: [Store]
+  clientProfileData: ClientProfileData
 }
 
-input SaveAppSettings {
+input SaveGlovoIntegrationSettings {
   glovoToken: String
   production: Boolean
+  stores: [SaveStore]
+  clientProfileData: SaveClientProfileData
 }

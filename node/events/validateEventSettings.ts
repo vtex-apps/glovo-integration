@@ -16,7 +16,7 @@ export async function validateEventSettings(
     )
   }
 
-  ctx.state.storesConfig = appConfig.storesConfig
+  ctx.state.stores = appConfig.stores
 
   await next()
 }

@@ -11,16 +11,24 @@ import {
   Spinner,
 } from 'vtex.styleguide'
 
-import APP_SETTINGS from '../../graphql/appSettings.graphql'
-import SAVE_APP_SETTINGS from '../../graphql/saveAppSettings.graphql'
+import GET_APP_SETTINGS from '../../graphql/getAppSettings.gql'
+import SAVE_APP_SETTINGS from '../../graphql/saveAppSettings.gql'
 import { Configuration } from './Configuration'
 import { Stores } from './Stores'
 
+interface QueryResponse {
+  loading: boolean
+  error: any
+  data: {
+    settings: AppSettings
+  }
+}
+
 const AdminPanel: FC = () => {
-  const [settings, setSettings] = useState<AppConfig>({
+  const [settings, setSettings] = useState<AppSettings>({
     glovoToken: '',
     production: false,
-    storesConfig: [],
+    stores: [],
     clientProfileData: {
       email: '',
       firstName: '',
@@ -34,35 +42,29 @@ const AdminPanel: FC = () => {
 
   const [saveSettings] = useMutation(SAVE_APP_SETTINGS)
 
-  const { loading, error, data } = useQuery(APP_SETTINGS, {
-    variables: {
-      version: process.env.VTEX_APP_VERSION,
-    },
+  const { loading, error, data }: QueryResponse = useQuery(GET_APP_SETTINGS, {
     ssr: false,
   })
 
   useEffect(() => {
-    if (!data?.appSettings?.message || data.appSettings.message === '{}') {
+    if (!data?.settings) {
       return
     }
 
-    const parsedSettings = JSON.parse(data.appSettings.message)
-
-    setSettings(parsedSettings)
+    setSettings(data.settings)
   }, [data])
 
   const updateSettings = async (
-    updatedSettings: AppConfig
+    updatedSettings: AppSettings
   ): Promise<boolean> => {
     try {
       const response = await saveSettings({
         variables: {
-          version: process.env.VTEX_APP_VERSION,
-          settings: JSON.stringify(updatedSettings),
+          settings: updatedSettings,
         },
       })
 
-      if (!response.data.saveAppSettings) {
+      if (!response.data.settingsUpdated) {
         throw new Error('Unable to save settings')
       }
 

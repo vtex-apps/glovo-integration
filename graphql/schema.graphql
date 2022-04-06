@@ -1,7 +1,8 @@
 type Query {
-  getAppSettings: AppSettings @cacheControl(scope: PUBLIC, maxAge: SHORT)
+  getGlovoIntegrationSettings: GlovoIntegrationSettings
+    @cacheControl(scope: PUBLIC, maxAge: SHORT)
 }
 
 type Mutation {
-  saveAppSettings(settings: SaveAppSettings): Boolean
+  saveGlovoIntegrationSettings(settings: SaveGlovoIntegrationSettings): Boolean
 }

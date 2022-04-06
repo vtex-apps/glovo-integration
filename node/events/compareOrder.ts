@@ -11,13 +11,13 @@ export async function compareOrder(
   const {
     body: { orderId },
     clients: { glovo, orders, recordsManager },
-    state: { storesConfig },
+    state: { stores },
     vtex: { logger },
   } = ctx
 
   try {
     const orderStoreId = orderId.slice(0, 3)
-    const storeInfo = getStoreInfoFromStoreId(orderStoreId, storesConfig)
+    const storeInfo = getStoreInfoFromStoreId(orderStoreId, stores)
 
     if (!storeInfo) {
       return

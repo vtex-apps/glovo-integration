@@ -1,0 +1,19 @@
+type ClientProfileData {
+  email: String
+  firstName: String
+  lastName: String
+  documentType: String
+  document: String
+  phone: String
+  corporateName: String
+}
+
+input SaveClientProfileData {
+  email: String!
+  firstName: String!
+  lastName: String!
+  documentType: String
+  document: String
+  phone: String
+  corporateName: String
+}
