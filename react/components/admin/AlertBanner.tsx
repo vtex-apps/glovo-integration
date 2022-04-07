@@ -1,4 +1,4 @@
-import type { Dispatch, FC, SetStateAction } from 'react'
+import type { Dispatch, SetStateAction } from 'react'
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Alert } from 'vtex.styleguide'
@@ -13,7 +13,7 @@ interface Props extends AlertProps {
   autoClose?: number
 }
 
-const AlertBanner: FC<Props> = ({ show, type, onClose, autoClose = 0 }) => {
+const AlertBanner = ({ show, type, onClose, autoClose = 0 }: Props) => {
   const handleClose = () => {
     onClose({
       show: false,

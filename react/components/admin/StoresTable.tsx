@@ -14,13 +14,13 @@ interface Props {
   setRemoveStore: Dispatch<SetStateAction<RemoveStore>>
 }
 
-const StoreTable: FC<Props> = ({
+const StoreTable = ({
   items,
   addOrEditStore,
   setAddOrEditStore,
   removeStore,
   setRemoveStore,
-}) => {
+}: Props) => {
   const [currentItemFrom] = useState(1)
   const [currentItemTo] = useState(items.length)
 

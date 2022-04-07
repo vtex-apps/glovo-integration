@@ -1,4 +1,3 @@
-import type { FC } from 'react'
 import React, { useState, Fragment } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { ButtonWithIcon, ModalDialog, IconPlusLines } from 'vtex.styleguide'
@@ -23,7 +22,7 @@ export interface AddOrEditStore extends ModifyStore {
   store: StoreInfo | null
 }
 
-const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
+const Stores = ({ settings, saveSettings }: SettingsSection) => {
   const [addOrEditStore, setAddOrEditStore] = useState<AddOrEditStore>({
     isOpen: false,
     loading: false,

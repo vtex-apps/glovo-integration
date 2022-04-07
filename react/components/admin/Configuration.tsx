@@ -1,4 +1,4 @@
-import type { ChangeEvent, FC } from 'react'
+import type { ChangeEvent } from 'react'
 import React, { Fragment, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Button, Input, InputPassword, Toggle } from 'vtex.styleguide'
@@ -19,11 +19,11 @@ import type { AlertProps } from './AlertBanner'
 import { AlertBanner } from './AlertBanner'
 import type { SettingsSection } from '../../typings/settingsSections'
 
-const Configuration: FC<SettingsSection> = ({
+const Configuration = ({
   settings,
   setSettings,
   saveSettings,
-}) => {
+}: SettingsSection) => {
   const [error, setError] = useState(false)
   const [savingSettings, setSavingSettings] = useState(false)
   const [alert, setAlert] = useState<AlertProps>({

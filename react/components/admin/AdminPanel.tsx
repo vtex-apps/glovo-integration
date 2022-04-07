@@ -1,4 +1,3 @@
-import type { FC } from 'react'
 import React, { useEffect, useState } from 'react'
 import { useMutation, useQuery } from 'react-apollo'
 import { FormattedMessage } from 'react-intl'
@@ -24,7 +23,7 @@ interface QueryResponse {
   }
 }
 
-const AdminPanel: FC = () => {
+const AdminPanel = () => {
   const [settings, setSettings] = useState<AppSettings>({
     glovoToken: '',
     production: false,

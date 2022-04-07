@@ -1,4 +1,4 @@
-import type { ChangeEvent, Dispatch, FC, SetStateAction } from 'react'
+import type { ChangeEvent, Dispatch, SetStateAction } from 'react'
 import React, { useEffect, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import {
@@ -36,14 +36,14 @@ interface SelectOption {
   value: string
 }
 
-const StoreModal: FC<Props> = ({
+const StoreModal = ({
   isOpen,
   setIsOpen,
   saving,
   store,
   addStore,
   editStore,
-}) => {
+}: Props) => {
   const [error, setError] = useState(false)
   const [storeInfo, setStoreInfo] = useState({} as StoreInfo)
   const [selectedCountry, setSelectedCountry] = useState<SelectOption | null>(
