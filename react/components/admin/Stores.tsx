@@ -89,11 +89,13 @@ const Stores = ({ settings, saveSettings }: SettingsSection) => {
   }
 
   const handleEditStore = async (editedStore: StoreInfo) => {
-    const filteredStores = settings.stores.filter(
-      ({ id }: StoreInfo) => id !== editedStore.id
-    )
+    const updatedStores = settings.stores.map((store: StoreInfo) => {
+      if (store.id === editedStore.id) {
+        return editedStore
+      }
 
-    const updatedStores = [...filteredStores, editedStore]
+      return store
+    })
 
     updateSettings(updatedStores)
 

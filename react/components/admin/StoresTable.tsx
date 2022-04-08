@@ -1,5 +1,5 @@
-import type { Dispatch, FC, SetStateAction } from 'react'
-import React, { useState } from 'react'
+import type { ChangeEvent, Dispatch, SetStateAction } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Table } from 'vtex.styleguide'
 import { FormattedMessage } from 'react-intl'
 
@@ -21,8 +21,14 @@ const StoreTable = ({
   removeStore,
   setRemoveStore,
 }: Props) => {
-  const [currentItemFrom] = useState(1)
-  const [currentItemTo] = useState(items.length)
+  const [tableLength, setTableLength] = useState(5)
+  const [currentItemFrom, setCurrentItemFrom] = useState(1)
+  const [currentItemTo, setCurrentItemTo] = useState(5)
+  const [storesToDisplay, setStoresToDisplay] = useState<StoreInfo[]>([])
+
+  useEffect(() => {
+    setStoresToDisplay(items.slice(currentItemFrom - 1, currentItemTo))
+  }, [currentItemFrom, currentItemTo, items, tableLength])
 
   const schema = {
     properties: {
@@ -80,13 +86,41 @@ const StoreTable = ({
     },
   ]
 
-  const handleNextClick = () => {}
-  const handlePrevClick = () => {}
-  const handleRowsChange = () => {}
+  const changePage = (itemFrom: number, itemTo: number) => {
+    setCurrentItemFrom(itemFrom)
+    setCurrentItemTo(itemTo)
+    setStoresToDisplay(items.slice(itemFrom - 1, itemTo))
+  }
+
+  const handleNextClick = () => {
+    const itemFrom = currentItemFrom + tableLength
+    const itemTo = currentItemTo + tableLength
+
+    changePage(itemFrom, itemTo)
+  }
+
+  const handlePrevClick = () => {
+    let itemFrom = currentItemFrom - tableLength
+    let itemTo = currentItemTo - tableLength
+
+    if (itemFrom < 0) {
+      itemFrom = 1
+      itemTo = tableLength
+    }
+
+    changePage(itemFrom, itemTo)
+  }
+
+  const handleRowsChange = (_: ChangeEvent, value: string) => {
+    const itemTo = currentItemFrom - 1 + parseInt(value, 10)
+
+    setTableLength(parseInt(value, 10))
+    setCurrentItemTo(itemTo)
+  }
 
   return (
     <Table
-      items={items}
+      items={storesToDisplay}
       schema={schema}
       lineActions={lineActions}
       fullWidth
@@ -96,8 +130,10 @@ const StoreTable = ({
         currentItemFrom,
         currentItemTo,
         onRowsChange: handleRowsChange,
-        textShowRows: 'Show rows',
-        textOf: 'of',
+        textShowRows: (
+          <FormattedMessage id="admin/glovo-integration.table.show-rows" />
+        ),
+        textOf: <FormattedMessage id="admin/glovo-integration.table.of" />,
         totalItems: items.length,
         rowsOptions: [5, 10, 15, 25],
       }}
