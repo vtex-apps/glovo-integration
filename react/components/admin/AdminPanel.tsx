@@ -46,7 +46,12 @@ const AdminPanel = () => {
   })
 
   useEffect(() => {
-    if (!data?.settings) {
+    if (
+      !data?.settings ||
+      data?.settings.glovoToken === null ||
+      data?.settings.production === null ||
+      data?.settings.clientProfileData === null
+    ) {
       return
     }
 
