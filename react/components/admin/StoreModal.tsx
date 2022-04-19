@@ -18,7 +18,8 @@ import {
   STORE_NAME,
 } from '../../constants'
 import { IconGlovo } from '../../icons/IconGlovo'
-import { countries } from '../../utils'
+import type { CountriesRecord } from '../../utils'
+import { countries, countriesOptions } from '../../utils'
 import { validateInputs } from '../../../common/utils'
 import type { AddOrEditStore } from './Stores'
 
@@ -31,11 +32,6 @@ interface Props {
   editStore: (store: StoreInfo) => Promise<void>
 }
 
-interface SelectOption {
-  label: string
-  value: string
-}
-
 const StoreModal = ({
   isOpen,
   setIsOpen,
@@ -46,9 +42,8 @@ const StoreModal = ({
 }: Props) => {
   const [error, setError] = useState(false)
   const [storeInfo, setStoreInfo] = useState({} as StoreInfo)
-  const [selectedCountry, setSelectedCountry] = useState<SelectOption | null>(
-    null
-  )
+  const [selectedCountry, setSelectedCountry] =
+    useState<CountriesRecord | null>(null)
 
   useEffect(() => {
     if (!store) {
@@ -60,17 +55,12 @@ const StoreModal = ({
       return
     }
 
-    for (const country of countries) {
-      if (country.value === store.country) {
-        setSelectedCountry({
-          label: country.label,
-          value: country.value,
-        })
-      }
-    }
+    setSelectedCountry({
+      label: countries[store.country],
+      value: store.country,
+    })
 
     setStoreInfo(store)
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store])
 
@@ -246,7 +236,7 @@ const StoreModal = ({
             }
             value={selectedCountry}
             multi={false}
-            options={countries}
+            options={countriesOptions}
             onChange={handleSelect}
             errorMessage={
               error &&
