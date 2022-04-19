@@ -5,6 +5,7 @@ query getGlovoIntegrationSettings {
     stores {
       id
       storeName
+      sellerId
       affiliateId
       salesChannel
       postalCode

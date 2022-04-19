@@ -2,6 +2,7 @@ export const GLOVO_TOKEN = 'glovoToken'
 export const PRODUCTION = 'production'
 
 export const STORE_NAME = 'storeName'
+export const SELLER_ID = 'sellerId'
 export const AFFILIATE_ID = 'affiliateId'
 export const SALES_CHANNEL = 'salesChannel'
 export const POSTAL_CODE = 'postalCode'

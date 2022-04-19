@@ -141,6 +141,9 @@ const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
       storeName: {
         title: <FormattedMessage id="admin/glovo-integration.store-name" />,
       },
+      sellerId: {
+        title: <FormattedMessage id="admin/glovo-integration.seller-id" />,
+      },
       affiliateId: {
         title: <FormattedMessage id="admin/glovo-integration.affiliate-id" />,
       },

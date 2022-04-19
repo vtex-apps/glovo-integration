@@ -8,6 +8,7 @@ import {
   EXPERIMENTAL_Select as Select,
 } from 'vtex.styleguide'
 import { v4 as createId } from 'uuid'
+import { useQuery } from 'react-apollo'
 
 import {
   COUNTRY,
@@ -16,11 +17,13 @@ import {
   SALES_CHANNEL,
   AFFILIATE_ID,
   STORE_NAME,
+  SELLER_ID,
 } from '../../constants'
 import { IconGlovo } from '../../icons/IconGlovo'
 import { countries } from '../../utils'
 import { validateInputs } from '../../../common/utils'
 import type { AddOrEditStore } from './Stores'
+import GET_SELLERS from '../../graphql/getSellers.gql'
 
 interface Props {
   isOpen: boolean
@@ -36,6 +39,12 @@ interface SelectOption {
   value: string
 }
 
+interface Seller {
+  id: string
+  name: string
+  isActive: boolean
+}
+
 const StoreModal: FC<Props> = ({
   isOpen,
   setIsOpen,
@@ -46,9 +55,22 @@ const StoreModal: FC<Props> = ({
 }) => {
   const [error, setError] = useState(false)
   const [storeInfo, setStoreInfo] = useState({} as StoreInfo)
+  const [sellers, setSellers] = useState<SelectOption[]>([])
+  const [selectedSeller, setSelectedSeller] = useState<SelectOption | null>(
+    null
+  )
+
   const [selectedCountry, setSelectedCountry] = useState<SelectOption | null>(
     null
   )
+
+  const {
+    loading: loadingSellers,
+    error: sellersError,
+    data,
+  } = useQuery(GET_SELLERS, {
+    ssr: false,
+  })
 
   useEffect(() => {
     if (!store) {
@@ -74,6 +96,32 @@ const StoreModal: FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store])
 
+  useEffect(() => {
+    if (loadingSellers || sellersError) {
+      return
+    }
+
+    if (data) {
+      const sellersInfo = data.sellers.items.reduce(
+        (sellersOptions: SelectOption[], seller: Seller) => {
+          if (seller.isActive) {
+            sellersOptions.push({
+              label: seller.name,
+              value: seller.id,
+            })
+
+            return sellersOptions
+          }
+
+          return sellersOptions
+        },
+        []
+      )
+
+      setSellers(sellersInfo)
+    }
+  }, [loadingSellers, data, sellersError])
+
   const handleCloseModal = () => {
     setStoreInfo({} as StoreInfo)
 
@@ -96,13 +144,22 @@ const StoreModal: FC<Props> = ({
     })
   }
 
-  const handleSelect = (country: { label: string; value: string }) => {
+  const handleSelectCountry = (country: SelectOption) => {
     setStoreInfo({
       ...storeInfo,
       country: country.value,
     })
 
     setSelectedCountry(country)
+  }
+
+  const handleSelectSeller = (seller: SelectOption) => {
+    setStoreInfo({
+      ...storeInfo,
+      sellerId: seller.value,
+    })
+
+    setSelectedSeller(seller)
   }
 
   const validate = () => {
@@ -134,6 +191,7 @@ const StoreModal: FC<Props> = ({
 
     setStoreInfo({} as StoreInfo)
     setSelectedCountry(null)
+    setSelectedSeller(null)
   }
 
   const handleEditStore = () => {
@@ -143,6 +201,7 @@ const StoreModal: FC<Props> = ({
 
     setStoreInfo({} as StoreInfo)
     setSelectedCountry(null)
+    setSelectedSeller(null)
   }
 
   return (
@@ -176,13 +235,35 @@ const StoreModal: FC<Props> = ({
 
         <div className="mb6">
           <p className="mb2">
+            {<FormattedMessage id="admin/glovo-integration.seller-id" />}
+          </p>
+          <Select
+            id={SELLER_ID}
+            label={
+              <FormattedMessage id="admin/glovo-integration.modal.seller-id.description" />
+            }
+            value={selectedSeller}
+            multi={false}
+            options={sellers}
+            onChange={handleSelectSeller}
+            errorMessage={
+              error &&
+              !storeInfo.sellerId && (
+                <FormattedMessage id="admin/glovo-integration.inputs.error-message" />
+              )
+            }
+          />
+        </div>
+
+        <div className="mb6">
+          <p className="mb2">
             {<FormattedMessage id="admin/glovo-integration.affiliate-id" />}
           </p>
           <Input
             id={AFFILIATE_ID}
             maxLength={3}
             label={
-              <FormattedMessage id="admin/glovo-integration.modal.store-id.description" />
+              <FormattedMessage id="admin/glovo-integration.modal.affiliate-id.description" />
             }
             value={storeInfo.affiliateId}
             onChange={handleChange}
@@ -247,7 +328,7 @@ const StoreModal: FC<Props> = ({
             value={selectedCountry}
             multi={false}
             options={countries}
-            onChange={handleSelect}
+            onChange={handleSelectCountry}
             errorMessage={
               error &&
               !storeInfo.country && (
