@@ -2,7 +2,7 @@
 
 export type CountriesRecord = Record<string, string>
 
-export const countries: CountriesRecord = {
+export const countriesMap: CountriesRecord = {
   ESP: 'Spain',
   PRT: 'Portugal',
   ITA: 'Italy',

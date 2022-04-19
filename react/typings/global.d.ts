@@ -12,6 +12,7 @@ interface AppSettings {
 interface StoreInfo {
   id: string
   storeName: string
+  sellerId: string
   affiliateId: string
   salesChannel: string
   postalCode: string

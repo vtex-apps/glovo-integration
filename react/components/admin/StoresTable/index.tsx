@@ -4,7 +4,7 @@ import { Table } from 'vtex.styleguide'
 import { FormattedMessage } from 'react-intl'
 
 import type { AddOrEditStore, RemoveStore } from '../Stores'
-import { countries } from '../../../utils'
+import { countriesMap } from '../../../utils'
 import { Pagination } from './pagination'
 import { Filters } from './filters'
 
@@ -30,6 +30,9 @@ const StoreTable = ({
       storeName: {
         title: <FormattedMessage id="admin/glovo-integration.store-name" />,
       },
+      sellerId: {
+        title: <FormattedMessage id="admin/glovo-integration.seller-id" />,
+      },
       affiliateId: {
         title: <FormattedMessage id="admin/glovo-integration.affiliate-id" />,
       },
@@ -45,7 +48,7 @@ const StoreTable = ({
       country: {
         title: <FormattedMessage id="admin/glovo-integration.country" />,
         cellRenderer: ({ cellData }: TableItem) =>
-          countries[cellData as string],
+          countriesMap[cellData as string],
       },
     },
   }
