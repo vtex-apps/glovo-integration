@@ -4,6 +4,7 @@
   "admin/glovo-integration.settings.error": "Unable to retrieve application settings",
   "admin/glovo-integration.store-name": "Store name",
   "admin/glovo-integration.seller-id": "Seller ID",
+  "admin/glovo-integration.seller-name": "Seller Name",
   "admin/glovo-integration.affiliate-id": "Affiliate ID",
   "admin/glovo-integration.sales-channel": "Sales Channel",
   "admin/glovo-integration.postal-code": "Postal Code",

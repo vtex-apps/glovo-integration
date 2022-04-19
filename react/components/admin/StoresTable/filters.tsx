@@ -1,7 +1,13 @@
+import type { Dispatch, SetStateAction } from 'react'
 import React, { useState } from 'react'
 import { Checkbox } from 'vtex.styleguide'
 
 import { countriesOptions } from '../../../utils'
+
+interface Props {
+  stores: StoreInfo[]
+  setStoresToDisplay: Dispatch<SetStateAction<StoreInfo[]>>
+}
 
 type FilterSelectorEvent = {
   error: any
@@ -9,12 +15,36 @@ type FilterSelectorEvent = {
   value: any
 }
 
+type Statement = {
+  subject: string
+  verb: string
+  object: any
+}
+
 type BooleanRecords = Record<string, boolean>
 
-const Filters = () => {
-  const [filterStatements, setFilterStatements] = useState([])
+const Filters = ({ stores, setStoresToDisplay }: Props) => {
+  const [filterStatements, setFilterStatements] = useState<any[]>([])
 
-  const handleFiltersChange = (statements = []) => {
+  const handleFiltersChange = (statements: Statement[] = []) => {
+    let test: any[] = []
+
+    statements.forEach((statement) => {
+      if (statement) {
+        switch (statement.subject) {
+          case 'affiliate':
+            if (!statement.object) return
+            test = stores.filter(() => statement.object.GLV)
+
+            break
+
+          default:
+            break
+        }
+      }
+    })
+
+    setStoresToDisplay(test)
     setFilterStatements(statements)
   }
 

@@ -30,8 +30,8 @@ const StoreTable = ({
       storeName: {
         title: <FormattedMessage id="admin/glovo-integration.store-name" />,
       },
-      sellerId: {
-        title: <FormattedMessage id="admin/glovo-integration.seller-id" />,
+      sellerName: {
+        title: <FormattedMessage id="admin/glovo-integration.seller-name" />,
       },
       affiliateId: {
         title: <FormattedMessage id="admin/glovo-integration.affiliate-id" />,
@@ -82,27 +82,28 @@ const StoreTable = ({
   ]
 
   return (
-    <>
-      <Table
-        items={storesToDisplay}
-        schema={schema}
-        lineActions={lineActions}
-        fullWidth
-        filters={Filters()}
-        pagination={Pagination({
-          stores: items,
-          setStoresToDisplay,
-        })}
-        emptyStateLabel=""
-        emptyStateChildren={
-          <div className="">
-            <h4 className="t-heading-4 pt8">
-              <FormattedMessage id="admin/glovo-integration.table.empty" />
-            </h4>
-          </div>
-        }
-      />
-    </>
+    <Table
+      items={storesToDisplay}
+      schema={schema}
+      lineActions={lineActions}
+      fullWidth
+      filters={Filters({
+        stores: items,
+        setStoresToDisplay,
+      })}
+      pagination={Pagination({
+        stores: items,
+        setStoresToDisplay,
+      })}
+      emptyStateLabel=""
+      emptyStateChildren={
+        <div className="">
+          <h4 className="t-heading-4 pt8">
+            <FormattedMessage id="admin/glovo-integration.table.empty" />
+          </h4>
+        </div>
+      }
+    />
   )
 }
 

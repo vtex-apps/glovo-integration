@@ -13,6 +13,7 @@ interface StoreInfo {
   id: string
   storeName: string
   sellerId: string
+  sellerName: string
   affiliateId: string
   salesChannel: string
   postalCode: string

@@ -152,6 +152,7 @@ const StoreModal = ({
     setStoreInfo({
       ...storeInfo,
       sellerId: seller.value,
+      sellerName: seller.label,
     })
 
     setSelectedSeller(seller)
