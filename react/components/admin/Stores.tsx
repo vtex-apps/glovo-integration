@@ -186,7 +186,7 @@ const Stores = ({ settings, saveSettings }: SettingsSection) => {
         </div>
 
         <StoreTable
-          items={settings.stores}
+          stores={settings.stores}
           addOrEditStore={addOrEditStore}
           setAddOrEditStore={setAddOrEditStore}
           removeStore={removeStore}

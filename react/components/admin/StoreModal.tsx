@@ -82,6 +82,11 @@ const StoreModal = ({
       return
     }
 
+    setSelectedSeller({
+      label: store.sellerName,
+      value: store.sellerId,
+    })
+
     setSelectedCountry({
       label: countriesMap[store.country],
       value: store.country,
