@@ -6,6 +6,7 @@ import {
   createSimulationPayload,
   getStoreInfoFormGlovoStoreId,
 } from '../utils'
+import { CustomError } from '../utils/customError'
 
 export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
   const {
@@ -35,16 +36,20 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
     )
   }
 
-  const { salesChannel, storeId, postalCode, country } = storeInfo
+  const { sellerId, salesChannel, affiliateId, postalCode, country } = storeInfo
 
   try {
-    const simulationItems = convertGlovoProductToItems(glovoOrder.products)
+    const simulationItems = convertGlovoProductToItems(
+      sellerId,
+      glovoOrder.products
+    )
+
     const simulationPayload = createSimulationPayload({
       items: simulationItems,
+      affiliateId,
+      salesChannel,
       postalCode,
       country,
-      salesChannel,
-      storeId,
     })
 
     logger.info({
@@ -65,8 +70,12 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
 
     await next()
   } catch (error) {
-    throw new Error(
-      `There was a problem with the simulation for order ${glovoOrder.order_id}`
-    )
+    if (error) throw error
+
+    throw new CustomError({
+      message: error.statusText,
+      status: error.status,
+      payload: error,
+    })
   }
 }

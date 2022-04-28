@@ -27,6 +27,7 @@ const AdminPanel = () => {
   const [settings, setSettings] = useState<AppSettings>({
     glovoToken: '',
     production: false,
+    marketplace: false,
     stores: [],
     clientProfileData: {
       email: '',

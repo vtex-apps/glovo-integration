@@ -5,23 +5,21 @@ import { isSkuAvailable } from './utils'
 export const createSimulationItem = ({
   id,
   quantity,
-}: {
-  id: string
-  quantity: number
-}): PayloadItem => {
+  sellerId,
+}: SimulationItem): PayloadItem => {
   return {
     id,
     quantity,
-    seller: '1',
+    seller: sellerId,
   }
 }
 
 export const createSimulationPayload = ({
   items,
+  affiliateId,
+  salesChannel,
   postalCode,
   country,
-  storeId,
-  salesChannel,
 }: CreateSimulationArgs): [SimulationPayload, string] => {
   const simulationPayload = {
     items,
@@ -29,7 +27,7 @@ export const createSimulationPayload = ({
     country,
   }
 
-  const queryString = `?storeId=${storeId}&sc=${salesChannel}`
+  const queryString = `?affiliateId=${affiliateId}&sc=${salesChannel}`
 
   return [simulationPayload, queryString]
 }
@@ -38,12 +36,17 @@ export const simulateItem = async (
   IdSku: string,
   store: StoreInfo,
   checkout: Checkout
-): Promise<{ price: number; available: boolean }> => {
-  const { storeId, salesChannel, postalCode, country } = store
-  const simulationItem = createSimulationItem({ id: IdSku, quantity: 1 })
+): Promise<SimulatedItem> => {
+  const { affiliateId, sellerId, salesChannel, postalCode, country } = store
+  const simulationItem = createSimulationItem({
+    id: IdSku,
+    quantity: 1,
+    sellerId,
+  })
+
   const simulationPayload = createSimulationPayload({
     items: [simulationItem],
-    storeId,
+    affiliateId,
     salesChannel,
     postalCode,
     country,

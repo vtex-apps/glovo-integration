@@ -1,8 +1,19 @@
+interface SimulationItem {
+  id: string
+  quantity: number
+  sellerId: string
+}
+
+interface SimulatedItem {
+  price: number
+  available: boolean
+}
+
 interface CreateSimulationArgs {
   items: PayloadItem[]
   postalCode?: string
   country?: string
-  storeId: string
+  affiliateId: string
   salesChannel: string
 }
 
@@ -55,6 +66,7 @@ interface ComparisonObject {
 interface AppSettings {
   glovoToken: string
   production: boolean
+  marketplace: boolean
   stores: StoreInfo[]
   clientProfileData: ClientProfileData
 }

@@ -8,15 +8,18 @@ export async function validateSettings(
     clients: { apps },
   } = ctx
 
-  const appConfig = await apps.getAppSettings(process.env.VTEX_APP_ID as string)
+  const appSettings = await apps.getAppSettings(
+    process.env.VTEX_APP_ID as string
+  )
 
-  if (!appConfig.glovoToken) {
+  if (!appSettings.glovoToken) {
     throw new UserInputError('Missing Glovo token. Please check app settings')
   }
 
-  ctx.state.glovoToken = appConfig.glovoToken
-  ctx.state.stores = appConfig.stores
-  ctx.state.clientProfileData = appConfig.clientProfileData
+  ctx.state.glovoToken = appSettings.glovoToken
+  ctx.state.marketplace = appSettings.marketplace
+  ctx.state.stores = appSettings.stores
+  ctx.state.clientProfileData = appSettings.clientProfileData
 
   await next()
 }

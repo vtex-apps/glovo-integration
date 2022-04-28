@@ -15,11 +15,27 @@ export default class Orders extends JanusClient {
   public getOrder = (orderId: string) =>
     this.http.get(`/api/oms/pvt/orders/${orderId}`)
 
-  public createOrder = (data: MarketplaceOrder, sc: string, storeId: string) =>
-    this.http.post<VTEXOrder[]>(`/api/fulfillment/pvt/orders`, [data], {
+  public createOrder = (
+    data: CreateOrderPayload,
+    sc: string,
+    affiliateId: string
+  ): Promise<VTEXOrder[]> =>
+    this.http.post('/api/fulfillment/pvt/orders', [data], {
       params: {
         sc,
-        storeId,
+        affiliateId,
+      },
+    })
+
+  public createMarketplaceOrder = (
+    data: CreateOrderPayload,
+    sc: string,
+    affiliateId: string
+  ): Promise<CreateMarketplaceOrderResponse> =>
+    this.http.put('/api/checkout/pvt/orders', data, {
+      params: {
+        sc,
+        affiliateId,
       },
     })
 
@@ -27,17 +43,22 @@ export default class Orders extends JanusClient {
     data: AuthorizeOrderPayload,
     orderId: string,
     sc: string,
-    storeId: string
+    affiliateId: string
     // eslint-disable-next-line max-params
-  ) =>
-    this.http.post<VTEXAuthorizedOrder>(
-      `/api/fulfillment/pvt/orders/${orderId}/fulfill`,
-      data,
-      {
-        params: {
-          sc,
-          storeId,
-        },
-      }
+  ): Promise<VTEXAuthorizedOrder> =>
+    this.http.post(`/api/fulfillment/pvt/orders/${orderId}/fulfill`, data, {
+      params: {
+        sc,
+        affiliateId,
+      },
+    })
+
+  public authorizeMarketplaceOrder = (
+    data: AuthorizeMarketplaceOrderPayload,
+    marketplaceOrderId: string
+  ): Promise<VTEXAuthorizedOrder> =>
+    this.http.post(
+      `/api/checkout/pvt/orders/${marketplaceOrderId}/receipts/marketplace-order-authorization`,
+      data
     )
 }

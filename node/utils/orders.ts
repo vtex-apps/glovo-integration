@@ -6,7 +6,7 @@ export const createVtexOrderData = (
   glovoOrder: GlovoOrder,
   orderSimulation: any,
   clientProfileData: ClientProfileData
-): MarketplaceOrder => {
+): CreateOrderPayload => {
   const { order_id, estimated_total_price } = glovoOrder
   const { items, pickupPoints, postalCode, logisticsInfo } = orderSimulation
   const {
@@ -65,8 +65,9 @@ export const createVtexOrderData = (
   return {
     marketplaceOrderId: order_id,
     marketplaceServicesEndpoint: 'https://api.glovoapp.com/',
-    isCreatedAsync: true,
     marketplacePaymentValue: estimated_total_price,
+    marketplaceOrderGroup: order_id,
+    isCreatedAsync: true,
     items: updatedItems,
     clientProfileData: {
       email,
@@ -102,4 +103,24 @@ export const createVtexOrderData = (
       logisticsInfo: updatedLogisticsInfo,
     },
   }
+}
+
+export const createAuthorizationPayload = (
+  orderIdentifier: string,
+  marketplace: boolean,
+  glovoOrder: GlovoOrder
+): AuthorizeOrderPayload | AuthorizeMarketplaceOrderPayload => {
+  const payload = marketplace
+    ? {
+        marketplaceOrderGroup: 'TST-Glovo',
+        authorizationReceipt: {
+          date: glovoOrder.order_time,
+          receipt: glovoOrder.order_code,
+        },
+      }
+    : {
+        marketplaceOrderId: orderIdentifier,
+      }
+
+  return payload
 }

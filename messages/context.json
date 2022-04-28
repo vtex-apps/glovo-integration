@@ -20,6 +20,8 @@
   "admin/glovo-integration.integration-settings.subtitle": "Glovo integration settings",
   "admin/glovo-integration.integration-settings.glovo-token.description": "Token to perform calls to the Glovo API",
   "admin/glovo-integration.integration-settings.glovo-token": "Glovo Token *",
+  "admin/glovo-integration.integration-settings.marketplace.description": "Toggle to use marketplace configuration",
+  "admin/glovo-integration.integration-settings.marketplace.label": "Marketplace",
   "admin/glovo-integration.integration-settings.production.description": "Toggle between development and production environment",
   "admin/glovo-integration.integration-settings.production.label": "Production",
   "admin/glovo-integration.client-info.title": "Client Information",

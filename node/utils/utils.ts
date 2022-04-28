@@ -20,9 +20,10 @@ export const getStoreInfoFormGlovoStoreId = (
 export const getStoreInfoFromStoreId = (
   id: string,
   stores: StoreInfo[]
-): StoreInfo | undefined => stores.find(({ storeId }) => storeId === id)
+): StoreInfo | undefined => stores.find(({ id: storeId }) => storeId === id)
 
 export const convertGlovoProductToItems = (
+  sellerId: string,
   glovoProducts: GlovoProduct[] = []
 ): PayloadItem[] => {
   const items = []
@@ -30,7 +31,7 @@ export const convertGlovoProductToItems = (
 
   for (const product of glovoProducts) {
     const { id, quantity, attributes = [] } = product
-    const item = createSimulationItem({ id, quantity })
+    const item = createSimulationItem({ id, quantity, sellerId })
 
     items.push(item)
     attributesCollection.push(...attributes)
@@ -38,7 +39,7 @@ export const convertGlovoProductToItems = (
 
   for (const attribute of attributesCollection) {
     const { id, quantity } = attribute
-    const item = createSimulationItem({ id, quantity })
+    const item = createSimulationItem({ id, quantity, sellerId })
 
     items.push(item)
   }

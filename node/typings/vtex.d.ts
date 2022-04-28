@@ -12,11 +12,12 @@ interface CatalogChange {
   HasStockKeepingUnitRemovedFromAffiliate: boolean
 }
 
-interface MarketplaceOrder {
+interface CreateOrderPayload {
   marketplaceOrderId: string
   marketplaceServicesEndpoint: string
-  isCreatedAsync: boolean
   marketplacePaymentValue: number
+  marketplaceOrderGroup: string
+  isCreatedAsync: boolean
   items: OrderItem[]
   clientProfileData: ClientProfileData
   shippingData: ShippingData
@@ -129,6 +130,7 @@ interface VTEXOrder {
   }
   paymentData: any
   customData: any
+  orders?: any
 }
 
 interface VTEXOrderItem {
@@ -148,13 +150,38 @@ interface VTEXOrderItem {
   catalogProvider: string
 }
 
+interface CreateMarketplaceOrderResponse {
+  orderForm?: any
+  transactionData: any
+  orders: VTEXMarketplaceOrder[]
+}
+
+interface VTEXMarketplaceOrder {
+  orderId: string
+  orderGroup: string
+  state: string | null
+  isCheckedIn: boolean
+  sellerOrderId: string
+  storeId: string | null
+}
 interface AuthorizeOrderPayload {
   marketplaceOrderId: string
 }
 
-interface VTEXAuthorizedOrder {
+interface AuthorizeMarketplaceOrderPayload {
+  marketplaceOrderGroup: string
+  authorizationReceipt: {
+    date: string
+    receipt: string
+  }
+}
+
+interface VTEXAuthorizedOrder extends VTEXAuthorizedMarketplaceOrder {
   orderId: string
   marketplaceOrderId: string
+}
+
+interface VTEXAuthorizedMarketplaceOrder {
   receipt: string
   date: string
   items: [{ id: string }]
@@ -162,7 +189,7 @@ interface VTEXAuthorizedOrder {
     logisticsInfo: [
       {
         itemIndex: number
-        selectedSla: string
+        selectedSLAId: string
         selectedDeliveryChannel: string
         shippingEstimateDate: string
       }

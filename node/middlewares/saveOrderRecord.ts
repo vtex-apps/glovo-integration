@@ -1,10 +1,12 @@
+import { CustomError } from '../utils/customError'
+
 export async function saveOrderRecord(ctx: Context) {
   const {
     clients: { recordsManager },
     state: { glovoOrder, vtexOrder },
   } = ctx
 
-  const [{ orderId }] = vtexOrder
+  const { orderId } = vtexOrder
   const currentDate = new Date()
   const data: OrderRecord = {
     orderId,
@@ -19,6 +21,10 @@ export async function saveOrderRecord(ctx: Context) {
 
     ctx.status = 201
   } catch (error) {
-    throw new Error(error)
+    throw new CustomError({
+      message: error.statusText,
+      status: error.status,
+      payload: error,
+    })
   }
 }

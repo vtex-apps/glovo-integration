@@ -1,7 +1,7 @@
 {
   "name": "glovo-integration",
   "vendor": "vtex",
-  "version": "2.0.13",
+  "version": "3.0.0",
   "title": "Glovo Integration",
   "description": "Glovo Integration",
   "dependencies": {
@@ -43,6 +43,27 @@
         "host": "api.glovoapp.com",
         "path": "*"
       }
+    },
+    {
+      "name": "colossus-fire-event"
+    },
+    {
+      "name": "colossus-write-logs"
+    },
+    {
+      "name": "ViewPayments"
+    },
+    {
+      "name": "MakePayments"
+    },
+    {
+      "name": "Changes"
+    },
+    {
+      "name": "AcessaTodosPedidos"
+    },
+    {
+      "name": "AcessaTodosCarrinhos"
     },
     {
       "name": "graphql-query"

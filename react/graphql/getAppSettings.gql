@@ -2,6 +2,7 @@ query getGlovoIntegrationSettings {
   settings: getGlovoIntegrationSettings {
     glovoToken
     production
+    marketplace
     stores {
       id
       storeName

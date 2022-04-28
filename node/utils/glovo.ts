@@ -55,9 +55,9 @@ export const updateGlovoProduct = async (
   }
 
   for await (const store of stores) {
-    const { storeId, glovoStoreId } = store
+    const { id, storeName, glovoStoreId } = store
     let newProduct = false
-    let productRecord = await recordsManager.getProductRecord(storeId, IdSku)
+    let productRecord = await recordsManager.getProductRecord(id, IdSku)
 
     if (!productRecord) {
       logger.warn({
@@ -121,9 +121,9 @@ export const updateGlovoProduct = async (
         available: glovoPayload.available,
       }
 
-      recordsManager.saveProductRecord(storeId, IdSku, updatedProductRecord)
+      recordsManager.saveProductRecord(id, IdSku, updatedProductRecord)
 
-      let storeMenuUpdates = await recordsManager.getStoreMenuUpdates(storeId)
+      let storeMenuUpdates = await recordsManager.getStoreMenuUpdates(id)
 
       if (!storeMenuUpdates) {
         // If the Store Menu Updates Record does not exist already, it is created.
@@ -131,14 +131,14 @@ export const updateGlovoProduct = async (
           current: {
             responseId: null,
             createdAt: Date.now(),
-            storeId,
+            storeId: id,
             glovoStoreId,
             items: [],
           },
         }
 
         logger.info({
-          message: `Created new Menu Updates record for store ${storeId}`,
+          message: `Created new Menu Updates record for store ${storeName} with id ${id}`,
           data: storeMenuUpdates,
         })
       }
@@ -161,7 +161,7 @@ export const updateGlovoProduct = async (
         })
       }
 
-      recordsManager.saveStoreMenuUpdates(storeId, storeMenuUpdates)
+      recordsManager.saveStoreMenuUpdates(id, storeMenuUpdates)
 
       logger.info({
         message: `Product with sku ${IdSku} from store ${glovoStoreId} has been updated`,
@@ -210,7 +210,7 @@ export const updateGlovoMenuAll = async (ctx: Context) => {
 
   // Send a complete bulk product update for each store
   for await (const store of stores) {
-    const { storeId, salesChannel, glovoStoreId } = store
+    const { affiliateId, sellerId, salesChannel, glovoStoreId } = store
 
     const glovoPayload: GlovoBulkUpdateProduct = {
       products: [],
@@ -220,12 +220,13 @@ export const updateGlovoMenuAll = async (ctx: Context) => {
       const simulationItem = createSimulationItem({
         id: sku,
         quantity: 1,
+        sellerId,
       })
 
       const simulation = await checkout.simulation(
         ...createSimulationPayload({
           items: [simulationItem],
-          storeId,
+          affiliateId,
           salesChannel,
         })
       )
@@ -302,10 +303,10 @@ export const updateGlovoMenuPartial = async (ctx: Context) => {
 
   // Send a partial bulk product update for each store
   for await (const store of stores) {
-    const { storeId, glovoStoreId } = store
+    const { id, storeName, glovoStoreId } = store
 
     try {
-      const menuUpdates = await recordsManager.getStoreMenuUpdates(storeId)
+      const menuUpdates = await recordsManager.getStoreMenuUpdates(id)
 
       const { current: currentUpdate } = menuUpdates
 
@@ -316,7 +317,7 @@ export const updateGlovoMenuPartial = async (ctx: Context) => {
       const newUpdate: MenuUpdatesItem = {
         responseId: null,
         createdAt: new Date().getTime(),
-        storeId,
+        storeId: id,
         glovoStoreId,
         items: [],
       }
@@ -331,15 +332,15 @@ export const updateGlovoMenuPartial = async (ctx: Context) => {
       menuUpdates.previous = currentUpdate
       menuUpdates.current = newUpdate
 
-      recordsManager.saveStoreMenuUpdates(storeId, menuUpdates)
+      recordsManager.saveStoreMenuUpdates(id, menuUpdates)
 
       logger.info({
-        message: `Menu for store ${storeId} was updated`,
+        message: `Menu for store ${storeName} with id ${id} was updated`,
         data: menuUpdates,
       })
     } catch (error) {
       logger.error({
-        message: `Partial Catalog for store ${glovoStoreId} could not be updated`,
+        message: `Partial Catalog for store ${storeName} with ${id} could not be updated`,
         data: error,
       })
     }

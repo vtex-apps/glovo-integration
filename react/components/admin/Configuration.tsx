@@ -1,3 +1,4 @@
+/* eslint-disable padding-line-between-statements */
 import type { ChangeEvent } from 'react'
 import React, { Fragment, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
@@ -11,6 +12,7 @@ import {
   FIRST_NAME,
   GLOVO_TOKEN,
   LAST_NAME,
+  MARKETPLACE,
   PHONE_NUMBER,
   PRODUCTION,
 } from '../../constants'
@@ -42,9 +44,10 @@ const Configuration = ({
         return
 
       case PRODUCTION:
+      case MARKETPLACE:
         setSettings({
           ...settings,
-          production: !settings.production,
+          [e.target.id]: !settings[e.target.id],
         })
 
         return
@@ -129,6 +132,21 @@ const Configuration = ({
                 <FormattedMessage id="admin/glovo-integration.inputs.error-message" />
               )
             }
+          />
+        </div>
+        <div className="mt7">
+          <p className="i mt0 gray">
+            <FormattedMessage id="admin/glovo-integration.integration-settings.marketplace.description" />
+          </p>
+          <Toggle
+            checked={settings.marketplace}
+            id={MARKETPLACE}
+            label={
+              <FormattedMessage id="admin/glovo-integration.integration-settings.marketplace.label" />
+            }
+            name="marketplace"
+            value={settings.marketplace}
+            onChange={handleChange}
           />
         </div>
         <div className="mt7">

@@ -61,10 +61,11 @@ declare global {
 
   interface State extends RecorderState {
     vtexAuthOrder: VTEXAuthorizedOrder
-    vtexOrder: VTEXOrder[]
+    vtexOrder: VTEXOrder | VTEXMarketplaceOrder
     glovoOrder: GlovoOrder
     glovoToken: string
     catalogUpdate: CatalogChange
+    marketplace: boolean
     stores: StoreInfo[]
     storeInfo: StoreInfo
     clientProfileData: ClientProfileData

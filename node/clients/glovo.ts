@@ -7,6 +7,9 @@ const BASE_URL = {
   STAGING: 'https://stageapi.glovoapp.com',
 }
 
+const PRODUCTION = 'PRODUCTION'
+const STAGING = 'STAGING'
+
 export default class Glovo extends ExternalClient {
   constructor(context: IOContext, options?: InstanceOptions) {
     super('glovoapp.com', context, {
@@ -20,14 +23,11 @@ export default class Glovo extends ExternalClient {
 
   public updateProducts = async (ctx: Context, data: GlovoUpdateProduct) => {
     const { glovoStoreId, skuId, price, available } = data
-    const {
-      glovoToken,
-      production,
-    }: { glovoToken: string; production: boolean } = await Glovo.getAppSettings(
+    const { glovoToken, production }: AppSettings = await Glovo.getAppSettings(
       ctx
     )
 
-    const environment = production ? 'PRODUCTION' : 'STAGING'
+    const environment = production ? PRODUCTION : STAGING
 
     const payload: GlovoPatchProduct = {
       available,
@@ -51,14 +51,11 @@ export default class Glovo extends ExternalClient {
     data: GlovoBulkUpdateProduct,
     glovoStoreId: string
   ) => {
-    const {
-      glovoToken,
-      production,
-    }: { glovoToken: string; production: boolean } = await Glovo.getAppSettings(
+    const { glovoToken, production }: AppSettings = await Glovo.getAppSettings(
       ctx
     )
 
-    const environment = production ? 'PRODUCTION' : 'STAGING'
+    const environment = production ? PRODUCTION : STAGING
 
     return this.http.post<GlovoBulkUpdateResponse>(
       `${BASE_URL[environment]}/webhook/stores/${glovoStoreId}/menu/updates`,
@@ -76,14 +73,11 @@ export default class Glovo extends ExternalClient {
     data: GlovoUpdateOrderStatus
   ) => {
     const { glovoStoreId, glovoOrderId, status } = data
-    const {
-      glovoToken,
-      production,
-    }: { glovoToken: string; production: boolean } = await Glovo.getAppSettings(
+    const { glovoToken, production }: AppSettings = await Glovo.getAppSettings(
       ctx
     )
 
-    const environment = production ? 'PRODUCTION' : 'STAGING'
+    const environment = production ? PRODUCTION : STAGING
 
     const payload: { status: string } = {
       status,
@@ -108,7 +102,7 @@ export default class Glovo extends ExternalClient {
       ctx
     )
 
-    const environment = production ? 'PRODUCTION' : 'STAGING'
+    const environment = production ? PRODUCTION : STAGING
 
     const {
       storeId,
