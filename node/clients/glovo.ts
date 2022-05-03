@@ -2,6 +2,8 @@
 import type { InstanceOptions, IOContext } from '@vtex/api'
 import { ExternalClient } from '@vtex/api'
 
+import { APP_SETTINGS, GLOVO } from '../constants'
+
 const BASE_URL = {
   PRODUCTION: 'https://api.glovoapp.com',
   STAGING: 'https://stageapi.glovoapp.com',
@@ -129,7 +131,9 @@ export default class Glovo extends ExternalClient {
     )
   }
 
-  private static async getAppSettings(ctx: Context | StatusChangeContext) {
-    return ctx.clients.apps.getAppSettings('vtex.glovo-integration')
+  private static async getAppSettings(
+    ctx: Context | StatusChangeContext
+  ): Promise<AppSettings> {
+    return ctx.clients.vbase.getJSON(GLOVO, APP_SETTINGS, true)
   }
 }

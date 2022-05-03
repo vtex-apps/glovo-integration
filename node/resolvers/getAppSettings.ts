@@ -1,14 +1,18 @@
+import { APP_SETTINGS, GLOVO } from '../constants'
+
 export const getGlovoIntegrationSettings = async (
   _: unknown,
   __: unknown,
   ctx: Context
 ): Promise<AppSettings> => {
   const {
-    clients: { apps },
+    clients: { vbase },
   } = ctx
 
-  const appSettings = await apps.getAppSettings(
-    process.env.VTEX_APP_ID as string
+  const appSettings: AppSettings = await vbase.getJSON(
+    GLOVO,
+    APP_SETTINGS,
+    true
   )
 
   return appSettings

@@ -1,4 +1,5 @@
 import { validateInputs } from '../../common/utils'
+import { APP_SETTINGS, GLOVO } from '../constants'
 
 export const saveGlovoIntegrationSettings = async (
   _: unknown,
@@ -6,7 +7,7 @@ export const saveGlovoIntegrationSettings = async (
   ctx: Context
 ): Promise<boolean> => {
   const {
-    clients: { apps },
+    clients: { vbase },
     vtex: { logger },
   } = ctx
 
@@ -15,7 +16,7 @@ export const saveGlovoIntegrationSettings = async (
   }
 
   try {
-    await apps.saveAppSettings(process.env.VTEX_APP_ID as string, settings)
+    await vbase.saveJSON(GLOVO, APP_SETTINGS, settings)
 
     return true
   } catch (error) {

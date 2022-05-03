@@ -1,4 +1,11 @@
-import { HANDLING, ACCEPTED, INVOICED, READY_FOR_PICKUP } from '../constants'
+import {
+  HANDLING,
+  ACCEPTED,
+  INVOICED,
+  READY_FOR_PICKUP,
+  GLOVO,
+  APP_SETTINGS,
+} from '../constants'
 import {
   createSimulationItem,
   createSimulationPayload,
@@ -17,13 +24,17 @@ export const updateGlovoProduct = async (
   catalogUpdate: CatalogChange
 ) => {
   const {
-    clients: { apps, checkout, recordsManager },
+    clients: { vbase, checkout, recordsManager },
     vtex: { logger },
   } = ctx
 
-  const appConfig = await apps.getAppSettings(process.env.VTEX_APP_ID as string)
+  const appSettings: AppSettings = await vbase.getJSON(
+    GLOVO,
+    APP_SETTINGS,
+    true
+  )
 
-  if (!appConfig.glovoToken) {
+  if (!appSettings.glovoToken) {
     logger.warn({
       message: 'Missing Glovo token. Please check app settings',
     })
@@ -31,7 +42,7 @@ export const updateGlovoProduct = async (
     return
   }
 
-  const { stores }: { stores: StoreInfo[] } = appConfig
+  const { stores }: { stores: StoreInfo[] } = appSettings
   const { IdSku, IsActive } = catalogUpdate
 
   if (!stores) {
@@ -182,13 +193,17 @@ export const updateGlovoProduct = async (
 
 export const updateGlovoMenuAll = async (ctx: Context) => {
   const {
-    clients: { apps, checkout, glovo, recordsManager },
+    clients: { vbase, checkout, glovo, recordsManager },
     vtex: { logger },
   } = ctx
 
-  const appConfig = await apps.getAppSettings(process.env.VTEX_APP_ID as string)
+  const appSettings: AppSettings = await vbase.getJSON(
+    GLOVO,
+    APP_SETTINGS,
+    true
+  )
 
-  if (!appConfig.glovoToken) {
+  if (!appSettings.glovoToken) {
     logger.warn({
       message: 'Missing or invalid Glovo token. Please check app settings',
     })
@@ -196,7 +211,7 @@ export const updateGlovoMenuAll = async (ctx: Context) => {
     return
   }
 
-  const { stores }: { stores: StoreInfo[] } = appConfig
+  const { stores }: { stores: StoreInfo[] } = appSettings
 
   if (!stores.length) {
     logger.warn({
@@ -277,13 +292,17 @@ export const updateGlovoMenuAll = async (ctx: Context) => {
 
 export const updateGlovoMenuPartial = async (ctx: Context) => {
   const {
-    clients: { apps, glovo, recordsManager },
+    clients: { vbase, glovo, recordsManager },
     vtex: { logger },
   } = ctx
 
-  const appConfig = await apps.getAppSettings(process.env.VTEX_APP_ID as string)
+  const appSettings: AppSettings = await vbase.getJSON(
+    GLOVO,
+    APP_SETTINGS,
+    true
+  )
 
-  if (!appConfig.glovoToken) {
+  if (!appSettings.glovoToken) {
     logger.warn({
       message: 'Missing or invalid Glovo token. Please check app settings',
     })
@@ -291,7 +310,7 @@ export const updateGlovoMenuPartial = async (ctx: Context) => {
     return
   }
 
-  const { stores }: { stores: StoreInfo[] } = appConfig
+  const { stores }: { stores: StoreInfo[] } = appSettings
 
   if (!stores.length) {
     logger.warn({

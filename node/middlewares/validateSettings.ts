@@ -1,15 +1,19 @@
 import { UserInputError } from '@vtex/api'
 
+import { APP_SETTINGS, GLOVO } from '../constants'
+
 export async function validateSettings(
   ctx: Context,
   next: () => Promise<void>
 ) {
   const {
-    clients: { apps },
+    clients: { vbase },
   } = ctx
 
-  const appSettings = await apps.getAppSettings(
-    process.env.VTEX_APP_ID as string
+  const appSettings: AppSettings = await vbase.getJSON(
+    GLOVO,
+    APP_SETTINGS,
+    true
   )
 
   if (!appSettings.glovoToken) {
