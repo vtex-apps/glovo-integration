@@ -1,12 +1,10 @@
 import type { ChangeEvent, Dispatch, SetStateAction } from 'react'
 import React, { useEffect, useState } from 'react'
 import { Checkbox, Table } from 'vtex.styleguide'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 
 import type { AddOrEditStore, RemoveStore } from './Stores'
 import { countriesMap } from '../../utils'
-// import { Pagination } from './pagination'
-// import { Filters } from './filters'
 
 interface Props {
   stores: StoreInfo[]
@@ -37,15 +35,16 @@ const StoreTable = ({
   removeStore,
   setRemoveStore,
 }: Props) => {
-  const [storesToDisplay, setStoresToDisplay] = useState<StoreInfo[]>([])
-
   // Pagination state
+  const [storesToDisplay, setStoresToDisplay] = useState<StoreInfo[]>([])
   const [tableLength, setTableLength] = useState(5)
   const [currentItemFrom, setCurrentItemFrom] = useState(1)
   const [currentItemTo, setCurrentItemTo] = useState(5)
+  const [totalItems, setTotalItems] = useState(0)
 
   // Filters state
-  const [filterStatements, setFilterStatements] = useState<any[]>([])
+  const [filteredStores, setFilteredStores] = useState<StoreInfo[]>([])
+  const [filterStatements, setFilterStatements] = useState<Statement[]>([])
   const [affiliatesFilters, setAffiliatesFilters] = useState<BooleanRecords>({})
   const [countriesFilters, setCountriesFilters] = useState<BooleanRecords>({})
 
@@ -105,22 +104,31 @@ const StoreTable = ({
     },
   ]
 
+  const intl = useIntl()
+
   // Pagination
   useEffect(() => {
+    setFilteredStores(stores)
     setStoresToDisplay(stores.slice(currentItemFrom - 1, currentItemTo))
-  }, [currentItemFrom, currentItemTo, setStoresToDisplay, stores, tableLength])
+    setTotalItems(stores.length)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stores])
 
-  const changePage = (from: number, to: number) => {
+  const setTablePage = (
+    from: number,
+    to: number,
+    storesInPage: StoreInfo[]
+  ) => {
     setCurrentItemFrom(from)
     setCurrentItemTo(to)
-    setStoresToDisplay(stores.slice(from - 1, to))
+    setStoresToDisplay(storesInPage.slice(from - 1, to))
   }
 
   const handleNextClick = () => {
     const from = currentItemFrom + tableLength
     const to = currentItemTo + tableLength
 
-    changePage(from, to)
+    setTablePage(from, to, filteredStores)
   }
 
   const handlePrevClick = () => {
@@ -132,7 +140,7 @@ const StoreTable = ({
       to = tableLength
     }
 
-    changePage(from, to)
+    setTablePage(from, to, filteredStores)
   }
 
   const handleRowsChange = (_: ChangeEvent, value: string) => {
@@ -163,29 +171,26 @@ const StoreTable = ({
     setCountriesFilters(countriesForFilters)
   }, [stores])
 
-  const handleFiltersChange = (statements: Statement[] = []) => {
-    let filteredByAffiliate: any[] = []
-    let filteredByCountry: any[] = []
+  const handleFiltersChange = async (statements: Statement[] = []) => {
+    let storesToFilter: StoreInfo[] = stores.slice()
 
     statements.forEach((statement) => {
       if (statement) {
         switch (statement.subject) {
           case 'affiliate':
             if (!statement.object) return
-            filteredByAffiliate = stores.filter(
+
+            storesToFilter = storesToFilter.filter(
               (store) => statement.object[store.affiliateId]
             )
-
-            setStoresToDisplay(filteredByAffiliate)
             break
 
           case 'country':
             if (!statement.object) return
-            filteredByCountry = stores.filter(
+
+            storesToFilter = storesToFilter.filter(
               (store) => statement.object[store.country]
             )
-
-            setStoresToDisplay(filteredByCountry)
             break
 
           default:
@@ -194,12 +199,15 @@ const StoreTable = ({
       }
     })
 
+    setFilteredStores(storesToFilter)
     setFilterStatements(statements)
+    setTotalItems(storesToFilter.length)
+    setTablePage(1, tableLength, storesToFilter)
   }
 
   const renderFilterLabel = (statement: Statement) => {
     if (!statement) {
-      return 'All'
+      return intl.formatMessage({ id: 'admin/glovo-integration.table.all' })
     }
 
     const { object } = statement
@@ -215,7 +223,13 @@ const StoreTable = ({
       trueKeysLabel += `${key}${i === trueKeys.length - 1 ? '' : ', '}`
     })
 
-    return `${isAllTrue ? 'All' : isAllFalse ? 'None' : `${trueKeysLabel}`}`
+    return `${
+      isAllTrue
+        ? intl.formatMessage({ id: 'admin/glovo-integration.table.all' })
+        : isAllFalse
+        ? intl.formatMessage({ id: 'admin/glovo-integration.table.none' })
+        : `${trueKeysLabel}`
+    }`
   }
 
   const toggleCheckbox = (values: any, defaultValues: any, key: string) => {
@@ -282,29 +296,36 @@ const StoreTable = ({
       filters={{
         statements: filterStatements,
         onChangeStatements: handleFiltersChange,
-        moreOptionsLabel: '',
+        moreOptionsLabel: (
+          <FormattedMessage id="admin/glovo-integration.table.more-options" />
+        ),
         alwaysVisibleFilters: ['affiliate', 'country'],
-        clearAllFiltersButtonLabel: 'Clear all',
-        subjectPlaceholder: 'more options',
-        submitFilterLabel: 'Apply',
+        clearAllFiltersButtonLabel: (
+          <FormattedMessage id="admin/glovo-integration.table.clear-all" />
+        ),
+        submitFilterLabel: (
+          <FormattedMessage id="admin/glovo-integration.table.apply" />
+        ),
         options: {
           affiliate: {
-            label: 'Affiliates',
+            label: intl.formatMessage({
+              id: 'admin/glovo-integration.affiliate-id',
+            }),
             renderFilterLabel,
             verbs: [
               {
-                label: 'Affiliate ID',
                 value: '=',
                 object: affiliatesSelector,
               },
             ],
           },
           country: {
-            label: 'Country',
+            label: intl.formatMessage({
+              id: 'admin/glovo-integration.country',
+            }),
             renderFilterLabel,
             verbs: [
               {
-                label: 'is',
                 value: '=',
                 object: countriesSelector,
               },
@@ -315,7 +336,7 @@ const StoreTable = ({
       pagination={{
         currentItemFrom,
         currentItemTo,
-        totalItems: stores.length,
+        totalItems,
         onNextClick: handleNextClick,
         onPrevClick: handlePrevClick,
         onRowsChange: handleRowsChange,
