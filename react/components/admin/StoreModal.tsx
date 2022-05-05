@@ -189,7 +189,7 @@ const StoreModal = ({
       addStore(storeInfo)
     }
 
-    setStoreInfo({} as StoreInfo)
+    setStoreInfo({ id: createId() } as StoreInfo)
     setSelectedCountry(null)
     setSelectedSeller(null)
   }

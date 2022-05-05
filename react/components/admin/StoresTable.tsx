@@ -149,6 +149,8 @@ const StoreTable = ({
 
     setTableLength(parseInt(value, 10))
     setCurrentItemTo(to)
+
+    setTablePage(currentItemFrom, to, filteredStores)
   }
 
   // Filters
