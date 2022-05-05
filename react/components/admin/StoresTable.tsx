@@ -55,6 +55,7 @@ const StoreTable = ({
       },
       sellerName: {
         title: <FormattedMessage id="admin/glovo-integration.seller-name" />,
+        width: 300,
       },
       affiliateId: {
         title: <FormattedMessage id="admin/glovo-integration.affiliate-id" />,

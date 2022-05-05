@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { useMutation, useQuery } from 'react-apollo'
 import { FormattedMessage } from 'react-intl'
 import {
@@ -12,6 +12,7 @@ import {
 
 import GET_APP_SETTINGS from '../../graphql/getAppSettings.gql'
 import SAVE_APP_SETTINGS from '../../graphql/saveAppSettings.gql'
+import { IconGlovo } from '../../icons/IconGlovo'
 import { Configuration } from './Configuration'
 import { Stores } from './Stores'
 
@@ -89,7 +90,12 @@ const AdminPanel = () => {
       pageHeader={
         <PageHeader
           title={
-            <FormattedMessage id="admin/glovo-integration.settings-title" />
+            <div className="flex items-center">
+              <div className="mr3">
+                <IconGlovo />
+              </div>
+              <FormattedMessage id="admin/glovo-integration.settings-title" />
+            </div>
           }
         />
       }
@@ -109,22 +115,24 @@ const AdminPanel = () => {
           <IconFailure size={60} />
         </EmptyState>
       ) : (
-        <PageBlock variation="aside">
-          <div>
-            <Stores
-              settings={settings}
-              setSettings={setSettings}
-              saveSettings={updateSettings}
-            />
+        <Fragment>
+          <div className="mb7">
+            <PageBlock>
+              <Stores
+                settings={settings}
+                setSettings={setSettings}
+                saveSettings={updateSettings}
+              />
+            </PageBlock>
           </div>
-          <div>
+          <PageBlock>
             <Configuration
               settings={settings}
               setSettings={setSettings}
               saveSettings={updateSettings}
             />
-          </div>
-        </PageBlock>
+          </PageBlock>
+        </Fragment>
       )}
     </Layout>
   )

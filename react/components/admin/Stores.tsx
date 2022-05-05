@@ -2,7 +2,6 @@ import React, { useState, Fragment } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { ButtonWithIcon, ModalDialog, IconPlusLines } from 'vtex.styleguide'
 
-import { IconGlovo } from '../../icons/IconGlovo'
 import { StoreModal } from './StoreModal'
 import type { AlertProps } from './AlertBanner'
 import { AlertBanner } from './AlertBanner'
@@ -176,7 +175,14 @@ const Stores = ({ settings, saveSettings }: SettingsSection) => {
 
       <div>
         <div className="flex justify-between items-center">
-          <IconGlovo />
+          <div>
+            <h2>
+              <FormattedMessage id="admin/glovo-integration.table.title" />
+            </h2>
+            <p className="i mt0 mb7 gray">
+              <FormattedMessage id="admin/glovo-integration.table.subtitle" />
+            </p>
+          </div>
           <ButtonWithIcon
             icon={<IconPlusLines />}
             onClick={handleOpenStoreModal}

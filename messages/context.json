@@ -10,6 +10,8 @@
   "admin/glovo-integration.postal-code": "Postal Code",
   "admin/glovo-integration.country": "Country",
   "admin/glovo-integration.glovo-store-id": "Glovo Store ID",
+  "admin/glovo-integration.table.title": "Stores",
+  "admin/glovo-integration.table.subtitle": "List of stores integrated with the Glovo app",
   "admin/glovo-integration.table.edit-store": "Edit store",
   "admin/glovo-integration.table.remove-store": "Remove store",
   "admin/glovo-integration.table.empty": "There are no stores configured",

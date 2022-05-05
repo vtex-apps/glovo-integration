@@ -19,7 +19,6 @@ import {
   STORE_NAME,
   SELLER_ID,
 } from '../../constants'
-import { IconGlovo } from '../../icons/IconGlovo'
 import { countriesMap, countriesOptions } from '../../utils'
 import { validateInputs } from '../../../common/utils'
 import type { AddOrEditStore } from './Stores'
@@ -207,13 +206,10 @@ const StoreModal = ({
 
   return (
     <Modal isOpen={isOpen} onClose={handleCloseModal}>
-      <div className="mt5">
-        <div className="flex items-center">
-          <IconGlovo size={60} />
-          <h4 className="t-heading-4 ml4">
-            <FormattedMessage id="admin/glovo-integration.modal.title" />
-          </h4>
-        </div>
+      <div className="mt3">
+        <h4 className="t-heading-4">
+          <FormattedMessage id="admin/glovo-integration.modal.title" />
+        </h4>
         <div className="mb6">
           <p className="mb2">
             <FormattedMessage id="admin/glovo-integration.store-name" />
