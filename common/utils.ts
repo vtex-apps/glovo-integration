@@ -1,4 +1,6 @@
-export const validateInputs = (inputs: Record<string, any>): boolean => {
+type Inputs = Record<string, any>
+
+export const validateInputs = (inputs: Inputs): boolean => {
   for (const key in inputs) {
     if (inputs[key] === '' || inputs[key] === undefined) {
       return false
