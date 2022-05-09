@@ -7,7 +7,6 @@
   "dependencies": {
     "vtex.styleguide": "9.x",
     "vtex.native-types": "0.x",
-    "vtex.apps-graphql": "2.x",
     "vtex.sellers-graphql": "7.x"
   },
   "builders": {
