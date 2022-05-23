@@ -10,11 +10,13 @@ export async function compareOrder(
   next: () => Promise<void>
 ) {
   const {
-    body: { orderId },
+    body,
     clients: { glovo, orders, recordsManager },
     state: { stores },
     vtex: { logger },
   } = ctx
+
+  const { orderId } = body
 
   logger.info({
     message: `Checking for order modifications for order ${orderId}`,
@@ -32,7 +34,7 @@ export async function compareOrder(
       throw new CustomError({
         message: `Store information not found for order modification for order ${orderId}`,
         status: 500,
-        payload: { stores, affiliateId: orderAffiliateId },
+        payload: { body },
       })
     }
 
