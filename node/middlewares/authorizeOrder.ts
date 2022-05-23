@@ -8,7 +8,7 @@ export async function authorizeOrder(ctx: Context, next: () => Promise<void>) {
     vtex: { logger },
   } = ctx
 
-  const { salesChannel, affiliateId } = storeInfo
+  const { salesChannel, affiliateId, sellerId } = storeInfo
   let id: string
 
   switch (marketplace) {
@@ -29,7 +29,7 @@ export async function authorizeOrder(ctx: Context, next: () => Promise<void>) {
   let order
 
   try {
-    switch (marketplace) {
+    switch (marketplace && sellerId !== '1') {
       case true:
         order = await orders.authorizeMarketplaceOrder(
           payload as AuthorizeMarketplaceOrderPayload,

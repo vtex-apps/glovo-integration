@@ -34,7 +34,7 @@
   "events": {
     "updateOnStartHandling": {
       "sender": "vtex.orders-broadcast",
-      "topics": ["handling"]
+      "topics": ["ready-for-handling", "waiting-seller-handling"]
     },
     "updateOnInvoiced": {
       "sender": "vtex.orders-broadcast",

@@ -120,6 +120,7 @@ export default new Service<Clients, State, ParamsContext>({
     updateOnStartHandling: [
       eventsErrorHandler,
       validateEventSettings,
+      compareOrder,
       updateGlovoOrderStatus,
     ],
     updateOnInvoiced: [

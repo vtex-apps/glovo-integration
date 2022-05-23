@@ -13,7 +13,7 @@ export async function createOrder(ctx: Context, next: () => Promise<void>) {
     clients: { orders },
   } = ctx
 
-  const { salesChannel, affiliateId } = storeInfo
+  const { salesChannel, affiliateId, sellerId } = storeInfo
 
   if (!orderSimulation.items.length) {
     throw new Error(
@@ -30,7 +30,7 @@ export async function createOrder(ctx: Context, next: () => Promise<void>) {
 
     let createdOrder
 
-    switch (marketplace) {
+    switch (marketplace && sellerId !== '1') {
       case true:
         createdOrder = await orders.createMarketplaceOrder(
           vtexOrderData,

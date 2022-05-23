@@ -32,23 +32,27 @@ export async function saveGlovoMenu(ctx: Context) {
 
     for await (const store of stores) {
       const menuUpdatesRecord = await recordsManager.getStoreMenuUpdates(
-        store.id
+        store.glovoStoreId
       )
 
       if (!menuUpdatesRecord) {
-        const { id, glovoStoreId } = store
+        const { id, storeName, glovoStoreId } = store
         const storeMenuUpdates: StoreMenuUpdates = {
           current: {
             responseId: null,
             createdAt: new Date().getTime(),
             storeId: id,
+            storeName,
             glovoStoreId,
             items: [],
           },
         }
 
         newStores.push(storeMenuUpdates)
-        await recordsManager.saveStoreMenuUpdates(id, storeMenuUpdates)
+        await recordsManager.saveStoreMenuUpdates(
+          glovoStoreId,
+          storeMenuUpdates
+        )
       }
     }
 

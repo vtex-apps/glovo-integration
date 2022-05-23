@@ -1,10 +1,10 @@
 import {
-  HANDLING,
   ACCEPTED,
   INVOICED,
   READY_FOR_PICKUP,
   GLOVO,
   APP_SETTINGS,
+  READY_FOR_HANDLING,
 } from '../constants'
 import {
   createSimulationItem,
@@ -13,7 +13,7 @@ import {
 } from './simulation'
 
 export const setGlovoStatus = (state: string) => {
-  if (state === HANDLING) return ACCEPTED
+  if (state === READY_FOR_HANDLING) return ACCEPTED
   if (state === INVOICED) return READY_FOR_PICKUP
 
   return ''
@@ -65,10 +65,19 @@ export const updateGlovoProduct = async (
     return
   }
 
+  logger.info({
+    message: 'Catalog update received',
+    catalogUpdate,
+    storesToUpdate: stores,
+  })
+
   for await (const store of stores) {
     const { id, storeName, glovoStoreId } = store
     let newProduct = false
-    let productRecord = await recordsManager.getProductRecord(id, IdSku)
+    let productRecord = await recordsManager.getProductRecord(
+      glovoStoreId,
+      IdSku
+    )
 
     if (!productRecord) {
       logger.warn({
@@ -132,9 +141,15 @@ export const updateGlovoProduct = async (
         available: glovoPayload.available,
       }
 
-      recordsManager.saveProductRecord(id, IdSku, updatedProductRecord)
+      recordsManager.saveProductRecord(
+        glovoStoreId,
+        IdSku,
+        updatedProductRecord
+      )
 
-      let storeMenuUpdates = await recordsManager.getStoreMenuUpdates(id)
+      let storeMenuUpdates = await recordsManager.getStoreMenuUpdates(
+        glovoStoreId
+      )
 
       if (!storeMenuUpdates) {
         // If the Store Menu Updates Record does not exist already, it is created.
@@ -143,6 +158,7 @@ export const updateGlovoProduct = async (
             responseId: null,
             createdAt: Date.now(),
             storeId: id,
+            storeName,
             glovoStoreId,
             items: [],
           },
@@ -172,14 +188,12 @@ export const updateGlovoProduct = async (
         })
       }
 
-      recordsManager.saveStoreMenuUpdates(id, storeMenuUpdates)
+      recordsManager.saveStoreMenuUpdates(glovoStoreId, storeMenuUpdates)
 
       logger.info({
         message: `Product with sku ${IdSku} from store ${glovoStoreId} has been updated`,
         updatedProductRecord,
       })
-
-      return updatedProductRecord
     } catch (error) {
       logger.error({
         message: `Product with sku ${IdSku} from store ${glovoStoreId} could not be updated`,
@@ -325,7 +339,7 @@ export const updateGlovoMenuPartial = async (ctx: Context) => {
     const { id, storeName, glovoStoreId } = store
 
     try {
-      const menuUpdates = await recordsManager.getStoreMenuUpdates(id)
+      const menuUpdates = await recordsManager.getStoreMenuUpdates(glovoStoreId)
 
       const { current: currentUpdate } = menuUpdates
 
@@ -337,6 +351,7 @@ export const updateGlovoMenuPartial = async (ctx: Context) => {
         responseId: null,
         createdAt: new Date().getTime(),
         storeId: id,
+        storeName,
         glovoStoreId,
         items: [],
       }
@@ -351,7 +366,7 @@ export const updateGlovoMenuPartial = async (ctx: Context) => {
       menuUpdates.previous = currentUpdate
       menuUpdates.current = newUpdate
 
-      recordsManager.saveStoreMenuUpdates(id, menuUpdates)
+      recordsManager.saveStoreMenuUpdates(glovoStoreId, menuUpdates)
 
       logger.info({
         message: `Menu for store ${storeName} with id ${id} was updated`,

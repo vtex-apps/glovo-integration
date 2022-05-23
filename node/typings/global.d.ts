@@ -90,6 +90,7 @@ interface MenuUpdatesItem {
   responseId: string | null
   createdAt: number
   storeId: string
+  storeName: string
   glovoStoreId: string
   items: ProductRecord[]
 }
