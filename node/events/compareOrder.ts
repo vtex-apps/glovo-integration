@@ -29,7 +29,11 @@ export async function compareOrder(
     const storeInfo = getStoreInfoFromAffiliateId(orderAffiliateId, stores)
 
     if (!storeInfo) {
-      return
+      throw new CustomError({
+        message: `Store information not found for order modification for order ${orderId}`,
+        status: 500,
+        payload: { stores, affiliateId: orderAffiliateId },
+      })
     }
 
     // fetch order's information
@@ -37,11 +41,11 @@ export async function compareOrder(
     const orderRecord = await recordsManager.getOrderRecord(orderId)
 
     if (!orderRecord) {
-      logger.warn({
+      throw new CustomError({
         message: `The record for the order ${orderId} was not found`,
+        status: 500,
+        payload: { stores, affiliateId: orderAffiliateId },
       })
-
-      return
     }
 
     // check if order has changed
@@ -130,11 +134,9 @@ export async function compareOrder(
 
     await next()
   } catch (error) {
-    if (error) throw error
-
     throw new CustomError({
-      message: `Order comparison for order ${orderId} failed`,
-      status: error.status,
+      message: `Order modification for order ${orderId} failed`,
+      status: 500,
       payload: error,
     })
   }

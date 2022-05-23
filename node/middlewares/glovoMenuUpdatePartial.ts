@@ -18,5 +18,7 @@ export async function glovoMenuUpdatePartial(
       message: `There was a problem updating the Glovo menu`,
       data: error,
     })
+
+    return error
   }
 }

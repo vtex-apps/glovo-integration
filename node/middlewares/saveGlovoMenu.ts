@@ -59,11 +59,9 @@ export async function saveGlovoMenu(ctx: Context) {
     ctx.status = 201
     ctx.body = { glovoMenu, newStores }
   } catch (error) {
-    if (error) throw error
-
     throw new CustomError({
       message: `There was a problem saving the Glovo menu`,
-      status: error.status,
+      status: 500,
       payload: error,
     })
   }

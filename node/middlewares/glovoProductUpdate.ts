@@ -16,10 +16,7 @@ export async function glovoProductUpdate(
   await next()
 
   try {
-    const updatedProduct = await updateGlovoProduct(ctx, catalogUpdate)
-
-    ctx.status = 200
-    ctx.body = updatedProduct
+    updateGlovoProduct(ctx, catalogUpdate)
   } catch (error) {
     logger.error({
       message: `There was a problem updating ${catalogUpdate.IdSku} for affiliate ${catalogUpdate.IdAffiliate}`,

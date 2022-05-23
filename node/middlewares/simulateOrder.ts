@@ -1,4 +1,3 @@
-import { UserInputError } from '@vtex/api'
 import { json } from 'co-body'
 
 import {
@@ -31,9 +30,11 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
   ) as StoreInfo
 
   if (!storeInfo) {
-    throw new UserInputError(
-      `Order not handled. Missing or invalid store with Glovo Store Id ${glovoOrder.store_id}`
-    )
+    throw new CustomError({
+      message: `Order not handled. Missing or invalid store with Glovo Store Id ${glovoOrder.store_id}`,
+      status: 500,
+      payload: glovoOrder,
+    })
   }
 
   const { sellerId, salesChannel, affiliateId, postalCode, country } = storeInfo
@@ -59,6 +60,22 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
 
     const simulation = await checkout.simulation(...simulationPayload)
 
+    if (!simulation) {
+      throw new CustomError({
+        message: `Simulation failed for Glovo Order ${glovoOrder.order_id}`,
+        status: 500,
+        payload: { glovoOrder, simulation },
+      })
+    }
+
+    if (!simulation.items.length) {
+      throw new CustomError({
+        message: `No items were returned from simulation for Glovo Order ${glovoOrder.order_id}`,
+        status: 500,
+        payload: glovoOrder,
+      })
+    }
+
     logger.info({
       message: `Simulation for order ${glovoOrder.order_id}`,
       simulation,
@@ -70,12 +87,6 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
 
     await next()
   } catch (error) {
-    if (error) throw error
-
-    throw new CustomError({
-      message: error.statusText,
-      status: error.status,
-      payload: error,
-    })
+    throw error
   }
 }

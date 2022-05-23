@@ -9,22 +9,26 @@ export async function authorizeOrder(ctx: Context, next: () => Promise<void>) {
   } = ctx
 
   const { salesChannel, affiliateId, sellerId } = storeInfo
-  let id: string
+  let orderIdentifier: string
 
   switch (marketplace) {
     case true:
-      id = vtexOrder.orderId
+      orderIdentifier = vtexOrder.orderId
       break
 
     default:
       // eslint-disable-next-line no-case-declarations
       const orderInfo = vtexOrder as VTEXOrder
 
-      id = orderInfo.marketplaceOrderId
+      orderIdentifier = orderInfo.marketplaceOrderId
       break
   }
 
-  const payload = createAuthorizationPayload(id, marketplace, glovoOrder)
+  const payload = createAuthorizationPayload(
+    orderIdentifier,
+    marketplace,
+    glovoOrder
+  )
 
   let order
 
@@ -33,7 +37,7 @@ export async function authorizeOrder(ctx: Context, next: () => Promise<void>) {
       case true:
         order = await orders.authorizeMarketplaceOrder(
           payload as AuthorizeMarketplaceOrderPayload,
-          id
+          orderIdentifier
         )
         break
 
@@ -48,20 +52,19 @@ export async function authorizeOrder(ctx: Context, next: () => Promise<void>) {
     }
 
     logger.info({
-      message: `Order ${id} has been placed.`,
+      message: `Order ${orderIdentifier} has been placed.`,
       order,
     })
+
     ctx.status = 201
     ctx.state.vtexOrder = vtexOrder
 
     await next()
   } catch (error) {
-    if (error) throw error
-
     throw new CustomError({
-      message: `Authorization for order ${id} failed`,
-      status: error.status,
-      payload: error,
+      message: `Authorization for order ${orderIdentifier} failed`,
+      status: 500,
+      payload: { glovoOrder, vtexOrder },
     })
   }
 }
