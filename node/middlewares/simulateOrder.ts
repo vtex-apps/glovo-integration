@@ -39,37 +39,29 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
 
   const { sellerId, salesChannel, affiliateId, postalCode, country } = storeInfo
 
+  const simulationItems = convertGlovoProductToItems(
+    sellerId,
+    glovoOrder.products
+  )
+
+  const simulationPayload = createSimulationPayload({
+    items: simulationItems,
+    affiliateId,
+    salesChannel,
+    postalCode,
+    country,
+  })
+
+  logger.info({
+    message: `Simulation payload for order ${glovoOrder.order_id}`,
+    simulationPayload,
+  })
+
   try {
-    const simulationItems = convertGlovoProductToItems(
-      sellerId,
-      glovoOrder.products
-    )
-
-    const simulationPayload = createSimulationPayload({
-      items: simulationItems,
-      affiliateId,
-      salesChannel,
-      postalCode,
-      country,
-    })
-
-    logger.info({
-      message: `Simulation payload for order ${glovoOrder.order_id}`,
-      simulationPayload,
-    })
-
     const simulation = await checkout.simulation(...simulationPayload)
 
-    if (!simulation) {
-      throw new CustomError({
-        message: `Simulation failed for Glovo Order ${glovoOrder.order_id}`,
-        status: 500,
-        payload: { glovoOrder, simulation },
-      })
-    }
-
     if (!simulation.items.length) {
-      throw new CustomError({
+      logger.error({
         message: `No items were returned from simulation for Glovo Order ${glovoOrder.order_id}`,
         status: 500,
         payload: glovoOrder,
@@ -87,6 +79,10 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
 
     await next()
   } catch (error) {
-    throw error
+    throw new CustomError({
+      message: `Simulation failed for Glovo Order ${glovoOrder.order_id}`,
+      status: 500,
+      payload: { glovoOrder, simulationPayload },
+    })
   }
 }
