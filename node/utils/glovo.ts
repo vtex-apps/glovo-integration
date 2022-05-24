@@ -5,6 +5,7 @@ import {
   GLOVO,
   APP_SETTINGS,
   READY_FOR_HANDLING,
+  WAITING_SELLER_HANDLING,
 } from '../constants'
 import {
   createSimulationItem,
@@ -13,6 +14,7 @@ import {
 } from './simulation'
 
 export const setGlovoStatus = (state: string) => {
+  if (state === WAITING_SELLER_HANDLING) return ACCEPTED
   if (state === READY_FOR_HANDLING) return ACCEPTED
   if (state === INVOICED) return READY_FOR_PICKUP
 
