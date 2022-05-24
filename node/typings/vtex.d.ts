@@ -94,11 +94,11 @@ interface ItemLogisticsDeliveryId {
   accountCarrierName: string
 }
 interface PaymentData {
-  id: 'paymentData'
+  id?: 'paymentData'
   payments: [
     {
       paymentSystem: string
-      paymentSystemName: string
+      paymentSystemName?: string
       value: number
       installments: number
       referenceValue: number

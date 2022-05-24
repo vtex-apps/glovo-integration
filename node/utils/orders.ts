@@ -1,3 +1,4 @@
+/* eslint-disable max-params */
 import { RESIDENTIAL, HOME } from '../constants'
 import { isSkuAvailable } from './utils'
 
@@ -5,7 +6,8 @@ import { isSkuAvailable } from './utils'
 export const createVtexOrderData = (
   glovoOrder: GlovoOrder,
   orderSimulation: any,
-  clientProfileData: ClientProfileData
+  clientProfileData: ClientProfileData,
+  marketplace: boolean
 ): CreateOrderPayload => {
   const { order_id, estimated_total_price } = glovoOrder
   const { items, pickupPoints, postalCode, logisticsInfo } = orderSimulation
@@ -62,7 +64,7 @@ export const createVtexOrderData = (
     []
   )
 
-  return {
+  const vtexOrderData: CreateOrderPayload = {
     marketplaceOrderId: order_id,
     marketplaceServicesEndpoint: 'https://api.glovoapp.com/',
     marketplacePaymentValue: estimated_total_price,
@@ -103,6 +105,21 @@ export const createVtexOrderData = (
       logisticsInfo: updatedLogisticsInfo,
     },
   }
+
+  if (marketplace) {
+    vtexOrderData.paymentData = {
+      payments: [
+        {
+          installments: 1,
+          paymentSystem: glovoOrder.payment_method,
+          referenceValue: glovoOrder.estimated_total_price,
+          value: glovoOrder.estimated_total_price,
+        },
+      ],
+    }
+  }
+
+  return vtexOrderData
 }
 
 export const createAuthorizationPayload = (
