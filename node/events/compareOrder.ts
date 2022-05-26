@@ -16,7 +16,7 @@ export async function compareOrder(
     vtex: { logger },
   } = ctx
 
-  const { orderId } = body
+  let { orderId } = body
 
   logger.info({
     message: `Checking for order modifications for order ${orderId}`,
@@ -46,7 +46,7 @@ export async function compareOrder(
 
     // fetch order's information
     if (orderId.includes('-')) {
-      orderId.slice(0, -3)
+      orderId = orderId.slice(0, -3)
     }
 
     const order = await orders.getOrder(orderId)
