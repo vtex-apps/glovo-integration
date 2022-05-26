@@ -14,6 +14,7 @@ export async function getGlovoMenu(ctx: Context) {
       message: `There was a problem getting the Glovo menu`,
       status: 500,
       payload: error,
+      error,
     })
   }
 }

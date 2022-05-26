@@ -25,6 +25,7 @@ export async function saveOrderRecord(ctx: Context) {
       message: `Unable to save order record for order ${vtexOrder}`,
       status: 500,
       payload: { orderId, orderRecord: data },
+      error,
     })
   }
 }

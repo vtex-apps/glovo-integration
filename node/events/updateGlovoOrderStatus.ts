@@ -59,6 +59,7 @@ export async function updateGlovoOrderStatus(ctx: StatusChangeContext) {
       message: `Glovo order ${glovoPayload.glovoOrderId} status update failed`,
       status: 500,
       payload: error,
+      error,
     })
   }
 }

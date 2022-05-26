@@ -129,7 +129,7 @@ export const updateGlovoProduct = async (
       productRecord.available === glovoPayload.available
     ) {
       logger.info({
-        message: `Product with sku ${IdSku} already up to date`,
+        message: `Product with sku ${IdSku} for store ${glovoStoreId} already up to date`,
         productRecord,
       })
 

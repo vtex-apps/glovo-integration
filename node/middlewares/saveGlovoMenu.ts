@@ -62,7 +62,7 @@ export async function saveGlovoMenu(ctx: Context) {
     throw new CustomError({
       message: `There was a problem saving the Glovo menu`,
       status: 500,
-      payload: error,
+      error,
     })
   }
 }

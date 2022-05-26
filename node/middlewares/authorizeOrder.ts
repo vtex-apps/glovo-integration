@@ -65,6 +65,7 @@ export async function authorizeOrder(ctx: Context, next: () => Promise<void>) {
       message: `Authorization for order ${orderIdentifier} failed`,
       status: 500,
       payload: { glovoOrder, vtexOrder },
+      error,
     })
   }
 }

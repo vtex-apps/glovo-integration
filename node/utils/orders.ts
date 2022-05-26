@@ -9,8 +9,10 @@ export const createVtexOrderData = (
   clientProfileData: ClientProfileData,
   marketplace: boolean
 ): CreateOrderPayload => {
-  const { order_id, estimated_total_price } = glovoOrder
-  const { items, pickupPoints, postalCode, logisticsInfo } = orderSimulation
+  const { order_id } = glovoOrder
+  const { items, pickupPoints, postalCode, logisticsInfo, totals } =
+    orderSimulation
+
   const {
     email,
     firstName,
@@ -67,7 +69,7 @@ export const createVtexOrderData = (
   const vtexOrderData: CreateOrderPayload = {
     marketplaceOrderId: order_id,
     marketplaceServicesEndpoint: 'https://api.glovoapp.com/',
-    marketplacePaymentValue: estimated_total_price,
+    marketplacePaymentValue: totals[0].value,
     marketplaceOrderGroup: order_id,
     isCreatedAsync: true,
     items: updatedItems,
@@ -112,8 +114,8 @@ export const createVtexOrderData = (
         {
           installments: 1,
           paymentSystem: glovoOrder.payment_method,
-          referenceValue: glovoOrder.estimated_total_price,
-          value: glovoOrder.estimated_total_price,
+          referenceValue: totals[0].value,
+          value: totals[0].value,
         },
       ],
     }
