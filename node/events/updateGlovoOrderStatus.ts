@@ -1,4 +1,8 @@
-import { getStoreInfoFromStoreId, setGlovoStatus } from '../utils'
+import {
+  getStoreInfoFromStoreId,
+  isValidAffiliateId,
+  setGlovoStatus,
+} from '../utils'
 import { CustomError } from '../utils/customError'
 
 export async function updateGlovoOrderStatus(ctx: StatusChangeContext) {
@@ -18,27 +22,39 @@ export async function updateGlovoOrderStatus(ctx: StatusChangeContext) {
    * Check if the order comes from Glovo and remove the affiliateId (i.e. 'TST') from the VTEX orderId to get the glovoOrderId.
    */
   const { orderId, currentState } = body
-  const storeId = orderId.slice(0, 3)
-  const storeInfo = getStoreInfoFromStoreId(storeId, stores)
+  const [affiliateId, glovoOrderId] = orderId.split('-')
 
-  if (!storeInfo) {
-    throw new CustomError({
-      message: `Store information not found for order modification for order ${orderId}`,
-      status: 500,
-      payload: body,
+  if (!isValidAffiliateId(affiliateId)) {
+    logger.warn({
+      message: 'Glovo order status not modified',
+      reason: 'AffiliateId not valid',
+      data: body,
     })
+
+    return
   }
 
-  const glovoOrderId = orderId.split('-').slice(1).join(' ')
+  const storeInfo = getStoreInfoFromStoreId(affiliateId, stores)
+
+  if (!storeInfo) {
+    logger.warn({
+      message: `Store information not found for order modification for order ${orderId}`,
+      payload: body,
+    })
+
+    return
+  }
+
   const { glovoStoreId } = storeInfo
   const status = setGlovoStatus(currentState)
 
   if (!status) {
-    throw new CustomError({
+    logger.warn({
       message: `The status is required for order modification for order ${orderId}`,
-      status: 500,
-      payload: body,
+      data: body,
     })
+
+    return
   }
 
   const glovoPayload: GlovoUpdateOrderStatus = {

@@ -89,3 +89,11 @@ export const convertGlovoProductsToCompare = (
 
   return items
 }
+
+export const isValidAffiliateId = (affiliateId: string) => {
+  if (Number(affiliateId)) {
+    return false
+  }
+
+  return true
+}

@@ -2,6 +2,7 @@
 import {
   convertGlovoProductsToCompare,
   getStoreInfoFromStoreId as getStoreInfoFromAffiliateId,
+  isValidAffiliateId,
 } from '../utils'
 import { CustomError } from '../utils/customError'
 
@@ -24,8 +25,7 @@ export async function compareOrder(
 
   const [orderIdAffiliate] = orderId.split('-')
 
-  // Filter orders that don't come form sellers (Example: 1234661638608-01)
-  if (Number(orderIdAffiliate)) {
+  if (!isValidAffiliateId(orderIdAffiliate)) {
     logger.warn({
       message: 'Received order without affiliateId',
       data: body,
