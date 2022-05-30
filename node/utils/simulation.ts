@@ -89,7 +89,7 @@ export const simulateItem = async (
   IdSku: string,
   store: StoreInfo,
   checkout: Checkout
-): Promise<SimulatedItem> => {
+): Promise<SimulatedItem | null> => {
   const { affiliateId, sellerId, salesChannel, postalCode, country } = store
   const simulationItem = createSimulationItem({
     id: IdSku,
@@ -105,25 +105,29 @@ export const simulateItem = async (
     country,
   })
 
-  const simulation = await checkout.simulation(...simulationPayload)
+  try {
+    const simulation = await checkout.simulation(...simulationPayload)
 
-  const {
-    items: [item],
-  } = simulation
+    const {
+      items: [item],
+    } = simulation
 
-  let itemInfo = {
-    price: 0,
-    available: false,
-  }
-
-  if (isSkuAvailable(item)) {
-    const { price, listPrice, unitMultiplier } = item
-
-    itemInfo = {
-      price: (Math.max(price, listPrice) * unitMultiplier) / 100,
-      available: true,
+    let itemInfo = {
+      price: 0,
+      available: false,
     }
-  }
 
-  return itemInfo
+    if (isSkuAvailable(item)) {
+      const { price, listPrice, unitMultiplier } = item
+
+      itemInfo = {
+        price: (Math.max(price, listPrice) * unitMultiplier) / 100,
+        available: true,
+      }
+    }
+
+    return itemInfo
+  } catch (error) {
+    return null
+  }
 }
