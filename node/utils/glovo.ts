@@ -179,7 +179,7 @@ export const updateGlovoProduct = async (
         }
 
         logger.info({
-          message: `Created new Menu Updates record for store ${storeName} with id ${id}`,
+          message: `Created new Menu Updates record for store ${storeName} with id ${glovoStoreId}`,
           data: storeMenuUpdates,
         })
       }
