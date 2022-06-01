@@ -89,9 +89,13 @@ export const createGlovoBulkUpdatePayload = (
 export const simulateItem = async (
   IdSku: string,
   store: StoreInfo,
-  checkout: Checkout,
-  logger: Logger
+  ctx: Context
 ): Promise<SimulatedItem | null> => {
+  const {
+    clients: { checkout },
+    vtex: { logger },
+  } = ctx
+
   const { affiliateId, sellerId, salesChannel, postalCode, country } = store
   const simulationItem = createSimulationItem({
     id: IdSku,

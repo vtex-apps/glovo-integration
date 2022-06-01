@@ -30,7 +30,7 @@ export const updateGlovoProduct = async (
   catalogUpdate: CatalogChange
 ) => {
   const {
-    clients: { vbase, checkout, recordsManager },
+    clients: { vbase, recordsManager },
     vtex: { logger },
   } = ctx
 
@@ -80,7 +80,7 @@ export const updateGlovoProduct = async (
   for await (const store of stores) {
     const { id, storeName, glovoStoreId } = store
 
-    const simulation = await simulateItem(IdSku, store, checkout, logger)
+    const simulation = await simulateItem(IdSku, store, ctx)
 
     if (!simulation) {
       logger.warn({
