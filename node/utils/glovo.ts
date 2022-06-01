@@ -80,7 +80,7 @@ export const updateGlovoProduct = async (
   for await (const store of stores) {
     const { id, storeName, glovoStoreId } = store
 
-    const simulation = await simulateItem(IdSku, store, checkout)
+    const simulation = await simulateItem(IdSku, store, checkout, logger)
 
     if (!simulation) {
       logger.warn({

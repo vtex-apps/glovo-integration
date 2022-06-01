@@ -1,3 +1,4 @@
+import type { Logger } from '@vtex/api'
 import type {
   Checkout,
   OrderFormItem,
@@ -88,7 +89,8 @@ export const createGlovoBulkUpdatePayload = (
 export const simulateItem = async (
   IdSku: string,
   store: StoreInfo,
-  checkout: Checkout
+  checkout: Checkout,
+  logger: Logger
 ): Promise<SimulatedItem | null> => {
   const { affiliateId, sellerId, salesChannel, postalCode, country } = store
   const simulationItem = createSimulationItem({
@@ -128,6 +130,12 @@ export const simulateItem = async (
 
     return itemInfo
   } catch (error) {
+    logger.warn({
+      message:
+        error.message ?? `Simulation for product with skuId ${IdSku} failed`,
+      data: error,
+    })
+
     return null
   }
 }
