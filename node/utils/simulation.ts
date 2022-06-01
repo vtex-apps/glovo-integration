@@ -1,3 +1,4 @@
+import type { Logger } from '@vtex/api'
 import type {
   Checkout,
   OrderFormItem,
@@ -88,8 +89,13 @@ export const createGlovoBulkUpdatePayload = (
 export const simulateItem = async (
   IdSku: string,
   store: StoreInfo,
-  checkout: Checkout
-): Promise<SimulatedItem> => {
+  ctx: Context
+): Promise<SimulatedItem | null> => {
+  const {
+    clients: { checkout },
+    vtex: { logger },
+  } = ctx
+
   const { affiliateId, sellerId, salesChannel, postalCode, country } = store
   const simulationItem = createSimulationItem({
     id: IdSku,
@@ -105,25 +111,35 @@ export const simulateItem = async (
     country,
   })
 
-  const simulation = await checkout.simulation(...simulationPayload)
+  try {
+    const simulation = await checkout.simulation(...simulationPayload)
 
-  const {
-    items: [item],
-  } = simulation
+    const {
+      items: [item],
+    } = simulation
 
-  let itemInfo = {
-    price: 0,
-    available: false,
-  }
-
-  if (isSkuAvailable(item)) {
-    const { price, listPrice, unitMultiplier } = item
-
-    itemInfo = {
-      price: (Math.max(price, listPrice) * unitMultiplier) / 100,
-      available: true,
+    let itemInfo = {
+      price: 0,
+      available: false,
     }
-  }
 
-  return itemInfo
+    if (isSkuAvailable(item)) {
+      const { price, listPrice, unitMultiplier } = item
+
+      itemInfo = {
+        price: (Math.max(price, listPrice) * unitMultiplier) / 100,
+        available: true,
+      }
+    }
+
+    return itemInfo
+  } catch (error) {
+    logger.warn({
+      message:
+        error.message ?? `Simulation for product with skuId ${IdSku} failed`,
+      data: error,
+    })
+
+    return null
+  }
 }
