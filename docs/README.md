@@ -20,15 +20,15 @@ To configure the Glovo Integration you can follow these steps:
 3. In your store's admin dashboard, on the side menu browse to **Apps -> Glovo Integration** and then click on it to open the application settings.\
 4. Add the stores that will integrate with Glovo:
 
-| Filed          | Description                                                                                                                         |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| Store name     | Display name associated to the store                                                                                                |
-| Seller ID      | Seller ID associated to the store (the dropdown displays the seller's name)                                                         |
-| Affiliate ID   | Three letters ID associated for the affiliate (you can find this ID going to **Store srettings -> Orders' Settings -> Affiliates**) |
-| Sales channel  | The sales channel associated to the store                                                                                           |
-| Postal code    | The postal code for the store in charge of fulfilling the orders from Glovo                                                         |
-| Country        | The country where the store is located                                                                                              |
-| Glovo Store ID | Glovo store ID assigned to the store by Glovo                                                                                       |
+| Field          | Description                                                                                                                        |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Store name     | Display name associated to the store                                                                                               |
+| Seller ID      | Seller ID associated to the store (the dropdown displays the seller's name)                                                        |
+| Affiliate ID   | Three letters ID associated for the affiliate (you can find this ID going to **Store settings -> Orders' settings -> Affiliates**) |
+| Sales channel  | The sales channel associated to the store                                                                                          |
+| Postal code    | The postal code for the store in charge of fulfilling the orders from Glovo                                                        |
+| Country        | The country where the store is located                                                                                             |
+| Glovo Store ID | Glovo store ID assigned to the store by Glovo                                                                                      |
 
 5. Fill in the the integration settings and client information:
 
@@ -39,7 +39,7 @@ To configure the Glovo Integration you can follow these steps:
 | Production Environment | Toggle between Glovo's Test environment and production environment        |
 | Client information     | All orders will be created using this information for the customer fields |
 
-6.  Using the example shown below, upload the catalog of your store's products that will be available on Glovo (include all the products from every store) by making a POST request to the following endopoint.
+6.  Using the example shown below, upload the catalog of your store's products that will be available on Glovo (include all the products from every store) by making a POST request to the following endpoint.
 
 ```
 curl --request POST \
@@ -60,7 +60,7 @@ curl --request POST \
 
 7. The catalog of products offered on Glovo can be updated completely or partially by using the following endpoints:
 
-- **Complete update** - This endopint will send a bulk update to every store for all the products in the menu.
+- **Complete update** - This endpoint will send a bulk update to every store for all the products in the menu.
 
 ```
 curl --request POST \
