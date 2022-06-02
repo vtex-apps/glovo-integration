@@ -22,9 +22,9 @@ export async function updateGlovoOrderStatus(ctx: StatusChangeContext) {
    * Check if the order comes from Glovo and remove the affiliateId (i.e. 'TST') from the VTEX orderId to get the glovoOrderId.
    */
   const { orderId, currentState } = body
-  const [affiliateId, glovoOrderId] = orderId.split('-')
+  const [orderIdAffiliate, glovoOrderId] = orderId.split('-')
 
-  if (!isValidAffiliateId(affiliateId)) {
+  if (!isValidAffiliateId(orderIdAffiliate)) {
     logger.warn({
       message: 'Glovo order status not modified',
       reason: 'AffiliateId not valid',
@@ -34,7 +34,7 @@ export async function updateGlovoOrderStatus(ctx: StatusChangeContext) {
     return
   }
 
-  const storeInfo = getStoreInfoFromStoreId(affiliateId, stores)
+  const storeInfo = getStoreInfoFromStoreId(orderIdAffiliate, stores)
 
   if (!storeInfo) {
     logger.warn({

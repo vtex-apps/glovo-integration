@@ -27,7 +27,8 @@ export async function compareOrder(
 
   if (!isValidAffiliateId(orderIdAffiliate)) {
     logger.warn({
-      message: 'Received order without affiliateId',
+      message: 'Glovo order status not modified',
+      reason: 'AffiliateId not valid',
       data: body,
     })
 
