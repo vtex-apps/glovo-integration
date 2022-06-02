@@ -1,6 +1,4 @@
-import type { Logger } from '@vtex/api'
 import type {
-  Checkout,
   OrderFormItem,
   PayloadItem,
   SimulationPayload,
