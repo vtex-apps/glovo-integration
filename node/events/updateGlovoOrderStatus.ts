@@ -24,7 +24,7 @@ export async function updateGlovoOrderStatus(ctx: StatusChangeContext) {
   const { orderId, currentState } = body
   const [orderIdAffiliate, glovoOrderId] = orderId.split('-')
 
-  if (!isValidAffiliateId(orderIdAffiliate)) {
+  if (!isValidAffiliateId(orderIdAffiliate, stores)) {
     logger.warn({
       message: 'Glovo order status not modified',
       reason: 'AffiliateId not valid',
@@ -34,16 +34,10 @@ export async function updateGlovoOrderStatus(ctx: StatusChangeContext) {
     return
   }
 
-  const storeInfo = getStoreInfoFromStoreId(orderIdAffiliate, stores)
-
-  if (!storeInfo) {
-    logger.warn({
-      message: `Store information not found for order modification for order ${orderId}`,
-      payload: body,
-    })
-
-    return
-  }
+  const storeInfo = getStoreInfoFromStoreId(
+    orderIdAffiliate,
+    stores
+  ) as StoreInfo
 
   const { glovoStoreId } = storeInfo
   const status = setGlovoStatus(currentState)

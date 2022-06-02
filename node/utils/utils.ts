@@ -17,10 +17,8 @@ export const getStoreInfoFormGlovoStoreId = (
 ): StoreInfo | undefined =>
   stores.find(({ glovoStoreId }) => glovoStoreId === id)
 
-export const getStoreInfoFromStoreId = (
-  id: string,
-  stores: StoreInfo[]
-): StoreInfo | undefined => stores.find(({ affiliateId }) => affiliateId === id)
+export const getStoreInfoFromStoreId = (id: string, stores: StoreInfo[]) =>
+  stores.find(({ affiliateId }) => affiliateId === id) as StoreInfo
 
 export const convertGlovoProductToItems = (
   sellerId: string,
@@ -90,8 +88,19 @@ export const convertGlovoProductsToCompare = (
   return items
 }
 
-export const isValidAffiliateId = (affiliateId: string) => {
+export const isValidAffiliateId = (
+  affiliateId: string,
+  stores: StoreInfo[]
+): boolean => {
   if (Number(affiliateId)) {
+    return false
+  }
+
+  const storeIsConfigured = stores.some(
+    (store) => store.affiliateId === affiliateId
+  )
+
+  if (!storeIsConfigured) {
     return false
   }
 
