@@ -1,9 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import {
-  convertGlovoProductsToCompare,
-  getStoreInfoFromStoreId as getStoreInfoFromAffiliateId,
-  isValidAffiliateId,
-} from '../utils'
+import { convertGlovoProductsToCompare, isValidAffiliateId } from '../utils'
 import { CustomError } from '../utils/customError'
 
 export async function compareOrder(
@@ -25,9 +21,10 @@ export async function compareOrder(
 
   const [orderIdAffiliate] = orderId.split('-')
 
-  if (!isValidAffiliateId(orderIdAffiliate)) {
+  if (!isValidAffiliateId(orderIdAffiliate, stores)) {
     logger.warn({
-      message: 'Received order without affiliateId',
+      message: 'Glovo order status not modified',
+      reason: 'AffiliateId not valid',
       data: body,
     })
 
@@ -35,16 +32,6 @@ export async function compareOrder(
   }
 
   try {
-    const storeInfo = getStoreInfoFromAffiliateId(orderIdAffiliate, stores)
-
-    if (!storeInfo) {
-      throw new CustomError({
-        message: `Store information not found for order modification for order ${orderId}`,
-        status: 500,
-        payload: { body },
-      })
-    }
-
     const order = await orders.getOrder(orderId)
     const orderRecord = await recordsManager.getOrderRecord(orderId)
 
