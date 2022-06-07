@@ -1,9 +1,9 @@
 {
   "memory": 1024,
   "ttl": 60,
-  "timeout": 5,
+  "timeout": 30,
   "minReplicas": 2,
-  "maxReplicas": 4,
+  "maxReplicas": 6,
   "workers": 1,
   "routes": {
     "createOrder": {
