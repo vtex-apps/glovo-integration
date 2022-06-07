@@ -66,10 +66,15 @@ export const createVtexOrderData = (
     []
   )
 
+  const totalValue = totals.reduce(
+    (total: number, item: SimulationTotalsItem) => (total += item.value),
+    0
+  )
+
   const vtexOrderData: CreateOrderPayload = {
     marketplaceOrderId: order_id,
     marketplaceServicesEndpoint: 'https://api.glovoapp.com/',
-    marketplacePaymentValue: totals[0].value,
+    marketplacePaymentValue: totalValue,
     marketplaceOrderGroup: order_id,
     isCreatedAsync: true,
     items: updatedItems,
@@ -114,8 +119,8 @@ export const createVtexOrderData = (
         {
           installments: 1,
           paymentSystem: glovoOrder.payment_method,
-          referenceValue: totals[0].value,
-          value: totals[0].value,
+          referenceValue: totalValue,
+          value: totalValue,
         },
       ],
     }
