@@ -37,9 +37,9 @@ const StoreTable = ({
 }: Props) => {
   // Pagination state
   const [storesToDisplay, setStoresToDisplay] = useState<StoreInfo[]>([])
-  const [tableLength, setTableLength] = useState(5)
+  const [tableLength, setTableLength] = useState(10)
   const [currentItemFrom, setCurrentItemFrom] = useState(1)
-  const [currentItemTo, setCurrentItemTo] = useState(5)
+  const [currentItemTo, setCurrentItemTo] = useState(10)
   const [totalItems, setTotalItems] = useState(0)
 
   // Filters state
@@ -347,7 +347,7 @@ const StoreTable = ({
         textShowRows: (
           <FormattedMessage id="admin/glovo-integration.table.show-rows" />
         ),
-        rowsOptions: [5, 10, 25],
+        rowsOptions: [10, 25],
       }}
       emptyStateLabel=""
       emptyStateChildren={

@@ -18,11 +18,11 @@
       "path": "/_v/glovo/products/update",
       "public": true
     },
-    "updateMenuAll": {
+    "updateCompleteMenu": {
       "path": "/_v/glovo/menu/update-all",
       "public": true
     },
-    "updateMenuPartial": {
+    "updatePartialMenu": {
       "path": "/_v/glovo/menu/update-partial",
       "public": true
     },

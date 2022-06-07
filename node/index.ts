@@ -105,10 +105,10 @@ export default new Service<Clients, State, ParamsContext>({
     updateProduct: method({
       POST: [glovoProductUpdate, sendResponse],
     }),
-    updateMenuAll: method({
+    updateCompleteMenu: method({
       POST: [glovoMenuUpdateAll, sendResponse],
     }),
-    updateMenuPartial: method({
+    updatePartialMenu: method({
       POST: [glovoMenuUpdatePartial, sendResponse],
     }),
     glovoMenu: method({
