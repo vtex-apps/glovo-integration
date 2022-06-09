@@ -22,7 +22,6 @@ import {
 import { IconGlovo } from '../../icons/IconGlovo'
 import { countries } from '../../utils'
 import { validateInputs } from '../../../common/utils'
-import type { AddOrEditStore } from './Stores'
 import GET_SELLERS from '../../graphql/getSellers.gql'
 
 interface Props {
