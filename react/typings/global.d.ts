@@ -57,5 +57,5 @@ interface UpdateStore {
 }
 
 type ModifyStore = Pick<UpdateStore, 'isOpen' | 'loading'>
-type RemoveStore = Pick<UpdateStore, 'storeId' | 'isOpen' | 'loading'>
-type AddOrEditStore = Pick<UpdateStore, 'store' | 'isOpen' | 'loading'>
+type RemoveStore = Omit<UpdateStore, 'store'>
+type AddOrEditStore = Omit<UpdateStore, 'storeId'>
