@@ -3,10 +3,10 @@ declare module 'react-apollo'
 declare module 'vtex.styleguide'
 declare module 'vtex.native-types'
 
-interface AppConfig {
+interface AppSettings {
   glovoToken: string
   production: boolean
-  storesConfig: StoreInfo[]
+  stores: StoreInfo[]
   clientProfileData: ClientProfileData
 }
 interface StoreInfo {

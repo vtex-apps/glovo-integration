@@ -95,14 +95,14 @@ const simulateItem = async (
 
 export const getStoreInfoFormGlovoStoreId = (
   id: string,
-  storesConfig: StoreInfo[]
+  stores: StoreInfo[]
 ): StoreInfo | undefined =>
-  storesConfig.find(({ glovoStoreId }) => glovoStoreId === id)
+  stores.find(({ glovoStoreId }) => glovoStoreId === id)
 
 export const getStoreInfoFromStoreId = (
   id: string,
-  storesConfig: StoreInfo[]
-): StoreInfo | undefined => storesConfig.find(({ storeId }) => storeId === id)
+  stores: StoreInfo[]
+): StoreInfo | undefined => stores.find(({ storeId }) => storeId === id)
 
 export const convertGlovoProductToItems = (
   glovoProducts: GlovoProduct[] = []
@@ -293,10 +293,10 @@ export const updateGlovoProduct = async (
     return
   }
 
-  const { storesConfig }: { storesConfig: StoreInfo[] } = appConfig
+  const { stores }: { stores: StoreInfo[] } = appConfig
   const { IdSku, IsActive } = catalogUpdate
 
-  if (!storesConfig) {
+  if (!stores) {
     logger.warn({
       message: 'Missing or invalid store information',
       catalogUpdate,
@@ -316,7 +316,7 @@ export const updateGlovoProduct = async (
     return
   }
 
-  for await (const store of storesConfig) {
+  for await (const store of stores) {
     const { storeId, glovoStoreId } = store
     let newProduct = false
     let productRecord = await recordsManager.getProductRecord(storeId, IdSku)
@@ -458,9 +458,9 @@ export const updateGlovoMenuAll = async (ctx: Context) => {
     return
   }
 
-  const { storesConfig }: { storesConfig: StoreInfo[] } = appConfig
+  const { stores }: { stores: StoreInfo[] } = appConfig
 
-  if (!storesConfig.length) {
+  if (!stores.length) {
     logger.warn({
       message: 'Missing or invalid stores information',
     })
@@ -471,7 +471,7 @@ export const updateGlovoMenuAll = async (ctx: Context) => {
   const glovoMenu = await recordsManager.getGlovoMenu()
 
   // Send a complete bulk product update for each store
-  for await (const store of storesConfig) {
+  for await (const store of stores) {
     const { storeId, salesChannel, glovoStoreId } = store
 
     const glovoPayload: GlovoBulkUpdateProduct = {
@@ -552,9 +552,9 @@ export const updateGlovoMenuPartial = async (ctx: Context) => {
     return
   }
 
-  const { storesConfig }: { storesConfig: StoreInfo[] } = appConfig
+  const { stores }: { stores: StoreInfo[] } = appConfig
 
-  if (!storesConfig.length) {
+  if (!stores.length) {
     logger.warn({
       message: 'Missing or invalid stores information',
     })
@@ -563,7 +563,7 @@ export const updateGlovoMenuPartial = async (ctx: Context) => {
   }
 
   // Send a partial bulk product update for each store
-  for await (const store of storesConfig) {
+  for await (const store of stores) {
     const { storeId, glovoStoreId } = store
 
     try {

@@ -9,7 +9,7 @@ import {
 
 export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
   const {
-    state: { storesConfig },
+    state: { stores },
     vtex: { logger },
     clients: { checkout },
   } = ctx
@@ -26,7 +26,7 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
 
   const storeInfo = getStoreInfoFormGlovoStoreId(
     glovoOrder.store_id,
-    storesConfig
+    stores
   ) as StoreInfo
 
   if (!storeInfo) {

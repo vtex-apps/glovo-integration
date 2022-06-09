@@ -1,0 +1,3 @@
+mutation SaveGlovoIntegrationSettings($settings: SaveGlovoIntegrationSettings) {
+  settingsUpdated: saveGlovoIntegrationSettings(settings: $settings)
+}

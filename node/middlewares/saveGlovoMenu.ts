@@ -21,11 +21,11 @@ export async function saveGlovoMenu(ctx: Context) {
       process.env.VTEX_APP_ID as string
     )
 
-    const { storesConfig }: { storesConfig: StoreInfo[] } = appConfig
+    const { stores }: { stores: StoreInfo[] } = appConfig
 
     const newStores: StoreMenuUpdates[] = []
 
-    for await (const store of storesConfig) {
+    for await (const store of stores) {
       const menuUpdatesRecord = await recordsManager.getStoreMenuUpdates(
         store.storeId
       )

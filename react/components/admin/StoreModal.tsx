@@ -18,7 +18,8 @@ import {
   STORE_NAME,
 } from '../../constants'
 import { IconGlovo } from '../../icons/IconGlovo'
-import { countries, validateInputs } from '../../utils'
+import { countries } from '../../utils'
+import { validateInputs } from '../../../common/utils'
 import type { AddOrEditStore } from './Stores'
 
 interface Props {

@@ -1,0 +1,19 @@
+type Store {
+  id: String
+  storeName: String
+  affiliateId: String
+  salesChannel: String
+  postalCode: String
+  country: String
+  glovoStoreId: String
+}
+
+input SaveStore {
+  id: String!
+  storeName: String
+  affiliateId: String!
+  salesChannel: String!
+  postalCode: String!
+  country: String!
+  glovoStoreId: String!
+}

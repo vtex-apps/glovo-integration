@@ -4,8 +4,6 @@
   "version": "3.0.0",
   "title": "Glovo Integration",
   "description": "Glovo Integration",
-  "mustUpdateAt": "2018-01-04",
-  "categories": [],
   "dependencies": {
     "vtex.styleguide": "9.x",
     "vtex.native-types": "0.x",
@@ -16,16 +14,15 @@
     "docs": "0.x",
     "admin": "0.x",
     "react": "3.x",
-    "messages": "1.x"
+    "messages": "1.x",
+    "graphql": "1.x"
   },
   "billingOptions": {
     "support": {
       "url": "https://support.vtex.com/hc/requests"
     },
     "type": "free",
-    "availableCountries": [
-      "*"
-    ]
+    "availableCountries": ["*"]
   },
   "scripts": {
     "prereleasy": "bash lint.sh"
@@ -47,6 +44,9 @@
       }
     },
     {
+      "name": "graphql-query"
+    },
+    {
       "name": "OMSViewer"
     },
     {
@@ -54,6 +54,9 @@
     },
     {
       "name": "ADMIN_DS"
+    },
+    {
+      "name": "update-app-settings"
     },
     {
       "name": "outbound-access",

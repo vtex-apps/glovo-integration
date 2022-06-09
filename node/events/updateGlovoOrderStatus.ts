@@ -4,7 +4,7 @@ export async function updateGlovoOrderStatus(ctx: StatusChangeContext) {
   const {
     body: { orderId, currentState },
     clients: { glovo },
-    state: { storesConfig },
+    state: { stores },
     vtex: { logger },
   } = ctx
 
@@ -12,7 +12,7 @@ export async function updateGlovoOrderStatus(ctx: StatusChangeContext) {
    * Check if the order comes from Glovo and remove the storeId (i.e. 'TST') from the VTEX orderId to get the glovoOrderId.
    */
   const storeId = orderId.slice(0, 3)
-  const storeInfo = getStoreInfoFromStoreId(storeId, storesConfig)
+  const storeInfo = getStoreInfoFromStoreId(storeId, stores)
 
   if (!storeInfo) {
     return

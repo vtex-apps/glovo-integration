@@ -13,7 +13,7 @@ interface Props extends AlertProps {
   autoClose?: number
 }
 
-const AlertBanner: FC<Props> = ({ show, type, onClose, autoClose = 5000 }) => {
+const AlertBanner: FC<Props> = ({ show, type, onClose, autoClose = 0 }) => {
   const handleClose = () => {
     onClose({
       show: false,

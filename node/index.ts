@@ -31,6 +31,7 @@ import {
   validateSettings,
   validateGlovoToken,
 } from './middlewares'
+import { mutations, queries } from './resolvers'
 
 const TIMEOUT_MS = 5000
 
@@ -64,7 +65,7 @@ declare global {
     glovoOrder: GlovoOrder
     glovoToken: string
     catalogUpdate: CatalogChange
-    storesConfig: StoreInfo[]
+    stores: StoreInfo[]
     storeInfo: StoreInfo
     clientProfileData: ClientProfileData
     orderSimulation: SimulationOrderForm
@@ -126,5 +127,15 @@ export default new Service<Clients, State, ParamsContext>({
       compareOrder,
       updateGlovoOrderStatus,
     ],
+  },
+  graphql: {
+    resolvers: {
+      Query: {
+        ...queries,
+      },
+      Mutation: {
+        ...mutations,
+      },
+    },
   },
 })

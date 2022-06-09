@@ -1,0 +1,13 @@
+type GlovoIntegrationSettings {
+  glovoToken: String
+  production: Boolean
+  stores: [Store]
+  clientProfileData: ClientProfileData
+}
+
+input SaveGlovoIntegrationSettings {
+  glovoToken: String
+  production: Boolean
+  stores: [SaveStore]
+  clientProfileData: SaveClientProfileData
+}
