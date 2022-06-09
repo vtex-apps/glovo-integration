@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.0.0] - 2022-06-09
+
 ### Added
 
 - New Admin Panel with enhanced UX/UI for managing the application's cofiguration.
