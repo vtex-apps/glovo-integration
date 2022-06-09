@@ -15,19 +15,6 @@ import type { AlertProps } from './AlertBanner'
 import { AlertBanner } from './AlertBanner'
 import type { SettingsSection } from '../../typings/settingsSections'
 
-interface ModifyStore {
-  isOpen: boolean
-  loading: boolean
-}
-
-interface RemoveStore extends ModifyStore {
-  storeId: string
-}
-
-export interface AddOrEditStore extends ModifyStore {
-  store: StoreInfo | null
-}
-
 const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
   const [addOrEditStore, setAddOrEditStore] = useState<AddOrEditStore>({
     isOpen: false,

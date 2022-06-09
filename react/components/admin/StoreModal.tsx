@@ -34,17 +34,6 @@ interface Props {
   editStore: (store: StoreInfo) => Promise<void>
 }
 
-interface SelectOption {
-  label: string
-  value: string
-}
-
-interface Seller {
-  id: string
-  name: string
-  isActive: boolean
-}
-
 const StoreModal: FC<Props> = ({
   isOpen,
   setIsOpen,

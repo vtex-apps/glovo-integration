@@ -30,6 +30,12 @@ interface ClientProfileData {
   corporateName: string
 }
 
+interface Seller {
+  id: string
+  name: string
+  isActive: boolean
+}
+
 interface TableItem {
   cellData: unknown
   rowData: StoreInfo
@@ -37,3 +43,19 @@ interface TableItem {
 }
 
 type AlertType = 'success' | 'warning' | 'error'
+
+interface SelectOption {
+  label: string
+  value: string
+}
+
+interface UpdateStore {
+  storeId: string
+  store: StoreInfo | null
+  isOpen: boolean
+  loading: boolean
+}
+
+type ModifyStore = Pick<UpdateStore, 'isOpen' | 'loading'>
+type RemoveStore = Pick<UpdateStore, 'storeId' | 'isOpen' | 'loading'>
+type AddOrEditStore = Pick<UpdateStore, 'store' | 'isOpen' | 'loading'>
