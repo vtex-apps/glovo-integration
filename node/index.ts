@@ -30,6 +30,7 @@ import {
   simulateOrder,
   validateSettings,
   validateGlovoToken,
+  getGlovoMenuByStore,
 } from './middlewares'
 import { mutations, queries } from './resolvers'
 
@@ -114,6 +115,9 @@ export default new Service<Clients, State, ParamsContext>({
     glovoMenu: method({
       GET: [errorHandler, getGlovoMenu],
       POST: [errorHandler, saveGlovoMenu],
+    }),
+    getGlovoMenuByStore: method({
+      GET: [getGlovoMenuByStore],
     }),
   },
   events: {
