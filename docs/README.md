@@ -78,8 +78,22 @@ curl --request POST \
 ```
 
 8. Inside your store's admin dashboard, on the side menu go to _Orders Management -> Settings -> Affiliate_ and configure a new [affiliate](https://help.vtex.com/en/tutorial/integration-guide-consuming-catalog-information-for-use-in-an-external-service) as follows:
+
    - Name: Give the affiliate a name
    - ID: a three (3) letter key for the affiliate (not compatible with numbers or vocals)
    - Trade Policy: number of the trade policy (sales channel) that will be linked to the Glovo Store
    - e-mail: email for notifications
    - Search Enpoint: `https://{{account}}.myvtex.com/_v/glovo/products/update`
+
+## Store Menu
+
+It is possible to see the current catalog offered in Glovo for any of the stores that have been added to the configuration. \
+The following endpoint will respond with the store's current catalog and generate a new updated record in the background.
+
+```
+curl --request GET \
+     --url https://app.io.vtex.com/vtex.glovo-integration/v3/{{account}}/{{workspace}}/_v/glovo/get-menu/{{affiliateId}}' \
+     --header 'VtexIdClientAutCookie: {authToken} \
+```
+
+_The response has a property called `lastUpdated` that shows you the last date in which the the record was generated._
