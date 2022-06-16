@@ -117,7 +117,7 @@ export default new Service<Clients, State, ParamsContext>({
       POST: [errorHandler, saveGlovoMenu],
     }),
     getGlovoMenuByStore: method({
-      GET: [getGlovoMenuByStore],
+      GET: [errorHandler, validateSettings, getGlovoMenuByStore],
     }),
   },
   events: {

@@ -1,23 +1,17 @@
-import { CustomError } from '../utils/customError'
+import { CustomError, generateStoreMenuRecord } from '../utils'
 
 export async function getGlovoMenuByStore(ctx: Context) {
   const {
     clients: { recordsManager },
+    params: { affiliateId },
   } = ctx
 
   try {
-    const glovoMenu = await recordsManager.getGlovoMenu()
-    const { storeId } = ctx.params
-    let itemRecord = []
-    for (const key in glovoMenu) {
-      if (glovoMenu[key]) {
-        const item = recordsManager.getProductRecord(storeId, key)
-        itemRecord.push(item)
-      }
-    }
-    itemRecord = await Promise.all(itemRecord)
+    const storeMenuRecord = await recordsManager.getStoreMenuRecord(affiliateId)
 
-    ctx.body = itemRecord
+    ctx.body = storeMenuRecord ?? 'Store menu record will be generated shortly'
+
+    generateStoreMenuRecord(ctx, affiliateId)
   } catch (error) {
     throw new CustomError({
       message: `There was a problem getting the Glovo menu for the specified store`,

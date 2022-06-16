@@ -94,3 +94,10 @@ interface MenuUpdatesItem {
   glovoStoreId: string
   items: ProductRecord[]
 }
+
+interface StoreMenuRecord {
+  items: {
+    [id: string]: ProductRecord
+  }
+  lastUpdated: string
+}
