@@ -15,19 +15,6 @@ import type { AlertProps } from './AlertBanner'
 import { AlertBanner } from './AlertBanner'
 import type { SettingsSection } from '../../typings/settingsSections'
 
-interface ModifyStore {
-  isOpen: boolean
-  loading: boolean
-}
-
-interface RemoveStore extends ModifyStore {
-  storeId: string
-}
-
-export interface AddOrEditStore extends ModifyStore {
-  store: StoreInfo | null
-}
-
 const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
   const [addOrEditStore, setAddOrEditStore] = useState<AddOrEditStore>({
     isOpen: false,
@@ -140,6 +127,9 @@ const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
     properties: {
       storeName: {
         title: <FormattedMessage id="admin/glovo-integration.store-name" />,
+      },
+      sellerId: {
+        title: <FormattedMessage id="admin/glovo-integration.seller-id" />,
       },
       affiliateId: {
         title: <FormattedMessage id="admin/glovo-integration.affiliate-id" />,

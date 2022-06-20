@@ -1,0 +1,9 @@
+query getSellers {
+  sellers @context(provider: "vtex.sellers-graphql") {
+    items {
+      id
+      name
+      isActive
+    }
+  }
+}
