@@ -1,5 +1,8 @@
-import { getStoreInfoFromStoreId, setGlovoStatus } from '../utils'
-import { CustomError } from '../utils/customError'
+import {
+  CustomError,
+  getStoreInfoFromAffiliateId,
+  setGlovoStatus,
+} from '../utils'
 
 export async function updateGlovoOrderStatus(ctx: StatusChangeContext) {
   const {
@@ -9,17 +12,12 @@ export async function updateGlovoOrderStatus(ctx: StatusChangeContext) {
     vtex: { logger },
   } = ctx
 
-  logger.info({
-    message: 'Received Order Status change event',
-    data: body,
-  })
-
   /**
    * Check if the order comes from Glovo and remove the affiliateId (i.e. 'TST') from the VTEX orderId to get the glovoOrderId.
    */
   const { orderId, currentState } = body
   const storeId = orderId.slice(0, 3)
-  const storeInfo = getStoreInfoFromStoreId(storeId, stores)
+  const storeInfo = getStoreInfoFromAffiliateId(storeId, stores)
 
   if (!storeInfo) {
     return

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
+  CustomError,
   convertGlovoProductsToCompare,
-  getStoreInfoFromStoreId as getStoreInfoFromAffiliateId,
+  getStoreInfoFromAffiliateId,
 } from '../utils'
-import { CustomError } from '../utils/customError'
 
 export async function compareOrder(
   ctx: StatusChangeContext,
@@ -15,10 +15,6 @@ export async function compareOrder(
     state: { stores },
     vtex: { logger },
   } = ctx
-
-  logger.info({
-    message: `Checking for order modifications for order ${orderId}`,
-  })
 
   if (orderId.includes('-')) {
     orderId.slice(0, -3)

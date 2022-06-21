@@ -1,5 +1,4 @@
-import { createVtexOrderData } from '../utils'
-import { CustomError } from '../utils/customError'
+import { CustomError, createVtexOrderData } from '../utils'
 
 export async function createOrder(ctx: Context, next: () => Promise<void>) {
   const {

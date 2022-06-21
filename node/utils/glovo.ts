@@ -65,12 +65,6 @@ export const updateGlovoProduct = async (
     return
   }
 
-  logger.info({
-    message: 'Catalog update received',
-    catalogUpdate,
-    storesToUpdate: stores,
-  })
-
   for await (const store of stores) {
     const { id, storeName, glovoStoreId } = store
     let newProduct = false
@@ -80,11 +74,6 @@ export const updateGlovoProduct = async (
     )
 
     if (!productRecord) {
-      logger.warn({
-        message: `Record not found for product with sku ${IdSku}`,
-        catalogUpdate,
-      })
-
       if (!IsActive) {
         continue
       }
@@ -126,11 +115,6 @@ export const updateGlovoProduct = async (
       productRecord.price === glovoPayload.price &&
       productRecord.available === glovoPayload.available
     ) {
-      logger.info({
-        message: `Product with sku ${IdSku} already up to date`,
-        productRecord,
-      })
-
       continue
     }
 
