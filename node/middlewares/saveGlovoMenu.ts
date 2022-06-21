@@ -1,8 +1,11 @@
 import { json } from 'co-body'
 
+import { APP_SETTINGS, GLOVO } from '../constants'
+import { CustomError } from '../utils/customError'
+
 export async function saveGlovoMenu(ctx: Context) {
   const {
-    clients: { apps, recordsManager },
+    clients: { vbase, recordsManager },
   } = ctx
 
   try {
@@ -17,39 +20,47 @@ export async function saveGlovoMenu(ctx: Context) {
     await recordsManager.saveGlovoMenu(glovoMenu)
 
     // Create initial Store Menu Updates record
-    const appConfig = await apps.getAppSettings(
-      process.env.VTEX_APP_ID as string
+    const appSettings: AppSettings = await vbase.getJSON(
+      GLOVO,
+      APP_SETTINGS,
+      true
     )
 
-    const { stores }: { stores: StoreInfo[] } = appConfig
+    const { stores }: { stores: StoreInfo[] } = appSettings
 
     const newStores: StoreMenuUpdates[] = []
 
     for await (const store of stores) {
       const menuUpdatesRecord = await recordsManager.getStoreMenuUpdates(
-        store.storeId
+        store.id
       )
 
       if (!menuUpdatesRecord) {
-        const { storeId, glovoStoreId } = store
+        const { id, glovoStoreId } = store
         const storeMenuUpdates: StoreMenuUpdates = {
           current: {
             responseId: null,
             createdAt: new Date().getTime(),
-            storeId,
+            storeId: id,
             glovoStoreId,
             items: [],
           },
         }
 
         newStores.push(storeMenuUpdates)
-        await recordsManager.saveStoreMenuUpdates(storeId, storeMenuUpdates)
+        await recordsManager.saveStoreMenuUpdates(id, storeMenuUpdates)
       }
     }
 
     ctx.status = 201
     ctx.body = { glovoMenu, newStores }
   } catch (error) {
-    throw new Error(error)
+    if (error) throw error
+
+    throw new CustomError({
+      message: `There was a problem saving the Glovo menu`,
+      status: error.status,
+      payload: error,
+    })
   }
 }

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 export const RESIDENTIAL = 'Residential'
 export const HOME = 'Home'
+export const APP_SETTINGS = 'app-settings'
 
 /** VTEX Order status */
 export const READY_FOR_HANDLING = 'ready-for-handling'
@@ -16,3 +17,7 @@ export const READY_FOR_PICKUP = 'READY_FOR_PICKUP'
 export const GLOVO = 'Glovo'
 export const MENU = 'Menu'
 export const ORDERS = 'orders'
+
+/** General */
+export const PRODUCTION = 'PRODUCTION'
+export const STAGING = 'STAGING'

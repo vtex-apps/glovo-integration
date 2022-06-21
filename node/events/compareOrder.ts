@@ -86,11 +86,11 @@ export async function compareOrder(
 
     if (replacements.length || removed_purchases.length) {
       const {
-        glovoOrder: { order_id: glovoOrderId, store_id: storeId },
+        glovoOrder: { order_id: glovoOrderId, store_id: glovoStoreId },
       } = orderRecord
 
       const payload: GlovoModifyOrderPayload = {
-        storeId,
+        glovoStoreId,
         glovoOrderId,
         replacements,
         removed_purchases,

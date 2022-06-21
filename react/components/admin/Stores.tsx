@@ -1,21 +1,14 @@
-import type { FC } from 'react'
 import React, { useState, Fragment } from 'react'
 import { FormattedMessage } from 'react-intl'
-import {
-  ButtonWithIcon,
-  ModalDialog,
-  Table,
-  IconPlusLines,
-} from 'vtex.styleguide'
+import { ButtonWithIcon, ModalDialog, IconPlusLines } from 'vtex.styleguide'
 
-import { IconGlovo } from '../../icons/IconGlovo'
-import { countries } from '../../utils'
 import { StoreModal } from './StoreModal'
 import type { AlertProps } from './AlertBanner'
 import { AlertBanner } from './AlertBanner'
 import type { SettingsSection } from '../../typings/settingsSections'
+import { StoreTable } from './StoresTable'
 
-const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
+const Stores = ({ settings, saveSettings }: SettingsSection) => {
   const [addOrEditStore, setAddOrEditStore] = useState<AddOrEditStore>({
     isOpen: false,
     loading: false,
@@ -82,11 +75,13 @@ const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
   }
 
   const handleEditStore = async (editedStore: StoreInfo) => {
-    const filteredStores = settings.stores.filter(
-      ({ id }: StoreInfo) => id !== editedStore.id
-    )
+    const updatedStores = settings.stores.map((store: StoreInfo) => {
+      if (store.id === editedStore.id) {
+        return editedStore
+      }
 
-    const updatedStores = [...filteredStores, editedStore]
+      return store
+    })
 
     updateSettings(updatedStores)
 
@@ -122,65 +117,6 @@ const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
       storeId: '',
     })
   }
-
-  const schema = {
-    properties: {
-      storeName: {
-        title: <FormattedMessage id="admin/glovo-integration.store-name" />,
-      },
-      sellerId: {
-        title: <FormattedMessage id="admin/glovo-integration.seller-id" />,
-      },
-      affiliateId: {
-        title: <FormattedMessage id="admin/glovo-integration.affiliate-id" />,
-      },
-      salesChannel: {
-        title: <FormattedMessage id="admin/glovo-integration.sales-channel" />,
-      },
-      glovoStoreId: {
-        title: <FormattedMessage id="admin/glovo-integration.glovo-store-id" />,
-      },
-      postalCode: {
-        title: <FormattedMessage id="admin/glovo-integration.postal-code" />,
-      },
-      country: {
-        title: <FormattedMessage id="admin/glovo-integration.country" />,
-        cellRenderer: ({ cellData }: TableItem) => {
-          const country = countries.find(({ value }) => value === cellData)
-
-          return country?.label
-        },
-      },
-    },
-  }
-
-  const lineActions = [
-    {
-      label: () => (
-        <FormattedMessage id="admin/glovo-integration.table.edit-store" />
-      ),
-      onClick: ({ rowData: store }: TableItem) => {
-        setAddOrEditStore({
-          ...addOrEditStore,
-          isOpen: true,
-          store,
-        })
-      },
-    },
-    {
-      label: () => (
-        <FormattedMessage id="admin/glovo-integration.table.remove-store" />
-      ),
-      isDangerous: true,
-      onClick: ({ rowData: { id } }: TableItem) => {
-        setRemoveStore({
-          ...removeStore,
-          isOpen: true,
-          storeId: id,
-        })
-      },
-    },
-  ]
 
   return (
     <Fragment>
@@ -226,7 +162,14 @@ const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
 
       <div>
         <div className="flex justify-between items-center">
-          <IconGlovo />
+          <div>
+            <h2>
+              <FormattedMessage id="admin/glovo-integration.table.title" />
+            </h2>
+            <p className="i mt0 mb7 gray">
+              <FormattedMessage id="admin/glovo-integration.table.subtitle" />
+            </p>
+          </div>
           <ButtonWithIcon
             icon={<IconPlusLines />}
             onClick={handleOpenStoreModal}
@@ -235,19 +178,12 @@ const Stores: FC<SettingsSection> = ({ settings, saveSettings }) => {
           </ButtonWithIcon>
         </div>
 
-        <Table
-          schema={schema}
-          items={settings.stores}
-          lineActions={lineActions}
-          fullWidth
-          emptyStateLabel=""
-          emptyStateChildren={
-            <div className="">
-              <h4 className="t-heading-4 pt8">
-                <FormattedMessage id="admin/glovo-integration.table.empty" />
-              </h4>
-            </div>
-          }
+        <StoreTable
+          stores={settings.stores}
+          addOrEditStore={addOrEditStore}
+          setAddOrEditStore={setAddOrEditStore}
+          removeStore={removeStore}
+          setRemoveStore={setRemoveStore}
         />
       </div>
     </Fragment>

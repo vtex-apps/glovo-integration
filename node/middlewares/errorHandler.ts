@@ -18,6 +18,7 @@ export async function errorHandler(ctx: Context, next: () => Promise<void>) {
     } else {
       logger.error({
         message: error.message,
+        status: error.status,
         error,
       })
     }

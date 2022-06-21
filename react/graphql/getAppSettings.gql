@@ -2,10 +2,12 @@ query getGlovoIntegrationSettings {
   settings: getGlovoIntegrationSettings {
     glovoToken
     production
+    marketplace
     stores {
       id
       storeName
       sellerId
+      sellerName
       affiliateId
       salesChannel
       postalCode

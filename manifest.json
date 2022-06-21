@@ -44,6 +44,27 @@
       }
     },
     {
+      "name": "colossus-fire-event"
+    },
+    {
+      "name": "colossus-write-logs"
+    },
+    {
+      "name": "ViewPayments"
+    },
+    {
+      "name": "MakePayments"
+    },
+    {
+      "name": "Changes"
+    },
+    {
+      "name": "AcessaTodosPedidos"
+    },
+    {
+      "name": "AcessaTodosCarrinhos"
+    },
+    {
       "name": "graphql-query"
     },
     {

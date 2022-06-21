@@ -1,4 +1,4 @@
-import type { ChangeEvent, Dispatch, FC, SetStateAction } from 'react'
+import type { ChangeEvent, Dispatch, SetStateAction } from 'react'
 import React, { useEffect, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import {
@@ -19,8 +19,7 @@ import {
   STORE_NAME,
   SELLER_ID,
 } from '../../constants'
-import { IconGlovo } from '../../icons/IconGlovo'
-import { countries } from '../../utils'
+import { countriesMap, countriesOptions } from '../../utils'
 import { validateInputs } from '../../../common/utils'
 import GET_SELLERS from '../../graphql/getSellers.gql'
 
@@ -33,14 +32,14 @@ interface Props {
   editStore: (store: StoreInfo) => Promise<void>
 }
 
-const StoreModal: FC<Props> = ({
+const StoreModal = ({
   isOpen,
   setIsOpen,
   saving,
   store,
   addStore,
   editStore,
-}) => {
+}: Props) => {
   const [error, setError] = useState(false)
   const [storeInfo, setStoreInfo] = useState({} as StoreInfo)
   const [sellers, setSellers] = useState<SelectOption[]>([])
@@ -70,17 +69,17 @@ const StoreModal: FC<Props> = ({
       return
     }
 
-    for (const country of countries) {
-      if (country.value === store.country) {
-        setSelectedCountry({
-          label: country.label,
-          value: country.value,
-        })
-      }
-    }
+    setSelectedSeller({
+      label: store.sellerName,
+      value: store.sellerId,
+    })
+
+    setSelectedCountry({
+      label: countriesMap[store.country],
+      value: store.country,
+    })
 
     setStoreInfo(store)
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store])
 
@@ -145,6 +144,7 @@ const StoreModal: FC<Props> = ({
     setStoreInfo({
       ...storeInfo,
       sellerId: seller.value,
+      sellerName: seller.label,
     })
 
     setSelectedSeller(seller)
@@ -177,7 +177,7 @@ const StoreModal: FC<Props> = ({
       addStore(storeInfo)
     }
 
-    setStoreInfo({} as StoreInfo)
+    setStoreInfo({ id: createId() } as StoreInfo)
     setSelectedCountry(null)
     setSelectedSeller(null)
   }
@@ -194,13 +194,10 @@ const StoreModal: FC<Props> = ({
 
   return (
     <Modal isOpen={isOpen} onClose={handleCloseModal}>
-      <div className="mt5">
-        <div className="flex items-center">
-          <IconGlovo size={60} />
-          <h4 className="t-heading-4 ml4">
-            <FormattedMessage id="admin/glovo-integration.modal.title" />
-          </h4>
-        </div>
+      <div className="mt3">
+        <h4 className="t-heading-4">
+          <FormattedMessage id="admin/glovo-integration.modal.title" />
+        </h4>
         <div className="mb6">
           <p className="mb2">
             <FormattedMessage id="admin/glovo-integration.store-name" />
@@ -315,7 +312,7 @@ const StoreModal: FC<Props> = ({
             }
             value={selectedCountry}
             multi={false}
-            options={countries}
+            options={countriesOptions}
             onChange={handleSelectCountry}
             errorMessage={
               error &&

@@ -6,6 +6,7 @@ declare module 'vtex.native-types'
 interface AppSettings {
   glovoToken: string
   production: boolean
+  marketplace: boolean
   stores: StoreInfo[]
   clientProfileData: ClientProfileData
 }
@@ -13,6 +14,7 @@ interface StoreInfo {
   id: string
   storeName: string
   sellerId: string
+  sellerName: string
   affiliateId: string
   salesChannel: string
   postalCode: string

@@ -2,6 +2,8 @@
 import type { InstanceOptions, IOContext } from '@vtex/api'
 import { ExternalClient } from '@vtex/api'
 
+import { APP_SETTINGS, GLOVO, PRODUCTION, STAGING } from '../constants'
+
 const BASE_URL = {
   PRODUCTION: 'https://api.glovoapp.com',
   STAGING: 'https://stageapi.glovoapp.com',
@@ -20,14 +22,11 @@ export default class Glovo extends ExternalClient {
 
   public updateProducts = async (ctx: Context, data: GlovoUpdateProduct) => {
     const { glovoStoreId, skuId, price, available } = data
-    const {
-      glovoToken,
-      production,
-    }: { glovoToken: string; production: boolean } = await Glovo.getAppSettings(
+    const { glovoToken, production }: AppSettings = await Glovo.getAppSettings(
       ctx
     )
 
-    const environment = production ? 'PRODUCTION' : 'STAGING'
+    const environment = production ? PRODUCTION : STAGING
 
     const payload: GlovoPatchProduct = {
       available,
@@ -51,14 +50,11 @@ export default class Glovo extends ExternalClient {
     data: GlovoBulkUpdateProduct,
     glovoStoreId: string
   ) => {
-    const {
-      glovoToken,
-      production,
-    }: { glovoToken: string; production: boolean } = await Glovo.getAppSettings(
+    const { glovoToken, production }: AppSettings = await Glovo.getAppSettings(
       ctx
     )
 
-    const environment = production ? 'PRODUCTION' : 'STAGING'
+    const environment = production ? PRODUCTION : STAGING
 
     return this.http.post<GlovoBulkUpdateResponse>(
       `${BASE_URL[environment]}/webhook/stores/${glovoStoreId}/menu/updates`,
@@ -76,14 +72,11 @@ export default class Glovo extends ExternalClient {
     data: GlovoUpdateOrderStatus
   ) => {
     const { glovoStoreId, glovoOrderId, status } = data
-    const {
-      glovoToken,
-      production,
-    }: { glovoToken: string; production: boolean } = await Glovo.getAppSettings(
+    const { glovoToken, production }: AppSettings = await Glovo.getAppSettings(
       ctx
     )
 
-    const environment = production ? 'PRODUCTION' : 'STAGING'
+    const environment = production ? PRODUCTION : STAGING
 
     const payload: { status: string } = {
       status,
@@ -108,10 +101,10 @@ export default class Glovo extends ExternalClient {
       ctx
     )
 
-    const environment = production ? 'PRODUCTION' : 'STAGING'
+    const environment = production ? PRODUCTION : STAGING
 
     const {
-      storeId,
+      glovoStoreId,
       glovoOrderId,
       replacements,
       removed_purchases,
@@ -125,7 +118,7 @@ export default class Glovo extends ExternalClient {
     }
 
     return this.http.post(
-      `${BASE_URL[environment]}/webhook/stores/${storeId}/orders/${glovoOrderId}/replace_products`,
+      `${BASE_URL[environment]}/webhook/stores/${glovoStoreId}/orders/${glovoOrderId}/replace_products`,
       payload,
       {
         headers: {
@@ -135,7 +128,9 @@ export default class Glovo extends ExternalClient {
     )
   }
 
-  private static async getAppSettings(ctx: Context | StatusChangeContext) {
-    return ctx.clients.apps.getAppSettings('vtex.glovo-integration')
+  private static async getAppSettings(
+    ctx: Context | StatusChangeContext
+  ): Promise<AppSettings> {
+    return ctx.clients.vbase.getJSON(GLOVO, APP_SETTINGS, true)
   }
 }

@@ -1,6 +1,7 @@
 type GlovoIntegrationSettings {
   glovoToken: String
   production: Boolean
+  marketplace: Boolean
   stores: [Store]
   clientProfileData: ClientProfileData
 }
@@ -8,6 +9,7 @@ type GlovoIntegrationSettings {
 input SaveGlovoIntegrationSettings {
   glovoToken: String
   production: Boolean
+  marketplace: Boolean
   stores: [SaveStore]
   clientProfileData: SaveClientProfileData
 }

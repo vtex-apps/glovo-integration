@@ -1,4 +1,5 @@
-import type { ChangeEvent, FC } from 'react'
+/* eslint-disable padding-line-between-statements */
+import type { ChangeEvent } from 'react'
 import React, { Fragment, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Button, Input, InputPassword, Toggle } from 'vtex.styleguide'
@@ -11,6 +12,7 @@ import {
   FIRST_NAME,
   GLOVO_TOKEN,
   LAST_NAME,
+  MARKETPLACE,
   PHONE_NUMBER,
   PRODUCTION,
 } from '../../constants'
@@ -19,11 +21,11 @@ import type { AlertProps } from './AlertBanner'
 import { AlertBanner } from './AlertBanner'
 import type { SettingsSection } from '../../typings/settingsSections'
 
-const Configuration: FC<SettingsSection> = ({
+const Configuration = ({
   settings,
   setSettings,
   saveSettings,
-}) => {
+}: SettingsSection) => {
   const [error, setError] = useState(false)
   const [savingSettings, setSavingSettings] = useState(false)
   const [alert, setAlert] = useState<AlertProps>({
@@ -42,9 +44,10 @@ const Configuration: FC<SettingsSection> = ({
         return
 
       case PRODUCTION:
+      case MARKETPLACE:
         setSettings({
           ...settings,
-          production: !settings.production,
+          [e.target.id]: !settings[e.target.id],
         })
 
         return
@@ -129,6 +132,21 @@ const Configuration: FC<SettingsSection> = ({
                 <FormattedMessage id="admin/glovo-integration.inputs.error-message" />
               )
             }
+          />
+        </div>
+        <div className="mt7">
+          <p className="i mt0 gray">
+            <FormattedMessage id="admin/glovo-integration.integration-settings.marketplace.description" />
+          </p>
+          <Toggle
+            checked={settings.marketplace}
+            id={MARKETPLACE}
+            label={
+              <FormattedMessage id="admin/glovo-integration.integration-settings.marketplace.label" />
+            }
+            name="marketplace"
+            value={settings.marketplace}
+            onChange={handleChange}
           />
         </div>
         <div className="mt7">

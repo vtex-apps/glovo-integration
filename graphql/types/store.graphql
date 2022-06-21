@@ -1,6 +1,7 @@
 type Store {
   id: String
   sellerId: String
+  sellerName: String
   storeName: String
   affiliateId: String
   salesChannel: String
@@ -12,6 +13,7 @@ type Store {
 input SaveStore {
   id: String!
   sellerId: String
+  sellerName: String
   storeName: String
   affiliateId: String!
   salesChannel: String!

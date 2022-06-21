@@ -1,84 +1,33 @@
 // This is a list of the countries where Glovo operates currently
 
-export const countries = [
-  {
-    label: 'Spain',
-    value: 'ESP',
-  },
-  {
-    label: 'Portugal',
-    value: 'PRT',
-  },
-  {
-    label: 'Italy',
-    value: 'ITA',
-  },
-  {
-    label: 'Poland',
-    value: 'POL',
-  },
-  {
-    label: 'Croatia',
-    value: 'HRV',
-  },
-  {
-    label: 'Serbia',
-    value: 'SRB',
-  },
-  {
-    label: 'Kazakhstan',
-    value: 'KAZ',
-  },
-  {
-    label: 'Romania',
-    value: 'ROU',
-  },
-  {
-    label: 'Morocco',
-    value: 'MAR',
-  },
-  {
-    label: 'Georgia',
-    value: 'GEO',
-  },
-  {
-    label: 'Kenya',
-    value: 'KEN',
-  },
-  {
-    label: 'Ivory Coast',
-    value: 'CIV',
-  },
-  {
-    label: 'Ukraine',
-    value: 'UKR',
-  },
-  {
-    label: 'Moldova',
-    value: 'MDA',
-  },
-  {
-    label: 'Uganda',
-    value: 'UGA',
-  },
-  {
-    label: 'Kyrgyzstan',
-    value: 'KGZ',
-  },
-  {
-    label: 'Bosnia & Herzegovina',
-    value: 'BIH',
-  },
-  {
-    label: 'Ghana',
-    value: 'GHA',
-  },
-  {
-    label: 'Montenegro',
-    value: 'MNE',
-  },
-  {
-    label: 'Bulgaria',
-    value: 'BGR',
-  },
-]
+export type CountriesRecord = Record<string, string>
+
+export const countriesMap: CountriesRecord = {
+  ESP: 'Spain',
+  PRT: 'Portugal',
+  ITA: 'Italy',
+  POL: 'Poland',
+  HRV: 'Croatia',
+  SRB: 'Serbia',
+  KAZ: 'Kazakhstan',
+  ROU: 'Romania',
+  MAR: 'Morocco',
+  GEO: 'Georgia',
+  KEN: 'Kenya',
+  CIV: 'Ivory Coast',
+  UKR: 'Ukraine',
+  MDA: 'Moldova',
+  UGA: 'Uganda',
+  KGZ: 'Kyrgyzstan',
+  BIH: 'Bosnia & Herzegovina',
+  GHA: 'Ghana',
+  MNE: 'Montenegro',
+  BGR: 'Bulgaria',
+}
+
+export const countriesOptions: CountriesRecord[] = Object.keys(
+  countriesMap
+).map((country) => ({
+  value: country,
+  label: countriesMap[country],
+}))
