@@ -19,5 +19,5 @@
   "scripts": {
     "lint": "tsc --noEmit --pretty"
   },
-  "version": "2.0.5"
+  "version": "3.0.3"
 }

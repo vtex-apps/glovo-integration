@@ -17,7 +17,7 @@ export const getStoreInfoFormGlovoStoreId = (
 ): StoreInfo | undefined =>
   stores.find(({ glovoStoreId }) => glovoStoreId === id)
 
-export const getStoreInfoFromStoreId = (
+export const getStoreInfoFromAffiliateId = (
   id: string,
   stores: StoreInfo[]
 ): StoreInfo | undefined => stores.find(({ affiliateId }) => affiliateId === id)

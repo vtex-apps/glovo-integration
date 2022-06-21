@@ -2,15 +2,12 @@
 import type { InstanceOptions, IOContext } from '@vtex/api'
 import { ExternalClient } from '@vtex/api'
 
-import { APP_SETTINGS, GLOVO } from '../constants'
+import { APP_SETTINGS, GLOVO, PRODUCTION, STAGING } from '../constants'
 
 const BASE_URL = {
   PRODUCTION: 'https://api.glovoapp.com',
   STAGING: 'https://stageapi.glovoapp.com',
 }
-
-const PRODUCTION = 'PRODUCTION'
-const STAGING = 'STAGING'
 
 export default class Glovo extends ExternalClient {
   constructor(context: IOContext, options?: InstanceOptions) {
@@ -107,7 +104,7 @@ export default class Glovo extends ExternalClient {
     const environment = production ? PRODUCTION : STAGING
 
     const {
-      storeId,
+      glovoStoreId,
       glovoOrderId,
       replacements,
       removed_purchases,
@@ -121,7 +118,7 @@ export default class Glovo extends ExternalClient {
     }
 
     return this.http.post(
-      `${BASE_URL[environment]}/webhook/stores/${storeId}/orders/${glovoOrderId}/replace_products`,
+      `${BASE_URL[environment]}/webhook/stores/${glovoStoreId}/orders/${glovoOrderId}/replace_products`,
       payload,
       {
         headers: {

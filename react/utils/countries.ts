@@ -25,25 +25,9 @@ export const countriesMap: CountriesRecord = {
   BGR: 'Bulgaria',
 }
 
-export const countriesOptions: CountriesRecord[] = [
-  { value: 'ESP', label: 'Spain' },
-  { value: 'PRT', label: 'Portugal' },
-  { value: 'ITA', label: 'Italy' },
-  { value: 'POL', label: 'Poland' },
-  { value: 'HRV', label: 'Croatia' },
-  { value: 'SRB', label: 'Serbia' },
-  { value: 'KAZ', label: 'Kazakhstan' },
-  { value: 'ROU', label: 'Romania' },
-  { value: 'MAR', label: 'Morocco' },
-  { value: 'GEO', label: 'Georgia' },
-  { value: 'KEN', label: 'Kenya' },
-  { value: 'CIV', label: 'Ivory Coast' },
-  { value: 'UKR', label: 'Ukraine' },
-  { value: 'MDA', label: 'Moldova' },
-  { value: 'UGA', label: 'Uganda' },
-  { value: 'KGZ', label: 'Kyrgyzstan' },
-  { value: 'BIH', label: 'Bosnia & Herzegovina' },
-  { value: 'GHA', label: 'Ghana' },
-  { value: 'MNE', label: 'Montenegro' },
-  { value: 'BGR', label: 'Bulgaria' },
-]
+export const countriesOptions: CountriesRecord[] = Object.keys(
+  countriesMap
+).map((country) => ({
+  value: country,
+  label: countriesMap[country],
+}))
