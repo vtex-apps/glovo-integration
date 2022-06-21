@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Add `paymentData` to payload for creating marketplaceplace orders.
+
 ## [3.0.2] - 2022-06-21
 
 ### Fixed

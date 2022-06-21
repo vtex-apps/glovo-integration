@@ -18,7 +18,8 @@ export async function createOrder(ctx: Context, next: () => Promise<void>) {
     const vtexOrderData = createVtexOrderData(
       glovoOrder,
       orderSimulation,
-      clientProfileData
+      clientProfileData,
+      marketplace
     )
 
     let createdOrder

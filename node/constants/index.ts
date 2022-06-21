@@ -4,6 +4,7 @@ export const HOME = 'Home'
 export const APP_SETTINGS = 'app-settings'
 
 /** VTEX Order status */
+export const WAITING_SELLER_HANDLING = 'waiting-seller-handling'
 export const READY_FOR_HANDLING = 'ready-for-handling'
 export const START_HANDLING = 'start-handling'
 export const HANDLING = 'handling'
