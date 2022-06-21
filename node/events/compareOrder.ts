@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
+  CustomError,
   convertGlovoProductsToCompare,
-  getStoreInfoFromStoreId,
+  getStoreInfoFromAffiliateId,
 } from '../utils'
 
 export async function compareOrder(
@@ -15,16 +16,20 @@ export async function compareOrder(
     vtex: { logger },
   } = ctx
 
+  if (orderId.includes('-')) {
+    orderId.slice(0, -3)
+  }
+
   try {
-    const orderStoreId = orderId.slice(0, 3)
-    const storeInfo = getStoreInfoFromStoreId(orderStoreId, stores)
+    const orderAffiliateId = orderId.slice(0, 3)
+    const storeInfo = getStoreInfoFromAffiliateId(orderAffiliateId, stores)
 
     if (!storeInfo) {
       return
     }
 
     // fetch order's information
-    const invoicedOrder = await orders.getOrder(orderId)
+    const order = await orders.getOrder(orderId)
     const orderRecord = await recordsManager.getOrderRecord(orderId)
 
     if (!orderRecord) {
@@ -40,7 +45,7 @@ export async function compareOrder(
       glovoOrder: { products },
     } = orderRecord
 
-    const { items: invoicedItems } = invoicedOrder
+    const { items: invoicedItems } = order
     const receivedItems = convertGlovoProductsToCompare(products)
 
     const comparison: any = {}
@@ -61,13 +66,14 @@ export async function compareOrder(
       // check if the item was in stock and invoiced
       if (!comparison[receivedItem.id]) {
         removed_purchases.push(receivedItem.purchased_product_id)
+
+        continue
       }
 
       // check if the item changed
       if (comparison[receivedItem.id].quantity !== receivedItem.quantity) {
-        const updatedProduct: GlovoUpdatedProduct = {
-          purchased_product_id:
-            comparison[receivedItem.id].purchased_product_id,
+        const updatedProduct: GlovoModifyReplacements = {
+          purchased_product_id: receivedItem.purchased_product_id,
           product: {
             id: receivedItem.id,
             quantity: receivedItem.quantity,
@@ -111,7 +117,7 @@ export async function compareOrder(
 
     const data: OrderRecord = {
       ...orderRecord,
-      invoiced: invoicedOrder,
+      invoiced: order,
       hasChanged,
       invoicedAt: currentDate.getTime(),
     }
@@ -120,6 +126,12 @@ export async function compareOrder(
 
     await next()
   } catch (error) {
-    throw new Error(error)
+    if (error) throw error
+
+    throw new CustomError({
+      message: `Order comparison for order ${orderId} failed`,
+      status: error.status,
+      payload: error,
+    })
   }
 }

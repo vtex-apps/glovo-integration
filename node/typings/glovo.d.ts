@@ -121,7 +121,7 @@ interface GlovoProduct {
   name?: string
   price?: number
   attributes: GlovoProductAttributes[]
-  purchased_product_id?: string
+  purchased_product_id: string
 }
 
 interface GlovoProductAttributes {
@@ -180,12 +180,14 @@ interface GlovoUpdateOrderStatus {
 interface GlovoModifyOrderPayload {
   glovoStoreId: string
   glovoOrderId: string
-  replacements: Array<{
-    purchased_product_id: string
-    product: GlovoModifiedProduct
-  }>
+  replacements: GlovoModifyReplacements[]
   removed_purchases: Array<string | undefined>
   added_products: GlovoModifiedProduct[]
+}
+
+interface GlovoModifyReplacements {
+  purchased_product_id: string
+  product: GlovoModifiedProduct
 }
 
 interface GlovoModifiedProduct {

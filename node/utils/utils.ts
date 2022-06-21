@@ -17,10 +17,10 @@ export const getStoreInfoFormGlovoStoreId = (
 ): StoreInfo | undefined =>
   stores.find(({ glovoStoreId }) => glovoStoreId === id)
 
-export const getStoreInfoFromStoreId = (
+export const getStoreInfoFromAffiliateId = (
   id: string,
   stores: StoreInfo[]
-): StoreInfo | undefined => stores.find(({ id: storeId }) => storeId === id)
+): StoreInfo | undefined => stores.find(({ affiliateId }) => affiliateId === id)
 
 export const convertGlovoProductToItems = (
   sellerId: string,
@@ -47,10 +47,16 @@ export const convertGlovoProductToItems = (
   return items
 }
 
+type ProductsToCompare = {
+  id: string
+  quantity: number
+  purchased_product_id: string
+}
+
 export const convertGlovoProductsToCompare = (
   glovoProducts: GlovoProduct[]
 ) => {
-  const items = []
+  const items: ProductsToCompare[] = []
   const attributesCollection = []
 
   for (const product of glovoProducts) {
@@ -69,7 +75,7 @@ export const convertGlovoProductsToCompare = (
     if (attribute.purchased_product_id) {
       const { id, quantity } = attribute
 
-      const updatedItems: GlovoProductAttributes[] = items.map((item) => {
+      const updatedItems = items.map((item) => {
         if (item.id === id) {
           item.quantity += quantity
         }

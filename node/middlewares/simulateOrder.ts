@@ -2,11 +2,11 @@ import { UserInputError } from '@vtex/api'
 import { json } from 'co-body'
 
 import {
+  CustomError,
   convertGlovoProductToItems,
   createSimulationPayload,
   getStoreInfoFormGlovoStoreId,
 } from '../utils'
-import { CustomError } from '../utils/customError'
 
 export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
   const {

@@ -112,7 +112,7 @@ export const createAuthorizationPayload = (
 ): AuthorizeOrderPayload | AuthorizeMarketplaceOrderPayload => {
   const payload = marketplace
     ? {
-        marketplaceOrderGroup: 'TST-Glovo',
+        marketplaceOrderGroup: orderIdentifier,
         authorizationReceipt: {
           date: glovoOrder.order_time,
           receipt: glovoOrder.order_code,
