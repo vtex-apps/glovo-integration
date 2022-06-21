@@ -106,6 +106,12 @@ interface PaymentData {
   ]
 }
 
+interface SimulationTotalsItem {
+  id: string
+  name: string
+  value: number
+}
+
 interface MarketingData {
   utmSource: string
   utmMedium: string
