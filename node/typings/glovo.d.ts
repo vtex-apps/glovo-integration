@@ -178,7 +178,7 @@ interface GlovoUpdateOrderStatus {
 }
 
 interface GlovoModifyOrderPayload {
-  storeId: string
+  glovoStoreId: string
   glovoOrderId: string
   replacements: Array<{
     purchased_product_id: string
