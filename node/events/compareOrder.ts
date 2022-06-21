@@ -17,9 +17,10 @@ export async function compareOrder(
   } = ctx
 
   const { orderId } = body
+  const [orderIdAffiliate] = orderId.split('-')
 
   // Filter orders that don't come form sellers (Example: 1234661638608-01)
-  if (Number(orderId.slice(0, 3))) {
+  if (Number(orderIdAffiliate)) {
     logger.warn({
       message: 'Received order without affiliateId',
       data: body,
@@ -29,8 +30,7 @@ export async function compareOrder(
   }
 
   try {
-    const orderAffiliateId = orderId.slice(0, 3)
-    const storeInfo = getStoreInfoFromAffiliateId(orderAffiliateId, stores)
+    const storeInfo = getStoreInfoFromAffiliateId(orderIdAffiliate, stores)
 
     if (!storeInfo) {
       throw new CustomError({
@@ -40,11 +40,6 @@ export async function compareOrder(
       })
     }
 
-    // fetch order's information
-    if (orderId.includes('-')) {
-      orderId.slice(0, -3)
-    }
-
     const order = await orders.getOrder(orderId)
     const orderRecord = await recordsManager.getOrderRecord(orderId)
 
@@ -52,7 +47,7 @@ export async function compareOrder(
       throw new CustomError({
         message: `The record for the order ${orderId} was not found`,
         status: 500,
-        payload: { stores, affiliateId: orderAffiliateId },
+        payload: { stores, affiliateId: orderIdAffiliate },
       })
     }
 

@@ -2,6 +2,7 @@
 export const RESIDENTIAL = 'Residential'
 export const HOME = 'Home'
 export const APP_SETTINGS = 'app-settings'
+export const AVAILABLE = 'available'
 
 /** VTEX Order status */
 export const WAITING_SELLER_HANDLING = 'waiting-seller-handling'

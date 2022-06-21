@@ -1,3 +1,5 @@
+import type { SimulationOrderForm } from '@vtex/clients'
+
 import {
   ACCEPTED,
   INVOICED,
@@ -7,8 +9,10 @@ import {
   READY_FOR_HANDLING,
   WAITING_SELLER_HANDLING,
 } from '../constants'
+import { CustomError } from './customError'
 import {
-  createSimulationItem,
+  createGlovoBulkUpdatePayload,
+  createSimulationItems,
   createSimulationPayload,
   simulateItem,
 } from './simulation'
@@ -197,96 +201,97 @@ export const updateGlovoMenuAll = async (ctx: Context) => {
     vtex: { logger },
   } = ctx
 
-  const appSettings: AppSettings = await vbase.getJSON(
-    GLOVO,
-    APP_SETTINGS,
-    true
-  )
+  try {
+    const appSettings: AppSettings = await vbase.getJSON(
+      GLOVO,
+      APP_SETTINGS,
+      true
+    )
 
-  if (!appSettings.glovoToken) {
-    logger.warn({
-      message: 'Missing or invalid Glovo token. Please check app settings',
-    })
-
-    return
-  }
-
-  const { stores }: { stores: StoreInfo[] } = appSettings
-
-  if (!stores.length) {
-    logger.warn({
-      message: 'Missing or invalid stores information',
-    })
-
-    return
-  }
-
-  const glovoMenu = await recordsManager.getGlovoMenu()
-
-  // Send a complete bulk product update for each store
-  for await (const store of stores) {
-    const { affiliateId, sellerId, salesChannel, glovoStoreId } = store
-
-    const glovoPayload: GlovoBulkUpdateProduct = {
-      products: [],
-    }
-
-    for await (const sku of Object.keys(glovoMenu)) {
-      const simulationItem = createSimulationItem({
-        id: sku,
-        quantity: 1,
-        sellerId,
+    if (!appSettings?.glovoToken) {
+      logger.warn({
+        message: 'Menu update for stores failed',
+        reason: 'Missing or invalid Glovo token. Please check app settings',
       })
 
-      const simulation = await checkout.simulation(
-        ...createSimulationPayload({
-          items: [simulationItem],
-          affiliateId,
-          salesChannel,
+      return
+    }
+
+    const { stores } = appSettings
+
+    if (!stores.length) {
+      logger.warn({
+        message: 'Menu update for stores failed',
+        reason: 'Missing or invalid stores information',
+      })
+
+      return
+    }
+
+    const glovoMenu = await recordsManager.getGlovoMenu()
+
+    for await (const store of stores) {
+      const { affiliateId, sellerId, salesChannel, glovoStoreId } = store
+
+      const simulationItems = createSimulationItems(glovoMenu, sellerId)
+      const [simulationPayload, querystring] = createSimulationPayload({
+        items: simulationItems,
+        affiliateId,
+        salesChannel,
+      })
+
+      let simulation = {} as SimulationOrderForm
+
+      try {
+        simulation = await checkout.simulation(simulationPayload, querystring)
+      } catch (error) {
+        logger.warn({
+          message: `Catalog update for store ${glovoStoreId} failed`,
+          reason: `Simulation for items failed`,
         })
-      )
 
-      if (simulation.items.length) {
-        const {
-          items: [item],
-        } = simulation
+        continue
+      }
 
-        const { id, price, listPrice, unitMultiplier, availability } = item
-        const payloadProduct: GlovoPatchProduct = {
-          id,
-          price: (Math.max(price, listPrice) * unitMultiplier) / 100,
-          available: availability === 'available',
-        }
+      if (!simulation.items.length) {
+        logger.warn({
+          message: `Simulation for store ${glovoStoreId} returned no items`,
+          simulation,
+        })
 
-        glovoPayload.products.push(payloadProduct)
-      } else {
-        const payloadProduct: GlovoPatchProduct = {
-          id: sku,
-          available: false,
-        }
+        continue
+      }
 
-        glovoPayload.products.push(payloadProduct)
+      const glovoPayload = createGlovoBulkUpdatePayload(simulation.items)
+
+      try {
+        const glovoResponse = await glovo.bulkUpdateProducts(
+          ctx,
+          glovoPayload,
+          glovoStoreId
+        )
+
+        logger.info({
+          message: `Catalog for store ${glovoStoreId} has been updated`,
+          glovoResponse,
+          glovoPayload,
+        })
+      } catch (error) {
+        logger.error({
+          message: `Catalog for store ${glovoStoreId} could not be updated`,
+          glovoPayload,
+          data: error,
+        })
+
+        continue
       }
     }
-
-    try {
-      const glovoResponse = await glovo.bulkUpdateProducts(
-        ctx,
-        glovoPayload,
-        glovoStoreId
-      )
-
-      logger.info({
-        message: `Catalog for store ${glovoStoreId} has been updated`,
-        glovoResponse,
-        glovoPayload,
-      })
-    } catch (error) {
-      logger.error({
-        message: `Catalog for store ${glovoStoreId} could not be updated`,
-        data: error,
-      })
-    }
+  } catch (error) {
+    throw new CustomError({
+      message: error.message ?? 'Catalog update for stores failed',
+      status: 500,
+      error,
+    })
   }
 }
 
