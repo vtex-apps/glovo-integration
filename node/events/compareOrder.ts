@@ -18,8 +18,14 @@ export async function compareOrder(
 
   const { orderId } = body
 
-  if (orderId.includes('-')) {
-    orderId.slice(0, -3)
+  // Filter orders that don't come form sellers (Example: 1234661638608-01)
+  if (Number(orderId.slice(0, 3))) {
+    logger.warn({
+      message: 'Received order without affiliateId',
+      data: body,
+    })
+
+    return
   }
 
   try {
@@ -35,6 +41,10 @@ export async function compareOrder(
     }
 
     // fetch order's information
+    if (orderId.includes('-')) {
+      orderId.slice(0, -3)
+    }
+
     const order = await orders.getOrder(orderId)
     const orderRecord = await recordsManager.getOrderRecord(orderId)
 
@@ -133,9 +143,10 @@ export async function compareOrder(
     await next()
   } catch (error) {
     throw new CustomError({
-      message: `Order modification for order ${orderId} failed`,
+      message: `Order comparison for order ${orderId} failed`,
       status: 500,
       payload: error,
+      error,
     })
   }
 }

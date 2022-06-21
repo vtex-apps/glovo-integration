@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Add `paymentData` to payload for creating marketplaceplace orders.
+- Calculate `totalValue` from simulation result instead of using the amount received from Glovo.
 
 ## [3.0.2] - 2022-06-21
 

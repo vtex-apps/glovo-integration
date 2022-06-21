@@ -59,10 +59,10 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
     const simulation = await checkout.simulation(...simulationPayload)
 
     if (!simulation.items.length) {
-      logger.error({
+      throw new CustomError({
         message: `No items were returned from simulation for Glovo Order ${glovoOrder.order_id}`,
-        status: 500,
-        payload: glovoOrder,
+        status: 400,
+        payload: { simulation },
       })
     }
 
@@ -78,9 +78,12 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
     await next()
   } catch (error) {
     throw new CustomError({
-      message: `Simulation failed for Glovo Order ${glovoOrder.order_id}`,
+      message:
+        error.message ??
+        `Simulation failed for Glovo Order ${glovoOrder.order_id}`,
       status: 500,
       payload: { glovoOrder, simulationPayload },
+      error,
     })
   }
 }
