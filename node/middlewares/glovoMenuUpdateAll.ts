@@ -12,13 +12,13 @@ export async function glovoMenuUpdateAll(
   await next()
 
   try {
-    updateGlovoMenuAll(ctx)
-
-    ctx.body = 'Glovo menu updated'
+    await updateGlovoMenuAll(ctx)
   } catch (error) {
     logger.error({
       message: `There was a problem updating the Glovo menu`,
       data: error,
     })
+
+    return error
   }
 }

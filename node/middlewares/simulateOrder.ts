@@ -1,4 +1,3 @@
-import { UserInputError } from '@vtex/api'
 import { json } from 'co-body'
 
 import {
@@ -31,33 +30,41 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
   ) as StoreInfo
 
   if (!storeInfo) {
-    throw new UserInputError(
+    throw new Error(
       `Order not handled. Missing or invalid store with Glovo Store Id ${glovoOrder.store_id}`
     )
   }
 
   const { sellerId, salesChannel, affiliateId, postalCode, country } = storeInfo
 
+  const simulationItems = convertGlovoProductToItems(
+    sellerId,
+    glovoOrder.products
+  )
+
+  const simulationPayload = createSimulationPayload({
+    items: simulationItems,
+    affiliateId,
+    salesChannel,
+    postalCode,
+    country,
+  })
+
+  logger.info({
+    message: `Simulation payload for order ${glovoOrder.order_id}`,
+    simulationPayload,
+  })
+
   try {
-    const simulationItems = convertGlovoProductToItems(
-      sellerId,
-      glovoOrder.products
-    )
-
-    const simulationPayload = createSimulationPayload({
-      items: simulationItems,
-      affiliateId,
-      salesChannel,
-      postalCode,
-      country,
-    })
-
-    logger.info({
-      message: `Simulation payload for order ${glovoOrder.order_id}`,
-      simulationPayload,
-    })
-
     const simulation = await checkout.simulation(...simulationPayload)
+
+    if (!simulation.items.length) {
+      logger.error({
+        message: `No items were returned from simulation for Glovo Order ${glovoOrder.order_id}`,
+        status: 500,
+        payload: glovoOrder,
+      })
+    }
 
     logger.info({
       message: `Simulation for order ${glovoOrder.order_id}`,
@@ -70,12 +77,10 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
 
     await next()
   } catch (error) {
-    if (error) throw error
-
     throw new CustomError({
-      message: error.statusText,
-      status: error.status,
-      payload: error,
+      message: `Simulation failed for Glovo Order ${glovoOrder.order_id}`,
+      status: 500,
+      payload: { glovoOrder, simulationPayload },
     })
   }
 }

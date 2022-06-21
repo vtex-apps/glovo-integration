@@ -20,7 +20,9 @@ export async function updateGlovoOrderStatus(ctx: StatusChangeContext) {
   const storeInfo = getStoreInfoFromAffiliateId(storeId, stores)
 
   if (!storeInfo) {
-    return
+    throw new Error(
+      `Store information not found for order modification for order ${orderId}`
+    )
   }
 
   const glovoOrderId = orderId.split('-').slice(1).join(' ')
@@ -28,12 +30,9 @@ export async function updateGlovoOrderStatus(ctx: StatusChangeContext) {
   const status = setGlovoStatus(currentState)
 
   if (!status) {
-    logger.warn({
-      message: 'The status is required',
-      data: body,
-    })
-
-    return
+    throw new Error(
+      `The status is required for order modification for order ${orderId}`
+    )
   }
 
   const glovoPayload: GlovoUpdateOrderStatus = {
@@ -50,11 +49,9 @@ export async function updateGlovoOrderStatus(ctx: StatusChangeContext) {
       glovoPayload,
     })
   } catch (error) {
-    if (error) throw error
-
     throw new CustomError({
       message: `Glovo order ${glovoPayload.glovoOrderId} status update failed`,
-      status: error.status,
+      status: 500,
       payload: error,
     })
   }
