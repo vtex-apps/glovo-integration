@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
+  CustomError,
   convertGlovoProductsToCompare,
-  getStoreInfoFromStoreId as getStoreInfoFromAffiliateId,
+  getStoreInfoFromAffiliateId,
 } from '../utils'
-import { CustomError } from '../utils/customError'
 
 export async function compareOrder(
   ctx: StatusChangeContext,
@@ -17,10 +17,6 @@ export async function compareOrder(
   } = ctx
 
   const { orderId } = body
-
-  logger.info({
-    message: `Checking for order modifications for order ${orderId}`,
-  })
 
   // Filter orders that don't come form sellers (Example: 1234661638608-01)
   if (Number(orderId.slice(0, 3))) {
@@ -112,11 +108,11 @@ export async function compareOrder(
 
     if (replacements.length || removed_purchases.length) {
       const {
-        glovoOrder: { order_id: glovoOrderId, store_id: storeId },
+        glovoOrder: { order_id: glovoOrderId, store_id: glovoStoreId },
       } = orderRecord
 
       const payload: GlovoModifyOrderPayload = {
-        storeId,
+        glovoStoreId,
         glovoOrderId,
         replacements,
         removed_purchases,
