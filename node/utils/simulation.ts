@@ -20,24 +20,31 @@ export const createSimulationItem = ({
 }
 
 export const createSimulationItems = (
-  glovoMenu: GlovoMenu,
+  items: string[],
   sellerId: string
 ): PayloadItem[] => {
   const simulationItems: PayloadItem[] = []
 
-  for (const key in glovoMenu) {
-    if (glovoMenu[key]) {
-      const item: PayloadItem = {
-        id: key,
-        quantity: 1,
-        seller: sellerId,
-      }
-
-      simulationItems.push(item)
+  for (const item of items) {
+    const payloadItem: PayloadItem = {
+      id: item,
+      quantity: 1,
+      seller: sellerId,
     }
+
+    simulationItems.push(payloadItem)
   }
 
   return simulationItems
+}
+
+export const MAX_ITEMS_FOR_SIMULATION = 300
+
+export function iterationLimits(step: number) {
+  return [
+    MAX_ITEMS_FOR_SIMULATION * step,
+    MAX_ITEMS_FOR_SIMULATION * step + MAX_ITEMS_FOR_SIMULATION - 1,
+  ]
 }
 
 export const createSimulationPayload = ({
@@ -135,7 +142,7 @@ export const simulateItem = async (
     logger.warn({
       message:
         error.message ?? `Simulation for product with skuId ${IdSku} failed`,
-      data: error,
+      data: error.response,
     })
 
     return null

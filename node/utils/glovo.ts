@@ -1,4 +1,4 @@
-import type { SimulationOrderForm } from '@vtex/clients'
+import type { OrderFormItem, SimulationOrderForm } from '@vtex/clients'
 
 import {
   ACCEPTED,
@@ -14,6 +14,8 @@ import {
   createGlovoBulkUpdatePayload,
   createSimulationItems,
   createSimulationPayload,
+  iterationLimits,
+  MAX_ITEMS_FOR_SIMULATION,
   simulateItem,
 } from './simulation'
 
@@ -63,19 +65,8 @@ export const updateGlovoProduct = async (
   const glovoMenu = await recordsManager.getGlovoMenu()
 
   if (!glovoMenu[IdSku]) {
-    logger.info({
-      message: `Product with sku ${IdSku} is not part of the Glovo Catalog`,
-      catalogUpdate,
-    })
-
     return
   }
-
-  logger.info({
-    message: 'Catalog update received',
-    catalogUpdate,
-    storesToUpdate: stores,
-  })
 
   for await (const store of stores) {
     const { id, storeName, glovoStoreId } = store
@@ -100,11 +91,6 @@ export const updateGlovoProduct = async (
     )
 
     if (!productRecord) {
-      logger.warn({
-        message: `Record not found for product with sku ${IdSku}`,
-        catalogUpdate,
-      })
-
       if (!IsActive) {
         continue
       }
@@ -140,11 +126,6 @@ export const updateGlovoProduct = async (
       productRecord.price === glovoPayload.price &&
       productRecord.available === glovoPayload.available
     ) {
-      logger.info({
-        message: `Product with sku ${IdSku} for store ${glovoStoreId} already up to date`,
-        productRecord,
-      })
-
       continue
     }
 
@@ -177,11 +158,6 @@ export const updateGlovoProduct = async (
             items: [],
           },
         }
-
-        logger.info({
-          message: `Created new Menu Updates record for store ${storeName} with id ${glovoStoreId}`,
-          data: storeMenuUpdates,
-        })
       }
 
       const currentUpdateItemsIds = storeMenuUpdates.current.items.map(
@@ -211,7 +187,7 @@ export const updateGlovoProduct = async (
     } catch (error) {
       logger.error({
         message: `Product with sku ${IdSku} from store ${glovoStoreId} could not be updated`,
-        data: error,
+        data: error.response,
       })
 
       return error
@@ -253,42 +229,66 @@ export const updateGlovoMenuAll = async (ctx: Context) => {
     }
 
     const glovoMenu = await recordsManager.getGlovoMenu()
+    const iterations = Math.ceil(
+      Object.keys(glovoMenu).length / MAX_ITEMS_FOR_SIMULATION
+    )
 
     for await (const store of stores) {
-      const { affiliateId, sellerId, salesChannel, glovoStoreId } = store
-
-      const simulationItems = createSimulationItems(glovoMenu, sellerId)
-      const [simulationPayload, querystring] = createSimulationPayload({
-        items: simulationItems,
-        affiliateId,
-        salesChannel,
+      logger.info({
+        message: `Updating menu for store ${store.storeName}`,
       })
 
-      let simulation = {} as SimulationOrderForm
+      const { affiliateId, sellerId, salesChannel, glovoStoreId, storeName } =
+        store
 
-      try {
-        simulation = await checkout.simulation(simulationPayload, querystring)
-      } catch (error) {
-        logger.warn({
-          message: `Catalog update for store ${glovoStoreId} failed`,
-          reason: `Simulation for items failed`,
+      let payloadItems: OrderFormItem[] = []
+
+      for (let i = 0; i < iterations; i++) {
+        const [from, to] = iterationLimits(i)
+
+        const itemsForSimulation = Object.keys(glovoMenu).slice(from, to)
+
+        const simulationItems = createSimulationItems(
+          itemsForSimulation,
+          sellerId
+        )
+
+        const [simulationPayload, querystring] = createSimulationPayload({
+          items: simulationItems,
+          affiliateId,
+          salesChannel,
         })
 
-        continue
+        let simulation = {} as SimulationOrderForm
+
+        try {
+          // eslint-disable-next-line no-await-in-loop
+          simulation = await checkout.simulation(simulationPayload, querystring)
+        } catch (error) {
+          logger.warn({
+            message: `Catalog update for store ${storeName} - ${glovoStoreId} failed`,
+            reason: `Simulation for items failed`,
+          })
+
+          continue
+        }
+
+        if (!simulation.items.length) {
+          logger.warn({
+            message: `Catalog update for store ${storeName} - ${glovoStoreId} failed`,
+            reason: `Simulation returned no items`,
+          })
+
+          continue
+        }
+
+        payloadItems = [...payloadItems, ...simulation.items]
       }
 
-      if (!simulation.items.length) {
-        logger.warn({
-          message: `Simulation for store ${glovoStoreId} returned no items`,
-          simulation,
-        })
-
-        continue
-      }
-
-      const glovoPayload = createGlovoBulkUpdatePayload(simulation.items)
+      const glovoPayload = createGlovoBulkUpdatePayload(payloadItems)
 
       try {
+        // eslint-disable-next-line no-await-in-loop
         const glovoResponse = await glovo.bulkUpdateProducts(
           ctx,
           glovoPayload,
@@ -296,15 +296,13 @@ export const updateGlovoMenuAll = async (ctx: Context) => {
         )
 
         logger.info({
-          message: `Catalog for store ${glovoStoreId} has been updated`,
+          message: `Catalog for store ${storeName} - ${glovoStoreId} has been updated. (${payloadItems.length} items)`,
           glovoResponse,
-          glovoPayload,
         })
       } catch (error) {
         logger.error({
-          message: `Catalog for store ${glovoStoreId} could not be updated`,
-          glovoPayload,
-          data: error,
+          message: `Catalog for store ${storeName} - ${glovoStoreId} could not be updated`,
+          reason: `Bulk update request failed`,
         })
 
         continue
@@ -314,7 +312,7 @@ export const updateGlovoMenuAll = async (ctx: Context) => {
     throw new CustomError({
       message: error.message ?? 'Catalog update for stores failed',
       status: 500,
-      error,
+      error: error.response,
     })
   }
 }
@@ -390,7 +388,7 @@ export const updateGlovoMenuPartial = async (ctx: Context) => {
     } catch (error) {
       logger.error({
         message: `Partial Catalog for store ${storeName} with ${id} could not be updated`,
-        data: error,
+        data: error.response,
       })
     }
   }

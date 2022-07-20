@@ -71,7 +71,6 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
     logger.info({
       message: `Simulation for order ${glovoOrder.order_id}`,
       simulation,
-      glovoOrder,
     })
 
     ctx.state.orderSimulation = simulation
