@@ -34,10 +34,7 @@ export async function updateGlovoOrderStatus(ctx: StatusChangeContext) {
     return
   }
 
-  const storeInfo = getStoreInfoFromStoreId(
-    orderIdAffiliate,
-    stores
-  ) as StoreInfo
+  const storeInfo = getStoreInfoFromStoreId(orderIdAffiliate, stores)
 
   const { glovoStoreId } = storeInfo
   const status = setGlovoStatus(currentState)

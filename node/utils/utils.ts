@@ -96,13 +96,5 @@ export const isValidAffiliateId = (
     return false
   }
 
-  const storeIsConfigured = stores.some(
-    (store) => store.affiliateId === affiliateId
-  )
-
-  if (!storeIsConfigured) {
-    return false
-  }
-
-  return true
+  return stores.some((store) => store.affiliateId === affiliateId)
 }
