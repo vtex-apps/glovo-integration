@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { convertGlovoProductsToCompare, isValidAffiliateId } from '../utils'
-import { CustomError } from '../utils/customError'
+import {
+  CustomError,
+  convertGlovoProductsToCompare,
+  isValidAffiliateId,
+} from '../utils'
 
 export async function compareOrder(
   ctx: StatusChangeContext,
@@ -14,11 +17,6 @@ export async function compareOrder(
   } = ctx
 
   const { orderId } = body
-
-  logger.info({
-    message: `Checking for order modifications for order ${orderId}`,
-  })
-
   const [orderIdAffiliate] = orderId.split('-')
 
   if (!isValidAffiliateId(orderIdAffiliate, stores)) {
@@ -95,11 +93,11 @@ export async function compareOrder(
 
     if (replacements.length || removed_purchases.length) {
       const {
-        glovoOrder: { order_id: glovoOrderId, store_id: storeId },
+        glovoOrder: { order_id: glovoOrderId, store_id: glovoStoreId },
       } = orderRecord
 
       const payload: GlovoModifyOrderPayload = {
-        storeId,
+        glovoStoreId,
         glovoOrderId,
         replacements,
         removed_purchases,

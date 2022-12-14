@@ -8,19 +8,6 @@ import { AlertBanner } from './AlertBanner'
 import type { SettingsSection } from '../../typings/settingsSections'
 import { StoreTable } from './StoresTable'
 
-interface ModifyStore {
-  isOpen: boolean
-  loading: boolean
-}
-
-export interface RemoveStore extends ModifyStore {
-  storeId: string
-}
-
-export interface AddOrEditStore extends ModifyStore {
-  store: StoreInfo | null
-}
-
 const Stores = ({ settings, saveSettings }: SettingsSection) => {
   const [addOrEditStore, setAddOrEditStore] = useState<AddOrEditStore>({
     isOpen: false,
