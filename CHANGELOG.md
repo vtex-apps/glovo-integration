@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [3.0.7] - 2022-12-14
 
+- Increase app resources.
+
 ## [3.0.5] - 2022-12-14
 
 ### Added
