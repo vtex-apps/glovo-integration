@@ -20,7 +20,7 @@ export async function glovoProductUpdate(
   } catch (error) {
     logger.error({
       message: `There was a problem updating ${catalogUpdate.IdSku} for affiliate ${catalogUpdate.IdAffiliate}`,
-      data: error,
+      data: error.reposense,
     })
 
     return error

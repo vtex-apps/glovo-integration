@@ -16,12 +16,12 @@ export async function eventsErrorHandler(
       logger.error({
         orderId,
         message: error.message,
-        data: error,
+        data: error.response,
       })
     } else {
       logger.error({
         message: error.message,
-        data: error,
+        data: error.response,
       })
     }
 

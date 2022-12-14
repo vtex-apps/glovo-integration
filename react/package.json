@@ -21,7 +21,7 @@
     "@vtex/test-tools": "^3.1.0",
     "@vtex/tsconfig": "^0.5.6",
     "vtex.native-types": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.native-types@0.8.0/public/@types/vtex.native-types",
-    "vtex.render-runtime": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.render-runtime@8.132.3/public/@types/vtex.render-runtime",
+    "vtex.render-runtime": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.render-runtime@8.132.4/public/@types/vtex.render-runtime",
     "vtex.styleguide": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.styleguide@9.146.1/public/@types/vtex.styleguide"
   },
   "version": "3.0.7"

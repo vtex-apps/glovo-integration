@@ -13,13 +13,13 @@ export async function errorHandler(ctx: Context, next: () => Promise<void>) {
       logger.error({
         orderId,
         message: error.message,
-        error,
+        error: error.resonse,
       })
     } else {
       logger.error({
         message: error.message,
         status: error.status,
-        error,
+        error: error.response,
       })
     }
 
