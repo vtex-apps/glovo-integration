@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- New admin panel to manage the Stores and Integration settings.
+- New `marketplace` setting to give the option to enable a store as a white label seller.
+- More information to the application's logs.
+
+### Changed
+
+- Improved performance and logs for the `updateCompleteMenu` endpoint.
+
+### Fixed
+
+- Bug affecting orders where items that could be fulfilled differ from the items requested in Glovo's order.
+
 ## [3.0.3] - 2022-06-21
 
 ### Fixed

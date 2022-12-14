@@ -30,7 +30,7 @@ export const updateGlovoProduct = async (
   catalogUpdate: CatalogChange
 ) => {
   const {
-    clients: { vbase, checkout, recordsManager },
+    clients: { vbase, recordsManager },
     vtex: { logger },
   } = ctx
 
@@ -73,6 +73,20 @@ export const updateGlovoProduct = async (
 
   for await (const store of stores) {
     const { id, storeName, glovoStoreId } = store
+
+    const simulation = await simulateItem(IdSku, store, ctx)
+
+    if (!simulation) {
+      logger.warn({
+        message: `Simulation failed for product with sku ${IdSku} for store ${storeName}`,
+        catalogUpdate,
+      })
+
+      continue
+    }
+
+    const { price, available } = simulation
+
     let newProduct = false
     let productRecord = await recordsManager.getProductRecord(
       glovoStoreId,
@@ -85,8 +99,6 @@ export const updateGlovoProduct = async (
       }
 
       newProduct = true
-
-      const { price, available } = await simulateItem(IdSku, store, checkout)
 
       const newProductRecord: ProductRecord = {
         id: IdSku,
@@ -102,18 +114,14 @@ export const updateGlovoProduct = async (
       glovoStoreId,
     }
 
-    if (IsActive) {
-      const { price, available } = await simulateItem(IdSku, store, checkout)
-
-      if (price) {
-        glovoPayload = {
-          ...glovoPayload,
-          price,
-          available,
-        }
-      } else {
-        glovoPayload.available = false
+    if (IsActive && price) {
+      glovoPayload = {
+        ...glovoPayload,
+        price,
+        available,
       }
+    } else {
+      glovoPayload.available = false
     }
 
     if (
@@ -155,7 +163,7 @@ export const updateGlovoProduct = async (
         }
 
         logger.info({
-          message: `Created new Menu Updates record for store ${storeName} with id ${id}`,
+          message: `Created new Menu Updates record for store ${storeName} with id ${glovoStoreId}`,
           data: storeMenuUpdates,
         })
       }
