@@ -1,4 +1,5 @@
-export * from './orders'
+export * from './customError'
 export * from './glovo'
+export * from './orders'
 export * from './simulation'
 export * from './utils'
