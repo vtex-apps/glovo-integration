@@ -20,3 +20,7 @@ export const GLOVO = 'Glovo'
 export const MENU = 'Menu'
 export const ORDERS = 'orders'
 export const STORE_MENU = 'store-menu'
+
+/** General */
+export const PRODUCTION = 'PRODUCTION'
+export const STAGING = 'STAGING'

@@ -21,7 +21,6 @@ import {
 } from '../../constants'
 import { countriesMap, countriesOptions } from '../../utils'
 import { validateInputs } from '../../../common/utils'
-import type { AddOrEditStore } from './Stores'
 import GET_SELLERS from '../../graphql/getSellers.gql'
 
 interface Props {
@@ -31,17 +30,6 @@ interface Props {
   store: StoreInfo | null
   addStore: (store: StoreInfo) => Promise<void>
   editStore: (store: StoreInfo) => Promise<void>
-}
-
-interface SelectOption {
-  label: string
-  value: string
-}
-
-interface Seller {
-  id: string
-  name: string
-  isActive: boolean
 }
 
 const StoreModal = ({

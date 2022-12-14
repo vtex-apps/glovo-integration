@@ -1,11 +1,11 @@
 import { json } from 'co-body'
 
 import {
+  CustomError,
   convertGlovoProductToItems,
   createSimulationPayload,
   getStoreInfoFormGlovoStoreId,
 } from '../utils'
-import { CustomError } from '../utils/customError'
 
 export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
   const {
@@ -30,11 +30,9 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
   ) as StoreInfo
 
   if (!storeInfo) {
-    throw new CustomError({
-      message: `Order not handled. Missing or invalid store with Glovo Store Id ${glovoOrder.store_id}`,
-      status: 500,
-      payload: glovoOrder,
-    })
+    throw new Error(
+      `Order not handled. Missing or invalid store with Glovo Store Id ${glovoOrder.store_id}`
+    )
   }
 
   const { sellerId, salesChannel, affiliateId, postalCode, country } = storeInfo
