@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.0.5] - 2022-12-14
+
 ### Added
 
 - New admin panel to manage the Stores and Integration settings.
