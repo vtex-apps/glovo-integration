@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.0.8] - 2022-12-14
+
+### Fixed
+
+- Fix issue with simulation receiving more than 300 items at a time which is not supported.
+
 ## [3.0.7] - 2022-12-14
 
 - Increase app resources.
