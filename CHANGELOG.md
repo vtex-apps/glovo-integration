@@ -19,10 +19,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- New `getGlovoMenuByStore` endpoint to retrieve a store's current catalog.
-
-### Added
-
 - New admin panel to manage the Stores and Integration settings.
 - New `marketplace` setting to give the option to enable a store as a white label seller.
 - More information to the application's logs.
