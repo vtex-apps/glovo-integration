@@ -195,7 +195,7 @@ export const updateGlovoProduct = async (
   }
 }
 
-export const updateGlovoMenuAll = async (ctx: Context) => {
+export const updateGlovoCompleteMenu = async (ctx: Context) => {
   const {
     clients: { vbase, checkout, glovo, recordsManager },
     vtex: { logger },
@@ -238,8 +238,15 @@ export const updateGlovoMenuAll = async (ctx: Context) => {
         message: `Updating menu for store ${store.storeName}`,
       })
 
-      const { affiliateId, sellerId, salesChannel, glovoStoreId, storeName } =
-        store
+      const {
+        affiliateId,
+        sellerId,
+        salesChannel,
+        glovoStoreId,
+        storeName,
+        postalCode,
+        country,
+      } = store
 
       let payloadItems: OrderFormItem[] = []
 
@@ -257,6 +264,8 @@ export const updateGlovoMenuAll = async (ctx: Context) => {
           items: simulationItems,
           affiliateId,
           salesChannel,
+          postalCode,
+          country,
         })
 
         let simulation = {} as SimulationOrderForm
@@ -295,6 +304,12 @@ export const updateGlovoMenuAll = async (ctx: Context) => {
           glovoStoreId
         )
 
+        recordsManager.saveStoreCompleteMenuUpdate(glovoStoreId, {
+          items: [...glovoPayload.products],
+          transactionId: glovoResponse.transaction_id,
+          lastUpdated: Date(),
+        })
+
         logger.info({
           message: `Catalog for store ${storeName} - ${glovoStoreId} has been updated. (${payloadItems.length} items)`,
           glovoResponse,
@@ -317,7 +332,7 @@ export const updateGlovoMenuAll = async (ctx: Context) => {
   }
 }
 
-export const updateGlovoMenuPartial = async (ctx: Context) => {
+export const updateGlovoPartialMenu = async (ctx: Context) => {
   const {
     clients: { vbase, glovo, recordsManager },
     vtex: { logger },

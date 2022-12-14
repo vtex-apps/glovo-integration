@@ -1,7 +1,13 @@
 import type { InstanceOptions, IOContext } from '@vtex/api'
 import { VBase } from '@vtex/api'
 
-import { GLOVO, MENU, STORE_MENU, ORDERS } from '../constants'
+import {
+  GLOVO,
+  MENU,
+  STORE_MENU,
+  ORDERS,
+  STORE_MENU_UPDATE,
+} from '../constants'
 
 export default class RecordsManager extends VBase {
   constructor(context: IOContext, options?: InstanceOptions) {
@@ -39,6 +45,23 @@ export default class RecordsManager extends VBase {
 
   public getStoreMenuRecord = (affiliateId: string) =>
     this.getJSON<StoreMenuRecord>(affiliateId, STORE_MENU, true)
+
+  // Store's catalog update
+  public saveStoreCompleteMenuUpdate = (
+    affiliateId: string,
+    data: {
+      items: GlovoPatchProduct[]
+      transactionId: string
+      lastUpdated: string
+    }
+  ) => this.saveJSON(affiliateId, STORE_MENU_UPDATE, data)
+
+  public getStoreCompleteMenuUpdate = (affiliateId: string) =>
+    this.getJSON<{ items: GlovoPatchProduct[]; lastUpdated: string }>(
+      affiliateId,
+      STORE_MENU_UPDATE,
+      true
+    )
 
   // Order's Records
   public saveOrderRecord = (orderId: string, data: OrderRecord) =>
