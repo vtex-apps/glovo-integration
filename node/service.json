@@ -29,6 +29,10 @@
     "glovoMenu": {
       "path": "/_v/glovo/glovo-menu",
       "public": false
+    },
+    "getGlovoMenuByStore": {
+      "path": "/_v/glovo/get-menu/:affiliateId",
+      "public": false
     }
   },
   "events": {
