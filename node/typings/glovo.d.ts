@@ -178,7 +178,7 @@ interface GlovoUpdateOrderStatus {
 }
 
 interface GlovoModifyOrderPayload {
-  storeId: string
+  glovoStoreId: string
   glovoOrderId: string
   replacements: GlovoModifyReplacements[]
   removed_purchases: Array<string | undefined>
