@@ -19,6 +19,7 @@ export const READY_FOR_PICKUP = 'READY_FOR_PICKUP'
 export const GLOVO = 'Glovo'
 export const MENU = 'Menu'
 export const ORDERS = 'orders'
+export const STORE_MENU = 'store-menu'
 
 /** General */
 export const PRODUCTION = 'PRODUCTION'
