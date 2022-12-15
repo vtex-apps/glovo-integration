@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [3.1.0] - 2022-12-15
 
+### Added
+
+- Record for menu updates sent to Glovo Stores.
+
 ## [3.0.8] - 2022-12-14
 
 ### Fixed
