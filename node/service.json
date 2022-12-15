@@ -33,6 +33,10 @@
     "getGlovoMenuByStore": {
       "path": "/_v/glovo/get-menu/:affiliateId",
       "public": false
+    },
+    "storeMenuUpdates": {
+      "path": "/_v/glovo/store-menu-updates/:affiliateId",
+      "public": false
     }
   },
   "events": {

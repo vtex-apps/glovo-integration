@@ -21,13 +21,14 @@ import {
   createOrder,
   errorHandler,
   getGlovoMenu,
-  glovoMenuUpdateAll,
-  glovoMenuUpdatePartial,
+  glovoMenuCompleteUpdate,
+  glovoMenuPartialUpdate,
   glovoProductUpdate,
   saveGlovoMenu,
   saveOrderRecord,
   sendResponse,
   simulateOrder,
+  storeMenuUpdates,
   validateSettings,
   validateGlovoToken,
   getGlovoMenuByStore,
@@ -107,10 +108,10 @@ export default new Service<Clients, State, ParamsContext>({
       POST: [glovoProductUpdate, sendResponse],
     }),
     updateCompleteMenu: method({
-      POST: [glovoMenuUpdateAll, sendResponse],
+      POST: [glovoMenuCompleteUpdate, sendResponse],
     }),
     updatePartialMenu: method({
-      POST: [glovoMenuUpdatePartial, sendResponse],
+      POST: [glovoMenuPartialUpdate, sendResponse],
     }),
     glovoMenu: method({
       GET: [errorHandler, getGlovoMenu],
@@ -118,6 +119,9 @@ export default new Service<Clients, State, ParamsContext>({
     }),
     getGlovoMenuByStore: method({
       GET: [errorHandler, validateSettings, getGlovoMenuByStore],
+    }),
+    storeMenuUpdates: method({
+      GET: [errorHandler, validateSettings, storeMenuUpdates],
     }),
   },
   events: {

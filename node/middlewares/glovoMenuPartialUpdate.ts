@@ -1,6 +1,6 @@
-import { updateGlovoMenuPartial } from '../utils'
+import { updateGlovoPartialMenu } from '../utils'
 
-export async function glovoMenuUpdatePartial(
+export async function glovoMenuPartialUpdate(
   ctx: Context,
   next: () => Promise<void>
 ) {
@@ -12,7 +12,7 @@ export async function glovoMenuUpdatePartial(
   await next()
 
   try {
-    updateGlovoMenuPartial(ctx)
+    updateGlovoPartialMenu(ctx)
   } catch (error) {
     logger.error({
       message: `There was a problem updating the Glovo menu`,
