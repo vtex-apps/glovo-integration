@@ -1,3 +1,5 @@
-mutation SaveGlovoIntegrationSettings($settings: SaveGlovoIntegrationSettings) {
+mutation SaveGlovoIntegrationSettings(
+  $settings: GlovoIntegrationSettingsInput
+) {
   settingsUpdated: saveGlovoIntegrationSettings(settings: $settings)
 }

@@ -5118,6 +5118,10 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
+"vtex.glovo-integration@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.glovo-integration@3.0.15/public/@types/vtex.glovo-integration":
+  version "3.0.15"
+  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.glovo-integration@3.0.15/public/@types/vtex.glovo-integration#502c4b6f4c0f3447b5e9ffcdf023aea2eb19793b"
+
 "vtex.native-types@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.native-types@0.8.0/public/@types/vtex.native-types":
   version "0.8.0"
   resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.native-types@0.8.0/public/@types/vtex.native-types#4fb38349122295832408d511efefa604a0addc57"
@@ -5126,9 +5130,13 @@ verror@1.10.0:
   version "8.132.4"
   resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.render-runtime@8.132.4/public/@types/vtex.render-runtime#66bb41bd4d342e37c9d85172aad5f7eefebfb6dc"
 
-"vtex.styleguide@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.styleguide@9.146.1/public/@types/vtex.styleguide":
-  version "9.146.1"
-  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.styleguide@9.146.1/public/@types/vtex.styleguide#66db40ca1b78ad77ce4beedabecee320e1ef2ead"
+"vtex.sellers-graphql@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.sellers-graphql@7.5.2/public/@types/vtex.sellers-graphql":
+  version "7.5.2"
+  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.sellers-graphql@7.5.2/public/@types/vtex.sellers-graphql#f5379d10af51006de212dc4eaf6d103d204e8206"
+
+"vtex.styleguide@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.styleguide@9.146.3/public/@types/vtex.styleguide":
+  version "9.146.3"
+  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.styleguide@9.146.3/public/@types/vtex.styleguide#05558160f29cd8f4aefe419844a4bd66e2b3fdbb"
 
 w3c-hr-time@^1.0.1:
   version "1.0.2"
