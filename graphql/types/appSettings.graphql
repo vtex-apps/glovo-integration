@@ -6,10 +6,10 @@ type GlovoIntegrationSettings {
   clientProfileData: ClientProfileData
 }
 
-input SaveGlovoIntegrationSettings {
+input GlovoIntegrationSettingsInput {
   glovoToken: String
   production: Boolean
   marketplace: Boolean
-  stores: [SaveStore]
-  clientProfileData: SaveClientProfileData
+  stores: [StoreInput]
+  clientProfileData: ClientProfileDataInput
 }
