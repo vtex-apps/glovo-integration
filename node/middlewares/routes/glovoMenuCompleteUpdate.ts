@@ -1,4 +1,4 @@
-import { updateGlovoCompleteMenu } from '../utils'
+import { updateGlovoCompleteMenu } from '../../utils'
 
 export async function glovoMenuCompleteUpdate(
   ctx: Context,

@@ -1,4 +1,4 @@
-import { updateGlovoPartialMenu } from '../utils'
+import { updateGlovoPartialMenu } from '../../utils'
 
 export async function glovoMenuPartialUpdate(
   ctx: Context,

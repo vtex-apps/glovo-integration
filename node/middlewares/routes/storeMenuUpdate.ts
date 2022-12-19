@@ -1,4 +1,4 @@
-import { CustomError } from '../utils'
+import { CustomError } from '../../utils'
 
 export async function storeMenuUpdates(ctx: Context) {
   const {

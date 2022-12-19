@@ -1,6 +1,6 @@
 import { json } from 'co-body'
 
-import { updateGlovoProduct } from '../utils'
+import { updateGlovoProduct } from '../../utils'
 
 export async function glovoProductUpdate(
   ctx: Context,

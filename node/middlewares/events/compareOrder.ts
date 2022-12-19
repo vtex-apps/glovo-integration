@@ -3,7 +3,7 @@ import {
   CustomError,
   convertGlovoProductsToCompare,
   isValidAffiliateId,
-} from '../utils'
+} from '../../utils'
 
 export async function compareOrder(
   ctx: StatusChangeContext,
@@ -58,9 +58,11 @@ export async function compareOrder(
       if (comparison[invoicedItem.id]) {
         // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
         comparison[invoicedItem.id].quantity += invoicedItem.quantity
-      } else {
-        comparison[invoicedItem.id] = invoicedItem
+
+        continue
       }
+
+      comparison[invoicedItem.id] = invoicedItem
     }
 
     for (const receivedItem of receivedItems) {
@@ -90,6 +92,9 @@ export async function compareOrder(
      *  Modify glovo order if it has changed and update the order record
      */
     let hasChanged = false
+
+    // eslint-disable-next-line no-console
+    console.log({ replacements })
 
     if (replacements.length || removed_purchases.length) {
       const {

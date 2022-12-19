@@ -1,4 +1,4 @@
-import { CustomError, createAuthorizationPayload } from '../utils'
+import { CustomError, createAuthorizationPayload } from '../../utils'
 
 export async function authorizeOrder(ctx: Context, next: () => Promise<void>) {
   const {

@@ -1,7 +1,7 @@
 import { json } from 'co-body'
 
-import { APP_SETTINGS, GLOVO } from '../constants'
-import { CustomError } from '../utils'
+import { APP_SETTINGS, GLOVO } from '../../constants'
+import { CustomError } from '../../utils'
 
 export async function saveGlovoMenu(ctx: Context) {
   const {

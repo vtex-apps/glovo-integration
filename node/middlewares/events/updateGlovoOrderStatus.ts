@@ -3,7 +3,7 @@ import {
   getStoreInfoFromStoreId,
   isValidAffiliateId,
   setGlovoStatus,
-} from '../utils'
+} from '../../utils'
 
 export async function updateGlovoOrderStatus(ctx: StatusChangeContext) {
   const {

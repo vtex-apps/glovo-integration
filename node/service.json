@@ -10,10 +10,6 @@
       "path": "/_v/glovo/orders/create",
       "public": true
     },
-    "cancelOrder": {
-      "path": "/_v/glovo/orders/delete",
-      "public": true
-    },
     "updateProduct": {
       "path": "/_v/glovo/products/update",
       "public": true
@@ -37,14 +33,14 @@
     "storeMenuUpdates": {
       "path": "/_v/glovo/store-menu-updates/:affiliateId",
       "public": false
+    },
+    "orderChange": {
+      "path": "/pvt/orders/:orderGroupId/changes",
+      "public": true
     }
   },
   "events": {
-    "updateOnStartHandling": {
-      "sender": "vtex.orders-broadcast",
-      "topics": ["ready-for-handling", "waiting-seller-handling"]
-    },
-    "updateOnInvoiced": {
+    "updateGlovoOrder": {
       "sender": "vtex.orders-broadcast",
       "topics": ["invoiced"]
     }

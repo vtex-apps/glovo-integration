@@ -1,4 +1,4 @@
-import { CustomError, generateStoreMenuRecord } from '../utils'
+import { CustomError, generateStoreMenuRecord } from '../../utils'
 
 export async function getGlovoMenuByStore(ctx: Context) {
   const {

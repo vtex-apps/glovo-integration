@@ -1,6 +1,6 @@
 import { UserInputError } from '@vtex/api'
 
-import { APP_SETTINGS, GLOVO } from '../constants'
+import { APP_SETTINGS, GLOVO } from '../../constants'
 
 export async function validateSettings(
   ctx: Context,
@@ -15,6 +15,9 @@ export async function validateSettings(
     APP_SETTINGS,
     true
   )
+
+  // eslint-disable-next-line no-console
+  console.log({ appSettings })
 
   if (!appSettings.glovoToken) {
     throw new UserInputError('Missing Glovo token. Please check app settings')

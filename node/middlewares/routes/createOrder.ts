@@ -1,4 +1,4 @@
-import { CustomError, createVtexOrderData } from '../utils'
+import { CustomError, createVtexOrderData } from '../../utils'
 
 export async function createOrder(ctx: Context, next: () => Promise<void>) {
   const {
@@ -50,6 +50,9 @@ export async function createOrder(ctx: Context, next: () => Promise<void>) {
 
     await next()
   } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log(error.response)
+
     throw new CustomError({
       message: `Order creation for order Glovo Order ${glovoOrder.order_id} failed`,
       status: 500,
