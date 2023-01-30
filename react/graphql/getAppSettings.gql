@@ -3,6 +3,7 @@ query getGlovoIntegrationSettings {
     glovoToken
     production
     marketplace
+    minimumStock
     stores {
       id
       storeName

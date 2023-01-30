@@ -21,6 +21,7 @@ export const createSimulationItem = ({
 
 export const createSimulationItems = (
   items: string[],
+  quantity: number,
   sellerId: string
 ): PayloadItem[] => {
   const simulationItems: PayloadItem[] = []
@@ -28,7 +29,7 @@ export const createSimulationItems = (
   for (const item of items) {
     const payloadItem: PayloadItem = {
       id: item,
-      quantity: 1,
+      quantity,
       seller: sellerId,
     }
 
@@ -66,15 +67,18 @@ export const createSimulationPayload = ({
 }
 
 export const createGlovoBulkUpdatePayload = (
-  items: OrderFormItem[]
+  items: OrderFormItem[],
+  minimumStock: number
 ): GlovoBulkUpdateProduct => {
   const payload: GlovoBulkUpdateProduct = {
     products: [],
   }
 
   for (const item of items) {
-    const { id, price, listPrice, unitMultiplier, availability } = item
-    const available = availability === AVAILABLE
+    const { id, price, listPrice, unitMultiplier, availability, quantity } =
+      item
+
+    const available = availability === AVAILABLE && quantity >= minimumStock
 
     const payloadProduct: GlovoPatchProduct = {
       id,

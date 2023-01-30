@@ -13,6 +13,7 @@ import {
   GLOVO_TOKEN,
   LAST_NAME,
   MARKETPLACE,
+  MINIMUM_STOCK,
   PHONE_NUMBER,
   PRODUCTION,
 } from '../../constants'
@@ -35,24 +36,34 @@ const Configuration = ({
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     switch (e.target.id) {
-      case GLOVO_TOKEN:
+      case GLOVO_TOKEN: {
         setSettings({
           ...settings,
           glovoToken: e.target.value,
         })
 
         return
+      }
 
+      case MINIMUM_STOCK: {
+        setSettings({
+          ...settings,
+          minimumStock: Number(e.target.value),
+        })
+
+        return
+      }
       case PRODUCTION:
-      case MARKETPLACE:
+      case MARKETPLACE: {
         setSettings({
           ...settings,
           [e.target.id]: !settings[e.target.id],
         })
 
         return
+      }
 
-      default:
+      default: {
         setSettings({
           ...settings,
           clientProfileData: {
@@ -60,6 +71,7 @@ const Configuration = ({
             [e.target.id]: e.target.value,
           },
         })
+      }
     }
   }
 
@@ -129,6 +141,26 @@ const Configuration = ({
             errorMessage={
               error &&
               !settings.glovoToken && (
+                <FormattedMessage id="admin/glovo-integration.inputs.error-message" />
+              )
+            }
+          />
+        </div>
+        <div className="mt4">
+          <p>
+            <FormattedMessage id="admin/glovo-integration.integration-settings.minimumStock.label" />
+          </p>
+          <Input
+            id={MINIMUM_STOCK}
+            value={settings.minimumStock}
+            label={
+              <FormattedMessage id="admin/glovo-integration.integration-settings.minimumStock.description" />
+            }
+            type="number"
+            onChange={handleChange}
+            errorMessage={
+              error &&
+              !settings.minimumStock && (
                 <FormattedMessage id="admin/glovo-integration.inputs.error-message" />
               )
             }

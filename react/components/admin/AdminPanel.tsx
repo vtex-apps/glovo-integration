@@ -29,6 +29,7 @@ const AdminPanel = () => {
     glovoToken: '',
     production: false,
     marketplace: false,
+    minimumStock: 1,
     stores: [],
     clientProfileData: {
       email: '',

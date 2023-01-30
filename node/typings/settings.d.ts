@@ -2,6 +2,7 @@ interface AppSettings {
   glovoToken: string
   production: boolean
   marketplace: boolean
+  minimumStock: number
   stores: StoreInfo[]
   clientProfileData: ClientProfileData
 }

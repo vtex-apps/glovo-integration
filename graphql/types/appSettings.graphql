@@ -4,6 +4,7 @@ type GlovoIntegrationSettings {
   marketplace: Boolean
   stores: [Store]
   clientProfileData: ClientProfileData
+  minimumStock: Int
 }
 
 input GlovoIntegrationSettingsInput {
@@ -12,4 +13,5 @@ input GlovoIntegrationSettingsInput {
   marketplace: Boolean
   stores: [StoreInput]
   clientProfileData: ClientProfileDataInput
+  minimumStock: Int
 }

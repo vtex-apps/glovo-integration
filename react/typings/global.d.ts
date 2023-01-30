@@ -9,6 +9,7 @@ interface AppSettings {
   marketplace: boolean
   stores: StoreInfo[]
   clientProfileData: ClientProfileData
+  minimumStock: number
 }
 interface StoreInfo {
   id: string
