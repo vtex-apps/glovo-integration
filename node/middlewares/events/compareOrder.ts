@@ -93,9 +93,6 @@ export async function compareOrder(
      */
     let hasChanged = false
 
-    // eslint-disable-next-line no-console
-    console.log({ replacements })
-
     if (replacements.length || removed_purchases.length) {
       const {
         glovoOrder: { order_id: glovoOrderId, store_id: glovoStoreId },

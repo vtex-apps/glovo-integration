@@ -262,3 +262,18 @@ interface MenuUpdatesItem {
   glovoStoreId: string
   items: ProductRecord[]
 }
+
+interface OrderChangeBody {
+  requestId: string
+  reason: string
+  discountValue: number
+  incrementValue: number
+  itemsRemoved: OrderChangeItem[]
+  itemsAdded: OrderChangeItem[]
+}
+
+interface OrderChangeItem {
+  id: string
+  price: number
+  quantity: number
+}

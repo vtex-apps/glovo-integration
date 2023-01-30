@@ -1,6 +1,6 @@
 /* eslint-disable max-params */
 import { RESIDENTIAL, HOME } from '../constants'
-import { isSkuAvailable } from './utils'
+import { getMarketplaceServiceEndpoint, isSkuAvailable } from './utils'
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const createVtexOrderData = (
@@ -73,7 +73,7 @@ export const createVtexOrderData = (
 
   const vtexOrderData: CreateOrderPayload = {
     marketplaceOrderId: order_id,
-    marketplaceServicesEndpoint: 'https://api.glovoapp.com/',
+    marketplaceServicesEndpoint: getMarketplaceServiceEndpoint(),
     marketplacePaymentValue: totalValue,
     marketplaceOrderGroup: order_id,
     isCreatedAsync: true,

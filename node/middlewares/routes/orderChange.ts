@@ -1,10 +1,27 @@
+import { json } from 'co-body'
+
+import { CustomError } from '../../utils'
+
 export async function orderChange(ctx: Context) {
-  const { params } = ctx
+  const {
+    vtex: {
+      route: { params },
+    },
+  } = ctx
 
-  const { orderGroupId } = params
+  try {
+    const { orderId } = params
+    const body: OrderChangeBody = await json(ctx.req)
 
-  ctx.body = {
-    orderId: orderGroupId,
-    receipt: '61d49ff5-eee4-4093-aba1-1560435dedb0', // hash for transaction identification or any string that uniquely identifies the transaction!
+    ctx.body = {
+      orderId,
+      receipt: body.requestId,
+    }
+  } catch (error) {
+    throw new CustomError({
+      message: `There was a problem changing order ${params?.orderId}`,
+      status: 500,
+      payload: error,
+    })
   }
 }

@@ -35,7 +35,7 @@
       "public": false
     },
     "orderChange": {
-      "path": "/pvt/orders/:orderGroupId/changes",
+      "path": "/pvt/orders/:orderId/changes",
       "public": true
     }
   },
