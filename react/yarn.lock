@@ -5118,13 +5118,13 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-"vtex.glovo-integration@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.glovo-integration@3.0.15/public/@types/vtex.glovo-integration":
-  version "3.0.15"
-  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.glovo-integration@3.0.15/public/@types/vtex.glovo-integration#502c4b6f4c0f3447b5e9ffcdf023aea2eb19793b"
+"vtex.glovo-integration@https://glvchange--ametllerorigenqa.myvtex.com/_v/private/typings/linked/v1/vtex.glovo-integration@3.1.0+build1675094555/public/@types/vtex.glovo-integration":
+  version "3.1.0"
+  resolved "https://glvchange--ametllerorigenqa.myvtex.com/_v/private/typings/linked/v1/vtex.glovo-integration@3.1.0+build1675094555/public/@types/vtex.glovo-integration#6449ba3b7bf05bd35c9af1f00fa4eb8d537cc94b"
 
-"vtex.native-types@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.native-types@0.8.0/public/@types/vtex.native-types":
-  version "0.8.0"
-  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.native-types@0.8.0/public/@types/vtex.native-types#4fb38349122295832408d511efefa604a0addc57"
+"vtex.native-types@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.native-types@0.9.0/public/@types/vtex.native-types":
+  version "0.9.0"
+  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.native-types@0.9.0/public/@types/vtex.native-types#1ed97bdb765de867cdb350b48d6a62c2624b15a4"
 
 "vtex.render-runtime@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.render-runtime@8.132.4/public/@types/vtex.render-runtime":
   version "8.132.4"

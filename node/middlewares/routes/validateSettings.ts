@@ -16,9 +16,6 @@ export async function validateSettings(
     true
   )
 
-  // eslint-disable-next-line no-console
-  console.log({ appSettings })
-
   if (!appSettings.glovoToken) {
     throw new UserInputError('Missing Glovo token. Please check app settings')
   }

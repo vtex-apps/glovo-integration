@@ -16,9 +16,6 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
 
   const glovoOrder: GlovoOrder = await json(ctx.req)
 
-  // eslint-disable-next-line no-console
-  console.log({ glovoOrder })
-
   ctx.state.glovoOrder = glovoOrder
 
   // Log the order received from Glovo
@@ -73,9 +70,6 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
       message: `Simulation for order ${glovoOrder.order_id}`,
       simulation,
     })
-
-    // eslint-disable-next-line no-console
-    console.log({ simulation })
 
     ctx.state.orderSimulation = simulation
     ctx.state.storeInfo = storeInfo
