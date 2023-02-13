@@ -8,7 +8,7 @@ type ClientProfileData {
   corporateName: String
 }
 
-input ClientProfileDataInput {
+input SaveClientProfileData {
   email: String!
   firstName: String!
   lastName: String!

@@ -7,11 +7,11 @@ type GlovoIntegrationSettings {
   minimumStock: Int
 }
 
-input GlovoIntegrationSettingsInput {
+input SaveGlovoIntegrationSettings {
   glovoToken: String
   production: Boolean
   marketplace: Boolean
-  stores: [StoreInput]
-  clientProfileData: ClientProfileDataInput
+  stores: [SaveStore]
+  clientProfileData: SaveClientProfileData
   minimumStock: Int
 }

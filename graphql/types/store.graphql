@@ -10,7 +10,7 @@ type Store {
   glovoStoreId: String
 }
 
-input StoreInput {
+input SaveStore {
   id: String!
   sellerId: String
   sellerName: String
