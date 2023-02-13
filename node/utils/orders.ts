@@ -73,7 +73,7 @@ export const createVtexOrderData = (
 
   const vtexOrderData: CreateOrderPayload = {
     marketplaceOrderId: order_id,
-    marketplaceServicesEndpoint: getMarketplaceServiceEndpoint(),
+    marketplaceServicesEndpoint: `https://${account}.myvtex.com`,
     marketplacePaymentValue: totalValue,
     marketplaceOrderGroup: order_id,
     isCreatedAsync: true,

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { ACCOUNT, WORKSPACE } from '@vtex/api'
 import type { OrderFormItem, PayloadItem } from '@vtex/clients'
 
 import { createSimulationItem } from './simulation'
@@ -99,8 +98,3 @@ export const isValidAffiliateId = (
 
   return stores.some((store) => store.affiliateId === affiliateId)
 }
-
-export const getMarketplaceServiceEndpoint = () =>
-  WORKSPACE === 'master'
-    ? `https://${ACCOUNT}.myvtex.com`
-    : `https://${WORKSPACE}--${ACCOUNT}.myvtex.com`
