@@ -5118,9 +5118,9 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-"vtex.glovo-integration@https://glvchange--ametllerorigenqa.myvtex.com/_v/private/typings/linked/v1/vtex.glovo-integration@3.1.0+build1675094555/public/@types/vtex.glovo-integration":
-  version "3.1.0"
-  resolved "https://glvchange--ametllerorigenqa.myvtex.com/_v/private/typings/linked/v1/vtex.glovo-integration@3.1.0+build1675094555/public/@types/vtex.glovo-integration#6449ba3b7bf05bd35c9af1f00fa4eb8d537cc94b"
+"vtex.glovo-integration@https://glvchange--ametllerorigenqa.myvtex.com/_v/private/typings/linked/v1/vtex.glovo-integration@3.2.0+build1675097070/public/@types/vtex.glovo-integration":
+  version "3.2.0"
+  resolved "https://glvchange--ametllerorigenqa.myvtex.com/_v/private/typings/linked/v1/vtex.glovo-integration@3.2.0+build1675097070/public/@types/vtex.glovo-integration#0e56cceada6109f48a6a2c55f39628f00f34278f"
 
 "vtex.native-types@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.native-types@0.9.0/public/@types/vtex.native-types":
   version "0.9.0"
