@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Support for order changes.
+- Additional customer's information on VTEX orders.
+
 ## [3.1.0] - 2022-12-15
 
 ### Added
