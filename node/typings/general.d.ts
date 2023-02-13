@@ -24,6 +24,7 @@ interface CreateOrderPayload {
   paymentData?: PaymentData
   marketingData?: MarketingData
   openTextField?: any
+  savePersonalData: boolean
 }
 
 interface OrderItem {
