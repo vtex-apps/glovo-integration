@@ -8,25 +8,16 @@ export async function eventsErrorHandler(
 
   try {
     await next()
-  } catch (err) {
-    const {
-      message,
-      reason,
-      status,
-      workflowType,
-      workflowInstance,
-      payload,
-      error,
-    } = err
-
+  } catch (error) {
     logger.error({
       orderId: ctx.body.orderId ?? 'No orderId information',
-      message,
-      reason,
-      status,
-      workflowType,
-      workflowInstance,
-      payload,
+      message: error.message,
+      reason: error.reason,
+      status: error.status,
+      workflowType: error.workflowType,
+      workflowInstance: error.workflowInstance,
+      payload: error.payload,
+      error: error.error,
     } as CustomError.Data)
 
     ctx.body = error.reason

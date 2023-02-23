@@ -129,10 +129,10 @@ export async function compareOrder(
       message: error.message,
       reason: error.reason ?? `Order comparison for order ${orderId} failed`,
       status: error.statusCode ?? 500,
-      workflowType: 'Orders',
-      workflowInstance: 'Change',
-      payload: body,
-      error: error.reponse?.data,
+      workflowType: error.workflowType ?? 'Orders',
+      workflowInstance: error.workflowInstance ?? 'Change',
+      payload: error.payload ?? body,
+      error: error.error ?? error.reponse?.data,
     })
   }
 }

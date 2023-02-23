@@ -56,10 +56,10 @@ export async function createOrder(ctx: Context, next: () => Promise<void>) {
         error.reason ??
         `Order creation for order Glovo Order ${glovoOrder.order_id} failed`,
       status: error.statusCode ?? 500,
-      workflowType: 'Orders',
-      workflowInstance: 'Creation',
-      payload: { glovoOrder },
-      error: error.response?.data,
+      workflowType: error.workflowType ?? 'Orders',
+      workflowInstance: error.workflowInstance ?? 'Creation',
+      payload: error.payload ?? { glovoOrder },
+      error: error.error ?? error.response?.data,
     })
   }
 }
