@@ -329,7 +329,8 @@ export const updateGlovoCompleteMenu = async (ctx: Context) => {
     }
   } catch (error) {
     throw new CustomError({
-      message: error.message ?? 'Catalog update for stores failed',
+      message: error.message,
+      reason: error.reason ?? 'Catalog update for stores failed',
       status: 500,
       error: error.response,
     })

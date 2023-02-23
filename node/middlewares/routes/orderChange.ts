@@ -19,9 +19,12 @@ export async function orderChange(ctx: Context) {
     }
   } catch (error) {
     throw new CustomError({
-      message: `There was a problem changing order ${params?.orderId}`,
-      status: 500,
-      payload: error,
+      message: error.message,
+      reason:
+        error.reason ?? `There was a problem changing order ${params?.orderId}`,
+      status: error.statusCode ?? 500,
+      payload: ctx.body,
+      error: error.response?.data,
     })
   }
 }

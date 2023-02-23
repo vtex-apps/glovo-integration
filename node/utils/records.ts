@@ -38,8 +38,11 @@ export const generateStoreMenuRecord = async (
     recordsManager.saveStoreMenuRecord(affiliateId, storeMenuRecord)
   } catch (error) {
     throw new CustomError({
-      message: `There was a problem creating the store menu record for ${affiliateId}`,
-      status: 500,
+      message: error.message,
+      reason:
+        error.reason ??
+        `There was a problem creating the store menu record for ${affiliateId}`,
+      status: error.statusCode ?? 500,
       error,
     })
   }

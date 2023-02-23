@@ -11,10 +11,11 @@ export async function getGlovoMenu(ctx: Context) {
     ctx.body = glovoMenu
   } catch (error) {
     throw new CustomError({
-      message: `There was a problem getting the Glovo menu`,
-      status: 500,
+      message: error.message,
+      reason: `There was a problem getting the Glovo menu`,
+      status: error.statusCode ?? 500,
       payload: error,
-      error,
+      error: error.response?.data,
     })
   }
 }

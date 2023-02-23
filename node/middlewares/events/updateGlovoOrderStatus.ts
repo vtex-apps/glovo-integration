@@ -58,10 +58,13 @@ export async function updateGlovoOrderStatus(ctx: StatusChangeContext) {
     })
   } catch (error) {
     throw new CustomError({
-      message: `Glovo order ${glovoPayload.glovoOrderId} status update failed`,
-      status: 500,
+      message: error.message,
+      reason:
+        error.reason ??
+        `Glovo order ${glovoPayload.glovoOrderId} status update failed`,
+      status: error.statusCode ?? 500,
       payload: error,
-      error,
+      error: error.response?.data,
     })
   }
 }

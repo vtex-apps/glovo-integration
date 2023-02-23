@@ -15,10 +15,8 @@ export async function createOrder(ctx: Context, next: () => Promise<void>) {
 
   const { salesChannel, affiliateId, sellerId } = storeInfo
 
-  let vtexOrderData: CreateOrderPayload
-
   try {
-    vtexOrderData = createVtexOrderData(
+    const vtexOrderData = createVtexOrderData(
       glovoOrder,
       orderSimulation,
       clientProfileData,
@@ -53,10 +51,13 @@ export async function createOrder(ctx: Context, next: () => Promise<void>) {
     await next()
   } catch (error) {
     throw new CustomError({
-      message: `Order creation for order Glovo Order ${glovoOrder.order_id} failed`,
-      status: 500,
+      message: error.message,
+      reason:
+        error.reason ??
+        `Order creation for order Glovo Order ${glovoOrder.order_id} failed`,
+      status: error.statusCode ?? 500,
       payload: { glovoOrder },
-      error,
+      error: error.response?.data,
     })
   }
 }

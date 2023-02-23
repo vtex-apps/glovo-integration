@@ -14,10 +14,13 @@ export async function getGlovoMenuByStore(ctx: Context) {
     generateStoreMenuRecord(ctx, affiliateId)
   } catch (error) {
     throw new CustomError({
-      message: `There was a problem getting the Glovo menu for the specified store`,
-      status: 500,
+      message: error.message,
+      reason:
+        error.reason ??
+        `There was a problem getting the Glovo menu for the specified store`,
+      status: error.statusCode ?? 500,
       payload: error,
-      error,
+      error: error.response?.data,
     })
   }
 }

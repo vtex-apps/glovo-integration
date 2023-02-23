@@ -22,10 +22,11 @@ export async function saveOrderRecord(ctx: Context) {
     ctx.status = 201
   } catch (error) {
     throw new CustomError({
-      message: `Unable to save order record for order ${vtexOrder}`,
-      status: 500,
+      message: error.message,
+      reason: `Unable to save order record for order ${vtexOrder}`,
+      status: error.statusCode ?? 500,
       payload: { orderId, orderRecord: data },
-      error,
+      error: error.response?.data,
     })
   }
 }

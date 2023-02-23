@@ -55,16 +55,17 @@ export async function authorizeOrder(ctx: Context, next: () => Promise<void>) {
       order,
     })
 
-    ctx.status = 201
     ctx.state.vtexOrder = vtexOrder
 
     await next()
   } catch (error) {
     throw new CustomError({
-      message: `Authorization for order ${orderIdentifier} failed`,
-      status: 500,
+      message: error.message,
+      reason:
+        error.reason ?? `Authorization for order ${orderIdentifier} failed`,
+      status: error.statusCode ?? 500,
       payload: { glovoOrder, vtexOrder },
-      error,
+      error: error.response?.data,
     })
   }
 }
