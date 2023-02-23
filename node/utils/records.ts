@@ -43,6 +43,8 @@ export const generateStoreMenuRecord = async (
         error.reason ??
         `There was a problem creating the store menu record for ${affiliateId}`,
       status: error.statusCode ?? 500,
+      workflowType: 'Menu',
+      workflowInstance: 'Update',
       error,
     })
   }

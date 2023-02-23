@@ -63,7 +63,9 @@ export async function updateGlovoOrderStatus(ctx: StatusChangeContext) {
         error.reason ??
         `Glovo order ${glovoPayload.glovoOrderId} status update failed`,
       status: error.statusCode ?? 500,
-      payload: error,
+      workflowType: 'Orders',
+      workflowInstance: 'Change',
+      payload: body,
       error: error.response?.data,
     })
   }

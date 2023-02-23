@@ -25,6 +25,8 @@ export async function saveOrderRecord(ctx: Context) {
       message: error.message,
       reason: `Unable to save order record for order ${vtexOrder}`,
       status: error.statusCode ?? 500,
+      workflowType: 'Orders',
+      workflowInstance: 'Creation',
       payload: { orderId, orderRecord: data },
       error: error.response?.data,
     })

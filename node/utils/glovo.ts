@@ -332,7 +332,9 @@ export const updateGlovoCompleteMenu = async (ctx: Context) => {
       message: error.message,
       reason: error.reason ?? 'Catalog update for stores failed',
       status: 500,
-      error: error.response,
+      workflowType: 'Menu',
+      workflowInstance: 'Complete Update',
+      error: error.response?.data,
     })
   }
 }

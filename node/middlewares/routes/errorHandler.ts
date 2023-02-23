@@ -5,15 +5,27 @@ export async function errorHandler(ctx: Context, next: () => Promise<void>) {
 
   try {
     await next()
-  } catch (error) {
+  } catch (err) {
+    const {
+      message,
+      reason,
+      status,
+      workflowType,
+      workflowInstance,
+      payload,
+      error,
+    } = err
+
     logger.error({
-      glovoOrder: ctx.state?.glovoOrder ?? null,
-      message: error.message,
-      status: error.status,
-      reason: error.reason,
-      payload: error.payload,
-      error: error.error,
-    })
+      glovoOrder: ctx.state?.glovoOrder ?? 'No Glovo order information',
+      message,
+      status,
+      reason,
+      workflowType,
+      workflowInstance,
+      payload,
+      error,
+    } as CustomError.Data)
 
     ctx.status = error.status || 500
     ctx.body = error.reason

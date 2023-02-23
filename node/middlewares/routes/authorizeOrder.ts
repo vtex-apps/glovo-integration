@@ -64,6 +64,8 @@ export async function authorizeOrder(ctx: Context, next: () => Promise<void>) {
       reason:
         error.reason ?? `Authorization for order ${orderIdentifier} failed`,
       status: error.statusCode ?? 500,
+      workflowType: 'Orders',
+      workflowInstance: 'Authorization',
       payload: { glovoOrder, vtexOrder },
       error: error.response?.data,
     })

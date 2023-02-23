@@ -23,6 +23,8 @@ export async function orderChange(ctx: Context) {
       reason:
         error.reason ?? `There was a problem changing order ${params?.orderId}`,
       status: error.statusCode ?? 500,
+      workflowType: 'Orders',
+      workflowInstance: 'Change',
       payload: ctx.body,
       error: error.response?.data,
     })

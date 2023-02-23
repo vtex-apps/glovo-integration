@@ -80,6 +80,8 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
         error.reason ??
         `Simulation failed for Glovo Order ${glovoOrder.order_id}`,
       status: error.statusCode ?? 500,
+      workflowType: 'Orders',
+      workflowInstance: 'Simulation',
       payload: glovoOrder,
       error: error.response?.data,
     })

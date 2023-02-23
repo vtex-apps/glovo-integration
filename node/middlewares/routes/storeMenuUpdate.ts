@@ -18,7 +18,8 @@ export async function storeMenuUpdates(ctx: Context) {
         error.reason ??
         `There was a problem getting the Glovo menu updates for the specified store`,
       status: error.statusCode ?? 500,
-      payload: error,
+      workflowType: 'Menu',
+      workflowInstance: 'Check',
       error: error.response?.data,
     })
   }

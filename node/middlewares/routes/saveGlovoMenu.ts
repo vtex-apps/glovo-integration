@@ -63,6 +63,9 @@ export async function saveGlovoMenu(ctx: Context) {
       message: error.message,
       reason: `There was a problem saving the Glovo menu`,
       status: error.statusCode ?? 500,
+      workflowType: 'Menu',
+      workflowInstance: 'Update',
+      payload: ctx.req,
       error: error.response?.data,
     })
   }

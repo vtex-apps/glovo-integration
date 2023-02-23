@@ -14,7 +14,8 @@ export async function getGlovoMenu(ctx: Context) {
       message: error.message,
       reason: `There was a problem getting the Glovo menu`,
       status: error.statusCode ?? 500,
-      payload: error,
+      workflowType: 'Menu',
+      workflowInstance: 'Check',
       error: error.response?.data,
     })
   }
