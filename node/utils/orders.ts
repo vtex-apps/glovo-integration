@@ -1,4 +1,5 @@
 /* eslint-disable max-params */
+
 import { RESIDENTIAL, HOME } from '../constants'
 import { isSkuAvailable } from './utils'
 
@@ -7,9 +8,14 @@ export const createVtexOrderData = (
   glovoOrder: GlovoOrder,
   orderSimulation: any,
   clientProfileData: ClientProfileData,
-  marketplace: boolean
+  marketplace: boolean,
+  account: string
 ): CreateOrderPayload => {
-  const { order_id } = glovoOrder
+  const {
+    order_id,
+    customer: { name, phone_number },
+  } = glovoOrder
+
   const { items, pickupPoints, postalCode, logisticsInfo, totals } =
     orderSimulation
 
@@ -22,6 +28,9 @@ export const createVtexOrderData = (
     phone,
     corporateName,
   } = clientProfileData
+
+  /** Check if Glovo sends customer name */
+  const customerName = name ?? `${firstName} ${lastName}`
 
   /** Re-Index items array */
   let counter = 0
@@ -73,18 +82,19 @@ export const createVtexOrderData = (
 
   const vtexOrderData: CreateOrderPayload = {
     marketplaceOrderId: order_id,
-    marketplaceServicesEndpoint: 'https://api.glovoapp.com/',
+    marketplaceServicesEndpoint: `https://${account}.myvtex.com`,
     marketplacePaymentValue: totalValue,
     marketplaceOrderGroup: order_id,
     isCreatedAsync: true,
     items: updatedItems,
+    savePersonalData: false,
     clientProfileData: {
-      email,
-      firstName,
-      lastName,
+      email: getEmail(customerName, phone_number, email),
+      firstName: getFirstName(customerName),
+      lastName: getLastName(customerName),
       documentType,
       document,
-      phone,
+      phone: phone_number ?? phone,
       corporateName,
       tradeName: null,
       corporateDocument: null,
@@ -96,7 +106,7 @@ export const createVtexOrderData = (
     shippingData: {
       address: {
         addressType: RESIDENTIAL,
-        receiverName: `${firstName} ${lastName}`,
+        receiverName: getReceiverName(customerName, phone_number),
         addressId: HOME,
         postalCode,
         city: pickupPoints[0].address.city,
@@ -147,4 +157,25 @@ export const createAuthorizationPayload = (
       }
 
   return payload
+}
+
+function getEmail(name: string, phone_number: string, email: string) {
+  return (
+    `${name.replace(/\W/g, '').toLowerCase()}_${phone_number.replace(
+      /\W/g,
+      ''
+    )}@glovointegration.com` ?? email
+  )
+}
+
+function getFirstName(name: string) {
+  return name.split(' ')[0]
+}
+
+function getLastName(name: string) {
+  return name.split(' ')[1]
+}
+
+function getReceiverName(name: string, phone_number: string) {
+  return `${name} - ${phone_number}`
 }

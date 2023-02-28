@@ -1,4 +1,4 @@
-import { CustomError, createVtexOrderData } from '../utils'
+import { ServiceError, createVtexOrderData } from '../../utils'
 
 export async function createOrder(ctx: Context, next: () => Promise<void>) {
   const {
@@ -10,18 +10,18 @@ export async function createOrder(ctx: Context, next: () => Promise<void>) {
       clientProfileData,
     },
     clients: { orders },
+    vtex: { account },
   } = ctx
 
   const { salesChannel, affiliateId, sellerId } = storeInfo
 
-  let vtexOrderData: CreateOrderPayload
-
   try {
-    vtexOrderData = createVtexOrderData(
+    const vtexOrderData = createVtexOrderData(
       glovoOrder,
       orderSimulation,
       clientProfileData,
-      marketplace
+      marketplace,
+      account
     )
 
     let createdOrder
@@ -50,11 +50,14 @@ export async function createOrder(ctx: Context, next: () => Promise<void>) {
 
     await next()
   } catch (error) {
-    throw new CustomError({
-      message: `Order creation for order Glovo Order ${glovoOrder.order_id} failed`,
-      status: 500,
-      payload: { glovoOrder, createVtexOrderData },
-      error,
+    throw new ServiceError({
+      message: error.message,
+      reason:
+        error.reason ??
+        `Order creation for order Glovo Order ${glovoOrder.order_id} failed`,
+      metric: 'orders',
+      data: error.data ?? { glovoOrder },
+      error: error.error ?? error.response?.data,
     })
   }
 }

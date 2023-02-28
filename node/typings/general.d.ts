@@ -24,6 +24,7 @@ interface CreateOrderPayload {
   paymentData?: PaymentData
   marketingData?: MarketingData
   openTextField?: any
+  savePersonalData: boolean
 }
 
 interface OrderItem {
@@ -201,4 +202,79 @@ interface VTEXAuthorizedMarketplaceOrder {
       }
     ]
   }
+}
+
+interface SimulationItem {
+  id: string
+  quantity: number
+  sellerId: string
+}
+
+interface SimulatedItem {
+  price: number
+  available: boolean
+}
+
+interface CreateSimulationArgs {
+  items: PayloadItem[]
+  postalCode?: string
+  country?: string
+  affiliateId: string
+  salesChannel: string
+}
+
+interface OrderRecord {
+  orderId: string
+  glovoOrder: GlovoOrder
+  invoiced: any | null
+  hasChanged: boolean
+  createdAt?: number
+  startHandlingAt?: string
+  invoicedAt?: number
+}
+
+interface ProductRecord {
+  id: string
+  price?: number
+  available?: boolean
+}
+
+interface StoreMenuRecord {
+  items: {
+    [id: string]: ProductRecord
+  }
+  lastUpdated: string
+}
+
+interface GlovoMenu {
+  [key: string]: boolean
+}
+
+interface StoreMenuUpdates {
+  current: MenuUpdatesItem
+  previous?: MenuUpdatesItem
+}
+
+interface MenuUpdatesItem {
+  responseId: string | null
+  createdAt: number
+  storeId: string
+  storeName: string
+  glovoStoreId: string
+  items: ProductRecord[]
+}
+
+interface OrderChangeBody {
+  requestId: string
+  reason: string
+  discountValue: number
+  incrementValue: number
+  itemsRemoved: OrderChangeItem[]
+  itemsAdded: OrderChangeItem[]
+}
+
+interface OrderChangeItem {
+  id: string
+  price: number
+  quantity: number
 }

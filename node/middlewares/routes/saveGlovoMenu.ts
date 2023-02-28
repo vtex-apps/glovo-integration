@@ -1,7 +1,7 @@
 import { json } from 'co-body'
 
-import { APP_SETTINGS, GLOVO } from '../constants'
-import { CustomError } from '../utils'
+import { APP_SETTINGS, GLOVO } from '../../constants'
+import { ServiceError } from '../../utils'
 
 export async function saveGlovoMenu(ctx: Context) {
   const {
@@ -56,13 +56,15 @@ export async function saveGlovoMenu(ctx: Context) {
       }
     }
 
-    ctx.status = 201
+    ctx.status = 200
     ctx.body = { glovoMenu, newStores }
   } catch (error) {
-    throw new CustomError({
-      message: `There was a problem saving the Glovo menu`,
-      status: 500,
-      error,
+    throw new ServiceError({
+      message: error.message,
+      reason: `There was a problem saving the Glovo menu`,
+      metric: 'menu',
+      data: ctx.req,
+      error: error.response?.data,
     })
   }
 }

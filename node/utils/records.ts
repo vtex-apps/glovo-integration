@@ -1,4 +1,4 @@
-import { CustomError } from '.'
+import { ServiceError } from './errors'
 
 export const generateStoreMenuRecord = async (
   ctx: Context,
@@ -37,10 +37,10 @@ export const generateStoreMenuRecord = async (
 
     recordsManager.saveStoreMenuRecord(affiliateId, storeMenuRecord)
   } catch (error) {
-    throw new CustomError({
-      message: `There was a problem creating the store menu record for ${affiliateId}`,
-      status: 500,
-      error,
+    throw new ServiceError({
+      message: error.message,
+      reason: `There was a problem creating the store menu record for ${affiliateId}`,
+      metric: 'menu',
     })
   }
 }

@@ -1,6 +1,7 @@
 export const GLOVO_TOKEN = 'glovoToken'
 export const PRODUCTION = 'production'
 export const MARKETPLACE = 'marketplace'
+export const MINIMUM_STOCK = 'minimumStock'
 
 export const STORE_NAME = 'storeName'
 export const SELLER_ID = 'sellerId'

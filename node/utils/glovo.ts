@@ -9,7 +9,7 @@ import {
   READY_FOR_HANDLING,
   WAITING_SELLER_HANDLING,
 } from '../constants'
-import { CustomError } from './customError'
+import { ServiceError } from './errors'
 import {
   createGlovoBulkUpdatePayload,
   createSimulationItems,
@@ -50,7 +50,7 @@ export const updateGlovoProduct = async (
     return
   }
 
-  const { stores }: { stores: StoreInfo[] } = appSettings
+  const { stores } = appSettings
   const { IdSku, IsActive } = catalogUpdate
 
   if (!stores) {
@@ -217,7 +217,7 @@ export const updateGlovoCompleteMenu = async (ctx: Context) => {
       return
     }
 
-    const { stores } = appSettings
+    const { stores, minimumStock } = appSettings
 
     if (!stores.length) {
       logger.warn({
@@ -257,6 +257,7 @@ export const updateGlovoCompleteMenu = async (ctx: Context) => {
 
         const simulationItems = createSimulationItems(
           itemsForSimulation,
+          minimumStock,
           sellerId
         )
 
@@ -294,7 +295,10 @@ export const updateGlovoCompleteMenu = async (ctx: Context) => {
         payloadItems = [...payloadItems, ...simulation.items]
       }
 
-      const glovoPayload = createGlovoBulkUpdatePayload(payloadItems)
+      const glovoPayload = createGlovoBulkUpdatePayload(
+        payloadItems,
+        minimumStock
+      )
 
       try {
         // eslint-disable-next-line no-await-in-loop
@@ -324,10 +328,11 @@ export const updateGlovoCompleteMenu = async (ctx: Context) => {
       }
     }
   } catch (error) {
-    throw new CustomError({
-      message: error.message ?? 'Catalog update for stores failed',
-      status: 500,
-      error: error.response,
+    throw new ServiceError({
+      message: error.message,
+      reason: error.reason ?? 'Catalog update for stores failed',
+      metric: 'menu',
+      data: error.response?.data,
     })
   }
 }

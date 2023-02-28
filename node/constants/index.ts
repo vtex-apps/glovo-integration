@@ -25,3 +25,4 @@ export const STORE_MENU_UPDATE = 'store-menu-update'
 /** General */
 export const PRODUCTION = 'PRODUCTION'
 export const STAGING = 'STAGING'
+export const TIMEOUT_MS = 10000

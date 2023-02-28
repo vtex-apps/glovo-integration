@@ -1,10 +1,19 @@
 import { getGlovoIntegrationSettings } from './getAppSettings'
 import { saveGlovoIntegrationSettings } from './saveAppSettings'
 
-export const queries = {
+const queries = {
   getGlovoIntegrationSettings,
 }
 
-export const mutations = {
+const mutations = {
   saveGlovoIntegrationSettings,
+}
+
+export const resolvers = {
+  Query: {
+    ...queries,
+  },
+  Mutation: {
+    ...mutations,
+  },
 }

@@ -32,12 +32,13 @@ To configure the Glovo Integration you can follow these steps:
 
 5. Fill in the the integration settings and client information:
 
-| Field                  | Description                                                               |
-| ---------------------- | ------------------------------------------------------------------------- |
-| Glovo Token            | Glovo token (app key) provided by Glovo to connect to their APIs          |
-| Marketplace            | Toggle to use a marketplace configuration                                 |
-| Production Environment | Toggle between Glovo's Test environment and production environment        |
-| Client information     | All orders will be created using this information for the customer fields |
+| Field                  | Description                                                               | Default value |
+| ---------------------- | ------------------------------------------------------------------------- | ------------- |
+| Glovo Token            | Glovo token (app key) provided by Glovo to connect to their APIs          |               |
+| Minimum stock          | Minimum stock for a product to be marked as available on the Glovo store  | 1             |
+| Marketplace            | Toggle to use a marketplace configuration                                 | `false`       |
+| Production Environment | Toggle between Glovo's Test environment and production environment        | `false`       |
+| Client information     | All orders will be created using this information for the customer fields |               |
 
 6.  Using the example shown below, upload the catalog of your store's products that will be available on Glovo (include all the products from every store) by making a POST request to the following endpoint.
 

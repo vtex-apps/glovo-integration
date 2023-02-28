@@ -1,6 +1,6 @@
 import { UserInputError } from '@vtex/api'
 
-import { APP_SETTINGS, GLOVO } from '../constants'
+import { APP_SETTINGS, GLOVO } from '../../constants'
 
 export async function validateSettings(
   ctx: Context,

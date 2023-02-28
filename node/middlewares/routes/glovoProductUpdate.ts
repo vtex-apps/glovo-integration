@@ -1,6 +1,6 @@
 import { json } from 'co-body'
 
-import { updateGlovoProduct } from '../utils'
+import { updateGlovoProduct } from '../../utils'
 
 export async function glovoProductUpdate(
   ctx: Context,
@@ -20,7 +20,7 @@ export async function glovoProductUpdate(
   } catch (error) {
     logger.error({
       message: `There was a problem updating ${catalogUpdate.IdSku} for affiliate ${catalogUpdate.IdAffiliate}`,
-      data: error.reposense,
+      data: error.response?.data,
     })
 
     return error
