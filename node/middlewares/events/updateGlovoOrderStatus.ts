@@ -1,7 +1,7 @@
 import {
-  CustomError,
   getStoreInfoFromStoreId,
   isValidAffiliateId,
+  ServiceError,
   setGlovoStatus,
 } from '../../utils'
 
@@ -57,15 +57,15 @@ export async function updateGlovoOrderStatus(ctx: StatusChangeContext) {
       glovoPayload,
     })
   } catch (error) {
-    throw new CustomError({
+    throw new ServiceError({
       message: error.message,
       reason:
         error.reason ??
         `Glovo order ${glovoPayload.glovoOrderId} status update failed`,
-      status: error.statusCode ?? 500,
-      workflowType: 'Orders',
-      workflowInstance: 'Change',
-      payload: body,
+      metric: 'orders',
+      data: {
+        body,
+      },
       error: error.response?.data,
     })
   }

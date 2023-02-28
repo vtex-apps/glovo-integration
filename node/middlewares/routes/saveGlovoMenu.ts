@@ -1,7 +1,7 @@
 import { json } from 'co-body'
 
 import { APP_SETTINGS, GLOVO } from '../../constants'
-import { CustomError } from '../../utils'
+import { ServiceError } from '../../utils'
 
 export async function saveGlovoMenu(ctx: Context) {
   const {
@@ -59,13 +59,11 @@ export async function saveGlovoMenu(ctx: Context) {
     ctx.status = 200
     ctx.body = { glovoMenu, newStores }
   } catch (error) {
-    throw new CustomError({
+    throw new ServiceError({
       message: error.message,
       reason: `There was a problem saving the Glovo menu`,
-      status: error.statusCode ?? 500,
-      workflowType: 'Menu',
-      workflowInstance: 'Update',
-      payload: ctx.req,
+      metric: 'menu',
+      data: ctx.req,
       error: error.response?.data,
     })
   }

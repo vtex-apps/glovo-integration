@@ -1,10 +1,10 @@
 import { json } from 'co-body'
 
 import {
-  CustomError,
   convertGlovoProductToItems,
   createSimulationPayload,
   getStoreInfoFormGlovoStoreId,
+  ServiceError,
 } from '../../utils'
 
 export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
@@ -74,15 +74,13 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
 
     await next()
   } catch (error) {
-    throw new CustomError({
-      message: error.message,
+    throw new ServiceError({
+      message: error.message ?? 'Order simulation error',
       reason:
         error.reason ??
         `Simulation failed for Glovo Order ${glovoOrder.order_id}`,
-      status: error.statusCode ?? 500,
-      workflowType: error.workflowType ?? 'Orders',
-      workflowInstance: error.workflowInstance ?? 'Simulation',
-      payload: error.payload ?? glovoOrder,
+      metric: 'orders',
+      data: error.data ?? glovoOrder,
       error: error.error ?? error.response?.data,
     })
   }

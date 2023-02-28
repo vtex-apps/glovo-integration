@@ -1,4 +1,4 @@
-import { CustomError, createVtexOrderData } from '../../utils'
+import { ServiceError, createVtexOrderData } from '../../utils'
 
 export async function createOrder(ctx: Context, next: () => Promise<void>) {
   const {
@@ -50,15 +50,13 @@ export async function createOrder(ctx: Context, next: () => Promise<void>) {
 
     await next()
   } catch (error) {
-    throw new CustomError({
+    throw new ServiceError({
       message: error.message,
       reason:
         error.reason ??
         `Order creation for order Glovo Order ${glovoOrder.order_id} failed`,
-      status: error.statusCode ?? 500,
-      workflowType: error.workflowType ?? 'Orders',
-      workflowInstance: error.workflowInstance ?? 'Creation',
-      payload: error.payload ?? { glovoOrder },
+      metric: 'orders',
+      data: error.data ?? { glovoOrder },
       error: error.error ?? error.response?.data,
     })
   }

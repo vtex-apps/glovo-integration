@@ -1,4 +1,4 @@
-import { CustomError } from '../../utils'
+import { ServiceError } from '../../utils'
 
 export async function getGlovoMenu(ctx: Context) {
   const {
@@ -10,12 +10,10 @@ export async function getGlovoMenu(ctx: Context) {
 
     ctx.body = glovoMenu
   } catch (error) {
-    throw new CustomError({
+    throw new ServiceError({
       message: error.message,
       reason: `There was a problem getting the Glovo menu`,
-      status: error.statusCode ?? 500,
-      workflowType: 'Menu',
-      workflowInstance: 'Check',
+      metric: 'menu',
       error: error.response?.data,
     })
   }

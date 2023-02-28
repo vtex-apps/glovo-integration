@@ -9,7 +9,7 @@ import {
   READY_FOR_HANDLING,
   WAITING_SELLER_HANDLING,
 } from '../constants'
-import { CustomError } from './customError'
+import { ServiceError } from './errors'
 import {
   createGlovoBulkUpdatePayload,
   createSimulationItems,
@@ -328,13 +328,11 @@ export const updateGlovoCompleteMenu = async (ctx: Context) => {
       }
     }
   } catch (error) {
-    throw new CustomError({
+    throw new ServiceError({
       message: error.message,
       reason: error.reason ?? 'Catalog update for stores failed',
-      status: 500,
-      workflowType: 'Menu',
-      workflowInstance: 'Complete Update',
-      error: error.response?.data,
+      metric: 'menu',
+      data: error.response?.data,
     })
   }
 }

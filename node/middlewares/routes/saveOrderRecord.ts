@@ -1,4 +1,4 @@
-import { CustomError } from '../../utils'
+import { ServiceError } from '../../utils'
 
 export async function saveOrderRecord(ctx: Context) {
   const {
@@ -21,13 +21,11 @@ export async function saveOrderRecord(ctx: Context) {
 
     ctx.status = 201
   } catch (error) {
-    throw new CustomError({
+    throw new ServiceError({
       message: error.message,
       reason: `Unable to save order record for order ${vtexOrder}`,
-      status: error.statusCode ?? 500,
-      workflowType: 'Orders',
-      workflowInstance: 'Creation',
-      payload: { orderId, orderRecord: data },
+      metric: 'orders',
+      data: { orderId, orderRecord: data },
       error: error.response?.data,
     })
   }

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
-  CustomError,
   convertGlovoProductsToCompare,
   isValidAffiliateId,
+  ServiceError,
 } from '../../utils'
 
 export async function compareOrder(
@@ -125,14 +125,12 @@ export async function compareOrder(
 
     await next()
   } catch (error) {
-    throw new CustomError({
+    throw new ServiceError({
       message: error.message,
       reason: error.reason ?? `Order comparison for order ${orderId} failed`,
-      status: error.statusCode ?? 500,
-      workflowType: error.workflowType ?? 'Orders',
-      workflowInstance: error.workflowInstance ?? 'Change',
-      payload: error.payload ?? body,
-      error: error.error ?? error.reponse?.data,
+      metric: 'orders',
+      data: { body },
+      error: error.response?.data,
     })
   }
 }

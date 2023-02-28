@@ -13,12 +13,10 @@ export async function eventsErrorHandler(
       orderId: ctx.body.orderId ?? 'No orderId information',
       message: error.message,
       reason: error.reason,
-      status: error.status,
-      workflowType: error.workflowType,
-      workflowInstance: error.workflowInstance,
-      payload: error.payload,
+      metric: error.metric,
+      data: error.data,
       error: error.error,
-    } as CustomError.Data)
+    })
 
     ctx.body = error.reason
   }

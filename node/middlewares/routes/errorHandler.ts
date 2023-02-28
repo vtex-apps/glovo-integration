@@ -6,18 +6,18 @@ export async function errorHandler(ctx: Context, next: () => Promise<void>) {
   try {
     await next()
   } catch (error) {
-    logger.error({
-      // glovoOrder: ctx.state?.glovoOrder ?? 'No Glovo order information',
-      message: error.message,
-      status: error.status,
-      reason: error.reason,
-      workflowType: error.workflowType,
-      workflowInstance: error.workflowInstance,
-      payload: error.payload,
-      error: error.error,
-    } as CustomError.Data)
+    // eslint-disable-next-line no-console
+    console.log({ error }, error.error)
 
-    ctx.status = error.status || 500
+    logger.error({
+      glovoOrder: ctx.state?.glovoOrder ?? 'No Glovo order information',
+      message: error.message,
+      reason: error.reason,
+      metric: error.metric,
+      data: error.data,
+      error: error.error,
+    })
+
     ctx.body = error.reason
     ctx.app.emit('error', error, ctx)
   }

@@ -1,4 +1,4 @@
-import { CustomError } from '../../utils'
+import { ServiceError } from '../../utils'
 
 export async function storeMenuUpdates(ctx: Context) {
   const {
@@ -12,14 +12,12 @@ export async function storeMenuUpdates(ctx: Context) {
 
     ctx.body = storeMenuUpdatesRecord ?? 'Store menu updates record not found'
   } catch (error) {
-    throw new CustomError({
+    throw new ServiceError({
       message: error.message,
       reason:
         error.reason ??
         `There was a problem getting the Glovo menu updates for the specified store`,
-      status: error.statusCode ?? 500,
-      workflowType: 'Menu',
-      workflowInstance: 'Check',
+      metric: 'menu',
       error: error.response?.data,
     })
   }

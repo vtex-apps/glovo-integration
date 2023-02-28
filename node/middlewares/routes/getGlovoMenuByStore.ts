@@ -1,4 +1,4 @@
-import { CustomError, generateStoreMenuRecord } from '../../utils'
+import { ServiceError, generateStoreMenuRecord } from '../../utils'
 
 export async function getGlovoMenuByStore(ctx: Context) {
   const {
@@ -13,14 +13,12 @@ export async function getGlovoMenuByStore(ctx: Context) {
 
     generateStoreMenuRecord(ctx, affiliateId)
   } catch (error) {
-    throw new CustomError({
+    throw new ServiceError({
       message: error.message,
       reason:
         error.reason ??
         `There was a problem getting the Glovo menu for the specified store`,
-      status: error.statusCode ?? 500,
-      workflowType: 'Menu',
-      workflowInstance: 'Check',
+      metric: 'menu',
       error: error.response?.data,
     })
   }
