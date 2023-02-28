@@ -22,7 +22,6 @@
   "admin/glovo-integration.table.clear-all": "Clear all",
   "admin/glovo-integration.table.more-options": "more options",
   "admin/glovo-integration.table.apply": "Apply",
-  "admin/glovo-integration.collapsible.header": "Configuration",
   "admin/glovo-integration.integration-settings.title": "Integration Settings",
   "admin/glovo-integration.integration-settings.subtitle": "Glovo integration settings",
   "admin/glovo-integration.integration-settings.glovo-token.description": "Token to perform calls to the Glovo API",
