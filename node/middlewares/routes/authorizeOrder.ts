@@ -1,4 +1,4 @@
-import { CustomError, createAuthorizationPayload } from '../../utils'
+import { createAuthorizationPayload, ServiceError } from '../../utils'
 
 export async function authorizeOrder(ctx: Context, next: () => Promise<void>) {
   const {
@@ -55,16 +55,17 @@ export async function authorizeOrder(ctx: Context, next: () => Promise<void>) {
       order,
     })
 
-    ctx.status = 201
     ctx.state.vtexOrder = vtexOrder
 
     await next()
   } catch (error) {
-    throw new CustomError({
-      message: `Authorization for order ${orderIdentifier} failed`,
-      status: 500,
-      payload: { glovoOrder, vtexOrder },
-      error,
+    throw new ServiceError({
+      message: error.message,
+      reason:
+        error.reason ?? `Authorization for order ${orderIdentifier} failed`,
+      metric: 'orders',
+      data: { glovoOrder, vtexOrder },
+      error: error.response?.data,
     })
   }
 }

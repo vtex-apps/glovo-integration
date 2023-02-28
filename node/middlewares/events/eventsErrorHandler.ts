@@ -9,22 +9,15 @@ export async function eventsErrorHandler(
   try {
     await next()
   } catch (error) {
-    // Check the Feed event object and add the order id to the log.
-    if (ctx.body.orderId) {
-      const { orderId } = ctx.body
+    logger.error({
+      orderId: ctx.body.orderId ?? 'No orderId information',
+      message: error.message,
+      reason: error.reason,
+      metric: error.metric,
+      data: error.data,
+      error: error.error,
+    })
 
-      logger.error({
-        orderId,
-        message: error.message,
-        data: error.response,
-      })
-    } else {
-      logger.error({
-        message: error.message,
-        data: error.response,
-      })
-    }
-
-    ctx.body = error.message
+    ctx.body = error.reason
   }
 }

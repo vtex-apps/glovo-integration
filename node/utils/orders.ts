@@ -164,7 +164,7 @@ function getEmail(name: string, phone_number: string, email: string) {
     `${name.replace(/\W/g, '').toLowerCase()}_${phone_number.replace(
       /\W/g,
       ''
-    )}@vtex-glovo.com` ?? email
+    )}@glovointegration.com` ?? email
   )
 }
 
