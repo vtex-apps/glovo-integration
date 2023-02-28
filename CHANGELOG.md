@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- New `minimumStock` option on settings to avoid having out of stock products displayed on the Glovo store.
+
 ## [3.2.4] - 2023-02-28
 
 ### Added
