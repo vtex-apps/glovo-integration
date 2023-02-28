@@ -16,7 +16,7 @@ export async function glovoMenuPartialUpdate(
   } catch (error) {
     logger.error({
       message: `There was a problem updating the Glovo menu`,
-      data: error.response,
+      data: error.response?.data,
     })
 
     return error

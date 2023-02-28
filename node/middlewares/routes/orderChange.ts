@@ -1,6 +1,6 @@
 import { json } from 'co-body'
 
-import { CustomError } from '../../utils'
+import { ServiceError } from '../../utils'
 
 export async function orderChange(ctx: Context) {
   const {
@@ -18,10 +18,13 @@ export async function orderChange(ctx: Context) {
       receipt: body.requestId,
     }
   } catch (error) {
-    throw new CustomError({
-      message: `There was a problem changing order ${params?.orderId}`,
-      status: 500,
-      payload: error,
+    throw new ServiceError({
+      message: error.message,
+      reason:
+        error.reason ?? `There was a problem changing order ${params?.orderId}`,
+      metric: 'orders',
+      data: ctx.body,
+      error: error.response?.data,
     })
   }
 }

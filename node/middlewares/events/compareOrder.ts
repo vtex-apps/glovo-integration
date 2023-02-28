@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
-  CustomError,
   convertGlovoProductsToCompare,
   isValidAffiliateId,
+  ServiceError,
 } from '../../utils'
 
 export async function compareOrder(
@@ -34,11 +34,7 @@ export async function compareOrder(
     const orderRecord = await recordsManager.getOrderRecord(orderId)
 
     if (!orderRecord) {
-      throw new CustomError({
-        message: `The record for the order ${orderId} was not found`,
-        status: 500,
-        payload: { stores, affiliateId: orderIdAffiliate },
-      })
+      throw new Error(`The record for the order ${orderId} was not found`)
     }
 
     // check if order has changed
@@ -129,11 +125,12 @@ export async function compareOrder(
 
     await next()
   } catch (error) {
-    throw new CustomError({
-      message: `Order comparison for order ${orderId} failed`,
-      status: 500,
-      payload: error,
-      error,
+    throw new ServiceError({
+      message: error.message,
+      reason: error.reason ?? `Order comparison for order ${orderId} failed`,
+      metric: 'orders',
+      data: { body },
+      error: error.response?.data,
     })
   }
 }
