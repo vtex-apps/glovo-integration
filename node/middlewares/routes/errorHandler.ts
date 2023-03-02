@@ -6,9 +6,6 @@ export async function errorHandler(ctx: Context, next: () => Promise<void>) {
   try {
     await next()
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.log({ error }, error.error)
-
     logger.error({
       glovoOrder: ctx.state?.glovoOrder ?? 'No Glovo order information',
       message: error.message,
