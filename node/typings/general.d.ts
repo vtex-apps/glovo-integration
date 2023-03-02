@@ -122,6 +122,32 @@ interface MarketingData {
   utmiCampaign: string
 }
 
+interface ChangesAttachmentItem {
+  id: string
+  name: string
+  quantity: number
+  price: number
+  unitMultiplier: number
+}
+
+interface ChangesData {
+  reason: string
+  discountvalue: number
+  incrementValue: number
+  itemsAdded: ChangesAttachmentItem[]
+  itemsRemoved: ChangesAttachmentItem[]
+  receipt: {
+    date: string
+    orderId: string
+    receipt: string
+  }
+}
+
+interface ChangesAttachment {
+  id: string
+  changesData: ChangesData[]
+}
+
 interface VTEXOrder {
   marketplaceOrderId: string
   orderId: string
@@ -138,6 +164,7 @@ interface VTEXOrder {
   paymentData: any
   customData: any
   orders?: any
+  changesAttachment: ChangesAttachment
 }
 
 interface VTEXOrderItem {

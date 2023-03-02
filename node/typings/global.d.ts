@@ -17,7 +17,7 @@ declare global {
     orderSimulation: SimulationOrderForm
   }
 
-  interface StatusChangeContext extends EventContext<Clients> {
+  interface StatusChangeContext extends EventContext<Clients, State> {
     body: {
       domain: string
       orderId: string
