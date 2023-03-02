@@ -17,56 +17,71 @@ export default class RecordsManager extends VBase {
   }
 
   // Glovo Menu Records
-  public saveGlovoMenu = (data: GlovoMenu) =>
-    this.saveJSON<GlovoMenu>(GLOVO, MENU, data)
+  public saveGlovoMenu(data: GlovoMenu) {
+    return this.saveJSON<GlovoMenu>(GLOVO, MENU, data)
+  }
 
-  public getGlovoMenu = () => this.getJSON<GlovoMenu>(GLOVO, MENU, true)
+  public getGlovoMenu() {
+    return this.getJSON<GlovoMenu>(GLOVO, MENU, true)
+  }
 
   // Store's Menu Updates Records
-  public saveStoreMenuUpdates = (affiliateId: string, data: StoreMenuUpdates) =>
-    this.saveJSON<StoreMenuUpdates>(affiliateId, MENU, data)
+  public saveStoreMenuUpdates(affiliateId: string, data: StoreMenuUpdates) {
+    return this.saveJSON<StoreMenuUpdates>(affiliateId, MENU, data)
+  }
 
-  public getStoreMenuUpdates = (affiliateId: string) =>
-    this.getJSON<StoreMenuUpdates>(affiliateId, MENU, true)
+  public getStoreMenuUpdates(affiliateId: string) {
+    return this.getJSON<StoreMenuUpdates>(affiliateId, MENU, true)
+  }
 
   // Product's Records
-  public saveProductRecord = (
+  public saveProductRecord(
     affiliateId: string,
     skuId: string,
     data: ProductRecord
-  ) => this.saveJSON<ProductRecord>(affiliateId, skuId, data)
+  ) {
+    return this.saveJSON<ProductRecord>(affiliateId, skuId, data)
+  }
 
-  public getProductRecord = (affiliateId: string, skuId: string) =>
-    this.getJSON<ProductRecord>(affiliateId, skuId, true)
+  public getProductRecord(affiliateId: string, skuId: string) {
+    return this.getJSON<ProductRecord>(affiliateId, skuId, true)
+  }
 
   // Store's catalog
-  public saveStoreMenuRecord = (affiliateId: string, data: StoreMenuRecord) =>
-    this.saveJSON<StoreMenuRecord>(affiliateId, STORE_MENU, data)
+  public saveStoreMenuRecord(affiliateId: string, data: StoreMenuRecord) {
+    return this.saveJSON<StoreMenuRecord>(affiliateId, STORE_MENU, data)
+  }
 
-  public getStoreMenuRecord = (affiliateId: string) =>
-    this.getJSON<StoreMenuRecord>(affiliateId, STORE_MENU, true)
+  public getStoreMenuRecord(affiliateId: string) {
+    return this.getJSON<StoreMenuRecord>(affiliateId, STORE_MENU, true)
+  }
 
   // Store's catalog update
-  public saveStoreCompleteMenuUpdate = (
+  public saveStoreCompleteMenuUpdate(
     affiliateId: string,
     data: {
       items: GlovoPatchProduct[]
       transactionId: string
       lastUpdated: string
     }
-  ) => this.saveJSON(affiliateId, STORE_MENU_UPDATE, data)
+  ) {
+    return this.saveJSON(affiliateId, STORE_MENU_UPDATE, data)
+  }
 
-  public getStoreCompleteMenuUpdate = (affiliateId: string) =>
-    this.getJSON<{ items: GlovoPatchProduct[]; lastUpdated: string }>(
+  public getStoreCompleteMenuUpdate(affiliateId: string) {
+    return this.getJSON<{ items: GlovoPatchProduct[]; lastUpdated: string }>(
       affiliateId,
       STORE_MENU_UPDATE,
       true
     )
+  }
 
   // Order's Records
-  public saveOrderRecord = (orderId: string, data: OrderRecord) =>
-    this.saveJSON<OrderRecord>(ORDERS, orderId, data)
+  public saveOrderRecord(orderId: string, data: OrderRecord) {
+    return this.saveJSON<OrderRecord>(ORDERS, orderId, data)
+  }
 
-  public getOrderRecord = (orderId: string) =>
-    this.getJSON<OrderRecord>(ORDERS, orderId, true)
+  public getOrderRecord(orderId: string) {
+    return this.getJSON<OrderRecord>(ORDERS, orderId, true)
+  }
 }
