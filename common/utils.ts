@@ -1,4 +1,4 @@
-export type Inputs = Record<string, any>
+type Inputs = Record<string, any>
 
 export const validateInputs = (inputs: Inputs): boolean => {
   for (const key in inputs) {
@@ -7,7 +7,7 @@ export const validateInputs = (inputs: Inputs): boolean => {
     }
 
     if (typeof inputs[key] === 'object') {
-      if (!validateInputs(inputs[key] as Inputs)) {
+      if (!validateInputs(inputs[key])) {
         return false
       }
     }
