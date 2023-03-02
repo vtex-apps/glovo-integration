@@ -1,6 +1,5 @@
 import {
   getStoreInfoFromStoreId,
-  isValidAffiliateId,
   ServiceError,
   setGlovoStatus,
 } from '../../utils'
@@ -9,25 +8,12 @@ export async function updateGlovoOrderStatus(ctx: StatusChangeContext) {
   const {
     body,
     clients: { glovo },
-    state: { stores },
+    state: { glovoToken, stores },
     vtex: { logger },
   } = ctx
 
-  /**
-   * Check if the order comes from Glovo and remove the affiliateId (i.e. 'TST') from the VTEX orderId to get the glovoOrderId.
-   */
   const { orderId, currentState } = body
   const [orderIdAffiliate, glovoOrderId] = orderId.split('-')
-
-  if (!isValidAffiliateId(orderIdAffiliate, stores)) {
-    logger.warn({
-      message: 'Glovo order status not modified',
-      reason: 'AffiliateId not valid',
-      data: body,
-    })
-
-    return
-  }
 
   const storeInfo = getStoreInfoFromStoreId(orderIdAffiliate, stores)
 
@@ -50,7 +36,7 @@ export async function updateGlovoOrderStatus(ctx: StatusChangeContext) {
   }
 
   try {
-    await glovo.updateOrderStatus(ctx, glovoPayload)
+    await glovo.updateOrderStatus(glovoPayload, glovoToken)
 
     logger.info({
       message: `Glovo order ${glovoPayload.glovoOrderId} status updated`,
