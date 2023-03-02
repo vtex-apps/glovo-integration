@@ -23,6 +23,7 @@ export async function validateEventSettings(
   }
 
   ctx.state.stores = appSettings.stores
+  ctx.state.glovoToken = appSettings.glovoToken
 
   await next()
 }
