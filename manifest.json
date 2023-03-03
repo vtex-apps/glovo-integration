@@ -1,7 +1,7 @@
 {
   "name": "glovo-integration",
   "vendor": "vtex",
-  "version": "3.3.1",
+  "version": "3.4.0",
   "title": "Glovo Integration",
   "description": "Glovo Integration",
   "dependencies": {
