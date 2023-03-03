@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.3.1] - 2023-03-03
+
 ### Fixed
 
 - Glovo order modification flow due to changes in VTEX process for order changes when using marketplace architecture.
