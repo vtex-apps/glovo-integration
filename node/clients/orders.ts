@@ -12,53 +12,62 @@ export default class Orders extends JanusClient {
     })
   }
 
-  public getOrder = (orderId: string) =>
-    this.http.get(`/api/oms/pvt/orders/${orderId}`)
+  public getOrder(orderId: string): Promise<VTEXOrder> {
+    return this.http.get(`/api/oms/pvt/orders/${orderId}`)
+  }
 
-  public createOrder = (
+  public createOrder(
     data: CreateOrderPayload,
     sc: string,
     affiliateId: string
-  ): Promise<VTEXOrder[]> =>
-    this.http.post('/api/fulfillment/pvt/orders', [data], {
+  ): Promise<VTEXOrder[]> {
+    return this.http.post('/api/fulfillment/pvt/orders', [data], {
       params: {
         sc,
         affiliateId,
       },
     })
+  }
 
-  public createMarketplaceOrder = (
+  public createMarketplaceOrder(
     data: CreateOrderPayload,
     sc: string,
     affiliateId: string
-  ): Promise<CreateMarketplaceOrderResponse> =>
-    this.http.put('/api/checkout/pvt/orders', data, {
+  ): Promise<CreateMarketplaceOrderResponse> {
+    return this.http.put('/api/checkout/pvt/orders', data, {
       params: {
         sc,
         affiliateId,
       },
     })
+  }
 
-  public authorizeOrder = (
+  // eslint-disable-next-line max-params
+  public authorizeOrder(
     data: AuthorizeOrderPayload,
     orderId: string,
     sc: string,
     affiliateId: string
-    // eslint-disable-next-line max-params
-  ): Promise<VTEXAuthorizedOrder> =>
-    this.http.post(`/api/fulfillment/pvt/orders/${orderId}/fulfill`, data, {
-      params: {
-        sc,
-        affiliateId,
-      },
-    })
+  ): Promise<VTEXAuthorizedOrder> {
+    return this.http.post(
+      `/api/fulfillment/pvt/orders/${orderId}/fulfill`,
+      data,
+      {
+        params: {
+          sc,
+          affiliateId,
+        },
+      }
+    )
+  }
 
-  public authorizeMarketplaceOrder = (
+  public authorizeMarketplaceOrder(
     data: AuthorizeMarketplaceOrderPayload,
     marketplaceOrderId: string
-  ): Promise<VTEXAuthorizedOrder> =>
-    this.http.post(
+  ): Promise<VTEXAuthorizedOrder> {
+    return this.http.post(
       `/api/checkout/pvt/orders/${marketplaceOrderId}/receipts/marketplace-order-authorization`,
       data
     )
+  }
 }

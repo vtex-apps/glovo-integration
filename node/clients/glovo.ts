@@ -1,13 +1,5 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import type { InstanceOptions, IOContext } from '@vtex/api'
-import { ExternalClient } from '@vtex/api'
-
-import { APP_SETTINGS, GLOVO, PRODUCTION, STAGING } from '../constants'
-
-const BASE_URL = {
-  PRODUCTION: 'https://api.glovoapp.com',
-  STAGING: 'https://stageapi.glovoapp.com',
-}
+import { PRODUCTION, ExternalClient } from '@vtex/api'
 
 export default class Glovo extends ExternalClient {
   constructor(context: IOContext, options?: InstanceOptions) {
@@ -20,14 +12,16 @@ export default class Glovo extends ExternalClient {
     })
   }
 
-  public updateProducts = async (ctx: Context, data: GlovoUpdateProduct) => {
-    const { glovoStoreId, skuId, price, available } = data
-    const { glovoToken, production }: AppSettings = await Glovo.getAppSettings(
-      ctx
-    )
+  private baseUrl() {
+    return PRODUCTION
+      ? 'https://api.glovoapp.com'
+      : 'https://stageapi.glovoapp.com'
+  }
 
-    const environment = production ? PRODUCTION : STAGING
-
+  public async updateProducts(
+    { glovoStoreId, skuId, price, available }: GlovoUpdateProduct,
+    glovoToken: string
+  ) {
     const payload: GlovoPatchProduct = {
       available,
     }
@@ -35,7 +29,7 @@ export default class Glovo extends ExternalClient {
     if (price) payload.price = price
 
     return this.http.patch(
-      `${BASE_URL[environment]}/webhook/stores/${glovoStoreId}/products/${skuId}`,
+      `${this.baseUrl()}/webhook/stores/${glovoStoreId}/products/${skuId}`,
       payload,
       {
         headers: {
@@ -45,19 +39,13 @@ export default class Glovo extends ExternalClient {
     )
   }
 
-  public bulkUpdateProducts = async (
-    ctx: Context,
+  public async bulkUpdateProducts(
     data: GlovoBulkUpdateProduct,
-    glovoStoreId: string
-  ) => {
-    const { glovoToken, production }: AppSettings = await Glovo.getAppSettings(
-      ctx
-    )
-
-    const environment = production ? PRODUCTION : STAGING
-
+    glovoStoreId: string,
+    glovoToken: string
+  ) {
     return this.http.post<GlovoBulkUpdateResponse>(
-      `${BASE_URL[environment]}/webhook/stores/${glovoStoreId}/menu/updates`,
+      `${this.baseUrl()}/webhook/stores/${glovoStoreId}/menu/updates`,
       data,
       {
         headers: {
@@ -67,24 +55,15 @@ export default class Glovo extends ExternalClient {
     )
   }
 
-  public updateOrderStatus = async (
-    ctx: StatusChangeContext,
-    data: GlovoUpdateOrderStatus
-  ) => {
-    const { glovoStoreId, glovoOrderId, status } = data
-    const { glovoToken, production }: AppSettings = await Glovo.getAppSettings(
-      ctx
-    )
-
-    const environment = production ? PRODUCTION : STAGING
-
-    const payload: { status: string } = {
-      status,
-    }
-
+  public async updateOrderStatus(
+    { glovoStoreId, glovoOrderId, status }: GlovoUpdateOrderStatus,
+    glovoToken: string
+  ) {
     return this.http.put(
-      `${BASE_URL[environment]}/webhook/stores/${glovoStoreId}/orders/${glovoOrderId}/status`,
-      payload,
+      `${this.baseUrl()}/webhook/stores/${glovoStoreId}/orders/${glovoOrderId}/status`,
+      {
+        status,
+      },
       {
         headers: {
           Authorization: glovoToken,
@@ -93,44 +72,28 @@ export default class Glovo extends ExternalClient {
     )
   }
 
-  public modifyOrder = async (ctx: any, data: GlovoModifyOrderPayload) => {
-    const {
-      glovoToken,
-      production,
-    }: { glovoToken: string; production: boolean } = await Glovo.getAppSettings(
-      ctx
-    )
-
-    const environment = production ? PRODUCTION : STAGING
-
-    const {
+  public async modifyOrder(
+    {
       glovoStoreId,
       glovoOrderId,
       replacements,
       removed_purchases,
       added_products,
-    } = data
-
-    const payload = {
-      replacements,
-      removed_purchases,
-      added_products,
-    }
-
+    }: GlovoModifyOrderPayload,
+    glovoToken: string
+  ) {
     return this.http.post(
-      `${BASE_URL[environment]}/webhook/stores/${glovoStoreId}/orders/${glovoOrderId}/replace_products`,
-      payload,
+      `${this.baseUrl()}/webhook/stores/${glovoStoreId}/orders/${glovoOrderId}/replace_products`,
+      {
+        replacements,
+        removed_purchases,
+        added_products,
+      },
       {
         headers: {
           Authorization: glovoToken,
         },
       }
     )
-  }
-
-  private static async getAppSettings(
-    ctx: Context | StatusChangeContext
-  ): Promise<AppSettings> {
-    return ctx.clients.vbase.getJSON(GLOVO, APP_SETTINGS, true)
   }
 }

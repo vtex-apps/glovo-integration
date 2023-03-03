@@ -217,7 +217,7 @@ export const updateGlovoCompleteMenu = async (ctx: Context) => {
       return
     }
 
-    const { stores, minimumStock } = appSettings
+    const { glovoToken, stores, minimumStock } = appSettings
 
     if (!stores.length) {
       logger.warn({
@@ -301,11 +301,10 @@ export const updateGlovoCompleteMenu = async (ctx: Context) => {
       )
 
       try {
-        // eslint-disable-next-line no-await-in-loop
         const glovoResponse = await glovo.bulkUpdateProducts(
-          ctx,
           glovoPayload,
-          glovoStoreId
+          glovoStoreId,
+          glovoToken
         )
 
         recordsManager.saveStoreCompleteMenuUpdate(glovoStoreId, {
@@ -357,7 +356,7 @@ export const updateGlovoPartialMenu = async (ctx: Context) => {
     return
   }
 
-  const { stores }: { stores: StoreInfo[] } = appSettings
+  const { stores, glovoToken } = appSettings
 
   if (!stores.length) {
     logger.warn({
@@ -390,9 +389,9 @@ export const updateGlovoPartialMenu = async (ctx: Context) => {
       }
 
       const glovoResponse = await glovo.bulkUpdateProducts(
-        ctx,
         glovoPayload,
-        glovoStoreId
+        glovoStoreId,
+        glovoToken
       )
 
       currentUpdate.responseId = glovoResponse.transaction_id
