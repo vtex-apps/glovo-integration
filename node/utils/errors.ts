@@ -1,5 +1,5 @@
 export class ServiceError extends Error {
-  constructor({ message, reason, metric, data, error }: Errors.Params) {
+  constructor({ message, reason, metric, data, error }: ErrorParams) {
     super(message)
     this.reason = reason
     this.metric = metric
@@ -8,7 +8,7 @@ export class ServiceError extends Error {
   }
 
   public reason: string
-  public metric: Errors.Metric
+  public metric: ErrorMetric
   public data: unknown
   public error: unknown
 }
