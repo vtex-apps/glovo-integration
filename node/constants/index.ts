@@ -7,7 +7,6 @@ export const AVAILABLE = 'available'
 /** VTEX Order status */
 export const WAITING_SELLER_HANDLING = 'waiting-seller-handling'
 export const READY_FOR_HANDLING = 'ready-for-handling'
-export const START_HANDLING = 'start-handling'
 export const HANDLING = 'handling'
 export const INVOICED = 'invoiced'
 
@@ -23,5 +22,4 @@ export const STORE_MENU = 'store-menu'
 export const STORE_MENU_UPDATE = 'store-menu-update'
 
 /** General */
-export const PRODUCTION = 'PRODUCTION'
 export const TIMEOUT_MS = 10000
