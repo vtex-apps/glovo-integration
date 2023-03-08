@@ -1,4 +1,4 @@
-import type { ClientsConfig } from '@vtex/api'
+import type { Cached, ClientsConfig } from '@vtex/api'
 import { IOClients, LRUCache } from '@vtex/api'
 import { Checkout } from '@vtex/clients'
 
@@ -26,13 +26,10 @@ export class Clients extends IOClients {
   }
 }
 
-// Create a LRU memory cache for the Status client.
-// The @vtex/api HttpClient respects Cache-Control headers and uses the provided cache.
-const memoryCache = new LRUCache<string, any>({ max: 5000 })
+const glovoCache = new LRUCache<string, Cached>({ max: 500 })
 
-metrics.trackCache('glovo', memoryCache)
+metrics.trackCache('glovo', glovoCache)
 
-// This is the configuration for clients available in `ctx.clients`.
 export const clientsConfig: ClientsConfig<Clients> = {
   implementation: Clients,
   options: {
@@ -41,7 +38,7 @@ export const clientsConfig: ClientsConfig<Clients> = {
       timeout: TIMEOUT_MS,
     },
     glovo: {
-      memoryCache,
+      memoryCache: glovoCache,
     },
   },
 }
