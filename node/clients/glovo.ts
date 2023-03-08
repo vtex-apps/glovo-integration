@@ -18,29 +18,8 @@ export default class Glovo extends ExternalClient {
       : 'https://stageapi.glovoapp.com'
   }
 
-  public async updateProducts(
-    { glovoStoreId, skuId, price, available }: GlovoUpdateProduct,
-    glovoToken: string
-  ) {
-    const payload: GlovoPatchProduct = {
-      available,
-    }
-
-    if (price) payload.price = price
-
-    return this.http.patch(
-      `${this.baseUrl()}/webhook/stores/${glovoStoreId}/products/${skuId}`,
-      payload,
-      {
-        headers: {
-          Authorization: glovoToken,
-        },
-      }
-    )
-  }
-
   public async bulkUpdateProducts(
-    data: GlovoBulkUpdateProduct,
+    data: GlovoProductBulkUpdate,
     glovoStoreId: string,
     glovoToken: string
   ) {
@@ -81,7 +60,7 @@ export default class Glovo extends ExternalClient {
       added_products,
     }: GlovoModifyOrderPayload,
     glovoToken: string
-  ) {
+  ): Promise<GlovoOrder> {
     return this.http.post(
       `${this.baseUrl()}/webhook/stores/${glovoStoreId}/orders/${glovoOrderId}/replace_products`,
       {
