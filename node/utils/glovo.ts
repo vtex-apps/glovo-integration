@@ -1,4 +1,5 @@
 import type { OrderFormItem, SimulationOrderForm } from '@vtex/clients'
+import type { GlovoIntegrationSettings } from 'vtex.glovo-integration'
 
 import {
   ACCEPTED,
@@ -36,14 +37,14 @@ export const updateGlovoProduct = async (
     vtex: { logger },
   } = ctx
 
-  const appSettings: AppSettings = await vbase.getJSON(
+  const appSettings: GlovoIntegrationSettings = await vbase.getJSON(
     GLOVO,
     APP_SETTINGS,
     true
   )
 
   if (!appSettings.glovoToken) {
-    logger.warn({
+    logger.error({
       message: 'Missing Glovo token. Please check app settings',
     })
 
@@ -54,7 +55,7 @@ export const updateGlovoProduct = async (
   const { IdSku, IsActive } = catalogUpdate
 
   if (!stores) {
-    logger.warn({
+    logger.error({
       message: 'Missing or invalid store information',
       catalogUpdate,
     })
@@ -106,7 +107,7 @@ export const updateGlovoProduct = async (
       productRecord = newProductRecord
     }
 
-    let glovoPayload: GlovoUpdateProduct = {
+    let glovoPayload: GlovoProductUpdate = {
       skuId: IdSku,
       glovoStoreId,
     }
@@ -202,14 +203,14 @@ export const updateGlovoCompleteMenu = async (ctx: Context) => {
   } = ctx
 
   try {
-    const appSettings: AppSettings = await vbase.getJSON(
+    const appSettings: GlovoIntegrationSettings = await vbase.getJSON(
       GLOVO,
       APP_SETTINGS,
       true
     )
 
     if (!appSettings?.glovoToken) {
-      logger.warn({
+      logger.error({
         message: 'Menu update for stores failed',
         reason: 'Missing or invalid Glovo token. Please check app settings',
       })
@@ -220,7 +221,7 @@ export const updateGlovoCompleteMenu = async (ctx: Context) => {
     const { glovoToken, stores, minimumStock } = appSettings
 
     if (!stores.length) {
-      logger.warn({
+      logger.error({
         message: 'Menu update for stores failed',
         reason: 'Missing or invalid stores information',
       })
@@ -342,14 +343,14 @@ export const updateGlovoPartialMenu = async (ctx: Context) => {
     vtex: { logger },
   } = ctx
 
-  const appSettings: AppSettings = await vbase.getJSON(
+  const appSettings: GlovoIntegrationSettings = await vbase.getJSON(
     GLOVO,
     APP_SETTINGS,
     true
   )
 
   if (!appSettings.glovoToken) {
-    logger.warn({
+    logger.error({
       message: 'Missing or invalid Glovo token. Please check app settings',
     })
 
@@ -359,7 +360,7 @@ export const updateGlovoPartialMenu = async (ctx: Context) => {
   const { stores, glovoToken } = appSettings
 
   if (!stores.length) {
-    logger.warn({
+    logger.error({
       message: 'Missing or invalid stores information',
     })
 
@@ -375,7 +376,7 @@ export const updateGlovoPartialMenu = async (ctx: Context) => {
 
       const { current: currentUpdate } = menuUpdates
 
-      const glovoPayload: GlovoBulkUpdateProduct = {
+      const glovoPayload: GlovoProductBulkUpdate = {
         products: currentUpdate.items,
       }
 

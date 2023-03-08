@@ -1,5 +1,7 @@
 /* eslint-disable max-params */
 
+import type { ClientProfileData } from 'vtex.glovo-integration'
+
 import { RESIDENTIAL, HOME } from '../constants'
 import { isSkuAvailable } from './utils'
 

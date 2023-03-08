@@ -1,4 +1,5 @@
 import { json } from 'co-body'
+import type { Store } from 'vtex.glovo-integration'
 
 import {
   convertGlovoProductToItems,
@@ -27,7 +28,7 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
     const storeInfo = getStoreInfoFormGlovoStoreId(
       glovoOrder.store_id,
       stores
-    ) as StoreInfo
+    ) as Store
 
     if (!storeInfo) {
       throw new Error(

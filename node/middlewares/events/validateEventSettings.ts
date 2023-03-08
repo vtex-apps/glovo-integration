@@ -1,4 +1,5 @@
 import { UserInputError } from '@vtex/api'
+import type { GlovoIntegrationSettings } from 'vtex.glovo-integration'
 
 import { APP_SETTINGS, GLOVO } from '../../constants'
 
@@ -10,7 +11,7 @@ export async function validateEventSettings(
     clients: { vbase },
   } = ctx
 
-  const appSettings: AppSettings = await vbase.getJSON(
+  const appSettings: GlovoIntegrationSettings = await vbase.getJSON(
     GLOVO,
     APP_SETTINGS,
     true

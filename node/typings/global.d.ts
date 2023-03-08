@@ -1,4 +1,5 @@
 import type { EventContext, RecorderState, ServiceContext } from '@vtex/api'
+import type { ClientProfileData, Store } from 'vtex.glovo-integration'
 import type { Clients } from '../clients'
 
 declare global {
@@ -11,8 +12,8 @@ declare global {
     glovoToken: string
     catalogUpdate: CatalogChange
     marketplace: boolean
-    stores: StoreInfo[]
-    storeInfo: StoreInfo
+    stores: Store[]
+    storeInfo: Store
     clientProfileData: ClientProfileData
     orderSimulation: SimulationOrderForm
   }
