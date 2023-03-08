@@ -92,7 +92,7 @@ interface GlovoOrder {
 }
 
 interface GlovoOrderCourier {
-  name: sring
+  name: string
   phone_number: string
 }
 
@@ -145,21 +145,21 @@ interface GlovoOrderCancellation {
   payment_strategy: string
 }
 
-interface GlovoUpdateProduct {
+interface GlovoProductUpdate {
   skuId: string
   price?: number
   available?: boolean
   glovoStoreId: string
 }
 
-interface GlovoPatchProduct {
+interface GlovoProductPatch {
   available?: boolean
   id?: string
   price?: number
 }
 
-interface GlovoBulkUpdateProduct {
-  products: GlovoPatchProduct[]
+interface GlovoProductBulkUpdate {
+  products: GlovoProductPatch[]
 }
 
 interface GlovoBulkUpdateResponse {

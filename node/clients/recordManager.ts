@@ -60,7 +60,7 @@ export default class RecordsManager extends VBase {
   public saveStoreCompleteMenuUpdate(
     affiliateId: string,
     data: {
-      items: GlovoPatchProduct[]
+      items: GlovoProductPatch[]
       transactionId: string
       lastUpdated: string
     }
@@ -69,7 +69,7 @@ export default class RecordsManager extends VBase {
   }
 
   public getStoreCompleteMenuUpdate(affiliateId: string) {
-    return this.getJSON<{ items: GlovoPatchProduct[]; lastUpdated: string }>(
+    return this.getJSON<{ items: GlovoProductPatch[]; lastUpdated: string }>(
       affiliateId,
       STORE_MENU_UPDATE,
       true
