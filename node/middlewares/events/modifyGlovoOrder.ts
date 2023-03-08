@@ -19,21 +19,33 @@ export async function modifyGlovoOrder(
    * Check if the order comes from Glovo and remove the affiliateId (i.e. 'TST') from the VTEX orderId to get the glovoOrderId.
    */
   if (!isValidAffiliateId(orderIdAffiliate, stores)) {
-    logger.warn({
-      message: 'Glovo order not modified',
-      reason: 'AffiliateId not valid',
-      data: body,
-    })
-
     return
   }
 
   try {
-    const order = await orders.getOrder(orderId)
+    let order: VTEXOrder
+
+    try {
+      order = await orders.getOrder(orderId)
+    } catch (error) {
+      throw new Error(`Error fetching order ${orderId}`)
+    }
 
     if (!order.changesAttachment) {
       return
     }
+
+    let orderRecord: OrderRecord
+
+    try {
+      orderRecord = await recordsManager.getOrderRecord(orderId)
+    } catch (error) {
+      throw new Error(`The record for the order ${orderId} was not found`)
+    }
+
+    const {
+      glovoOrder: { order_id, store_id, products },
+    } = orderRecord
 
     const {
       changesAttachment: { changesData },
@@ -52,19 +64,13 @@ export async function modifyGlovoOrder(
       }
 
       for (const item of change.itemsRemoved) {
-        removedProducts.push(item.id)
+        for (const product of products) {
+          if (item.id === product.id) {
+            removedProducts.push(product.purchased_product_id)
+          }
+        }
       }
     }
-
-    const orderRecord = await recordsManager.getOrderRecord(orderId)
-
-    if (!orderRecord) {
-      throw new Error(`The record for the order ${orderId} was not found`)
-    }
-
-    const {
-      glovoOrder: { order_id, store_id },
-    } = orderRecord
 
     const payload: GlovoModifyOrderPayload = {
       glovoStoreId: store_id,
@@ -79,7 +85,13 @@ export async function modifyGlovoOrder(
       data: payload,
     })
 
-    const modifiedGlovoOrder = await glovo.modifyOrder(payload, glovoToken)
+    let modifiedGlovoOrder
+
+    try {
+      modifiedGlovoOrder = await glovo.modifyOrder(payload, glovoToken)
+    } catch (error) {
+      throw new Error(`Unable to modify Glovo order for order ${orderId}`)
+    }
 
     const data: OrderRecord = {
       ...orderRecord,
@@ -98,11 +110,10 @@ export async function modifyGlovoOrder(
     await next()
   } catch (error) {
     throw new ServiceError({
-      message: error.message,
-      reason: error.reason ?? `Order modification for order ${orderId} failed`,
+      message: `Order modification for order ${orderId} failed`,
+      reason: error.message,
       metric: 'orders',
       data: { body },
-      error: error.response?.data,
     })
   }
 }
