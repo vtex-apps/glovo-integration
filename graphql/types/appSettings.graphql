@@ -1,17 +1,17 @@
 type GlovoIntegrationSettings {
-  glovoToken: String
-  production: Boolean
-  marketplace: Boolean
-  stores: [Store]
-  clientProfileData: ClientProfileData
-  minimumStock: Int
+  glovoToken: String!
+  production: Boolean!
+  marketplace: Boolean!
+  stores: [Store!]!
+  clientProfileData: ClientProfileData!
+  minimumStock: Int!
 }
 
 input SaveGlovoIntegrationSettings {
-  glovoToken: String
-  production: Boolean
-  marketplace: Boolean
-  stores: [SaveStore]
-  clientProfileData: SaveClientProfileData
-  minimumStock: Int
+  glovoToken: String!
+  production: Boolean!
+  marketplace: Boolean!
+  stores: [SaveStore!]!
+  clientProfileData: SaveClientProfileData!
+  minimumStock: Int!
 }
