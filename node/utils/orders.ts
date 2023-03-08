@@ -90,8 +90,8 @@ export const createVtexOrderData = (
     savePersonalData: false,
     clientProfileData: {
       email: getEmail(customerName, phone_number, email),
-      firstName: getFirstName(customerName),
-      lastName: getLastName(customerName),
+      firstName: getFirstName(customerName) ?? firstName,
+      lastName: getLastName(customerName) ?? lastName,
       documentType,
       document,
       phone: phone_number ?? phone,
