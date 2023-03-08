@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Add backup value for first and last names to avoid errors (`ORD007`) when creating orders.
+
 ## [3.4.0] - 2023-03-03
 
 ## [3.3.1] - 2023-03-03
