@@ -1,9 +1,11 @@
+import type { SaveGlovoIntegrationSettings } from 'vtex.glovo-integration'
+
 import { validateInputs } from '../../common/utils'
 import { APP_SETTINGS, GLOVO } from '../constants'
 
 export const saveGlovoIntegrationSettings = async (
   _: unknown,
-  { settings }: { settings: AppSettings },
+  { settings }: { settings: SaveGlovoIntegrationSettings },
   ctx: Context
 ): Promise<boolean> => {
   const {

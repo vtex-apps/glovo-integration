@@ -5331,7 +5331,7 @@ static-extend@^0.1.1:
     define-property "^0.2.5"
     object-copy "^0.1.0"
 
-"stats-lite@github:vtex/node-stats-lite#dist":
+stats-lite@vtex/node-stats-lite#dist:
   version "2.2.0"
   resolved "https://codeload.github.com/vtex/node-stats-lite/tar.gz/1b0d39cc41ef7aaecfd541191f877887a2044797"
   dependencies:
@@ -5847,9 +5847,9 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-"vtex.glovo-integration@https://glvchange--ametllerorigenqa.myvtex.com/_v/private/typings/linked/v1/vtex.glovo-integration@3.2.0+build1675097070/public/@types/vtex.glovo-integration":
-  version "3.2.0"
-  resolved "https://glvchange--ametllerorigenqa.myvtex.com/_v/private/typings/linked/v1/vtex.glovo-integration@3.2.0+build1675097070/public/@types/vtex.glovo-integration#0e56cceada6109f48a6a2c55f39628f00f34278f"
+"vtex.glovo-integration@https://glvchange--ametllerorigenqa.myvtex.com/_v/private/typings/linked/v1/vtex.glovo-integration@3.4.1+build1678298929/public/@types/vtex.glovo-integration":
+  version "3.4.1"
+  resolved "https://glvchange--ametllerorigenqa.myvtex.com/_v/private/typings/linked/v1/vtex.glovo-integration@3.4.1+build1678298929/public/@types/vtex.glovo-integration#7677ff7ec73e2f49171f2d1e1943cbfe85d63f4b"
 
 "vtex.native-types@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.native-types@0.9.0/public/@types/vtex.native-types":
   version "0.9.0"

@@ -3,6 +3,7 @@ import type {
   PayloadItem,
   SimulationPayload,
 } from '@vtex/clients'
+import type { Store } from 'vtex.glovo-integration'
 
 import { AVAILABLE } from '../constants'
 import { isSkuAvailable } from './utils'
@@ -69,8 +70,8 @@ export const createSimulationPayload = ({
 export const createGlovoBulkUpdatePayload = (
   items: OrderFormItem[],
   minimumStock: number
-): GlovoBulkUpdateProduct => {
-  const payload: GlovoBulkUpdateProduct = {
+): GlovoProductBulkUpdate => {
+  const payload: GlovoProductBulkUpdate = {
     products: [],
   }
 
@@ -80,7 +81,7 @@ export const createGlovoBulkUpdatePayload = (
 
     const available = availability === AVAILABLE && quantity >= minimumStock
 
-    const payloadProduct: GlovoPatchProduct = {
+    const payloadProduct: GlovoProductPatch = {
       id,
       available,
     }
@@ -97,7 +98,7 @@ export const createGlovoBulkUpdatePayload = (
 
 export const simulateItem = async (
   IdSku: string,
-  store: StoreInfo,
+  store: Store,
   ctx: Context
 ): Promise<SimulatedItem | null> => {
   const {
@@ -143,7 +144,7 @@ export const simulateItem = async (
 
     return itemInfo
   } catch (error) {
-    logger.warn({
+    logger.error({
       message:
         error.message ?? `Simulation for product with skuId ${IdSku} failed`,
       data: error.response,

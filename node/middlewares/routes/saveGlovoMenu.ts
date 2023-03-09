@@ -1,4 +1,5 @@
 import { json } from 'co-body'
+import type { GlovoIntegrationSettings, Store } from 'vtex.glovo-integration'
 
 import { APP_SETTINGS, GLOVO } from '../../constants'
 import { ServiceError } from '../../utils'
@@ -20,13 +21,13 @@ export async function saveGlovoMenu(ctx: Context) {
     await recordsManager.saveGlovoMenu(glovoMenu)
 
     // Create initial Store Menu Updates record
-    const appSettings: AppSettings = await vbase.getJSON(
+    const appSettings: GlovoIntegrationSettings = await vbase.getJSON(
       GLOVO,
       APP_SETTINGS,
       true
     )
 
-    const { stores }: { stores: StoreInfo[] } = appSettings
+    const { stores }: { stores: Store[] } = appSettings
 
     const newStores: StoreMenuUpdates[] = []
 

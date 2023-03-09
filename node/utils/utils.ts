@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { OrderFormItem, PayloadItem } from '@vtex/clients'
+import type { Store } from 'vtex.glovo-integration'
 
 import { createSimulationItem } from './simulation'
 
@@ -13,12 +14,11 @@ export const isSkuAvailable = (item: OrderFormItem | undefined): boolean => {
 
 export const getStoreInfoFormGlovoStoreId = (
   id: string,
-  stores: StoreInfo[]
-): StoreInfo | undefined =>
-  stores.find(({ glovoStoreId }) => glovoStoreId === id)
+  stores: Store[]
+): Store | undefined => stores.find(({ glovoStoreId }) => glovoStoreId === id)
 
-export const getStoreInfoFromStoreId = (id: string, stores: StoreInfo[]) =>
-  stores.find(({ affiliateId }) => affiliateId === id) as StoreInfo
+export const getStoreInfoFromStoreId = (id: string, stores: Store[]) =>
+  stores.find(({ affiliateId }) => affiliateId === id) as Store
 
 export const convertGlovoProductToItems = (
   sellerId: string,
@@ -90,7 +90,7 @@ export const convertGlovoProductsToCompare = (
 
 export const isValidAffiliateId = (
   affiliateId: string,
-  stores: StoreInfo[]
+  stores: Store[]
 ): boolean => {
   if (Number(affiliateId)) {
     return false

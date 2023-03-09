@@ -1,11 +1,17 @@
 type ClientProfileData {
-  email: String
-  firstName: String
-  lastName: String
+  email: String!
+  firstName: String!
+  lastName: String!
   documentType: String
   document: String
   phone: String
   corporateName: String
+  tradeName: String
+  corporateDocument: String
+  stateInscription: String
+  corporatePhone: String
+  isCorporate: Boolean
+  userProfileId: String
 }
 
 input SaveClientProfileData {
