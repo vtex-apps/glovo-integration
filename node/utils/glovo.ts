@@ -1,5 +1,8 @@
 import type { OrderFormItem, SimulationOrderForm } from '@vtex/clients'
-import type { GlovoIntegrationSettings } from 'vtex.glovo-integration'
+import type {
+  GlovoIntegrationSettings,
+  MaxItemsForSimulation,
+} from 'vtex.glovo-integration'
 
 import {
   ACCEPTED,
@@ -9,14 +12,15 @@ import {
   APP_SETTINGS,
   READY_FOR_HANDLING,
   WAITING_SELLER_HANDLING,
+  MAX_ITEMS_FOR_SIMULATION,
 } from '../constants'
 import { ServiceError } from './errors'
+import { requestWithRetries } from './requests'
 import {
   createGlovoBulkUpdatePayload,
   createSimulationItems,
   createSimulationPayload,
   iterationLimits,
-  MAX_ITEMS_FOR_SIMULATION,
   simulateItem,
 } from './simulation'
 
@@ -220,7 +224,7 @@ export const updateGlovoCompleteMenu = async (ctx: Context) => {
 
     const { glovoToken, stores, minimumStock } = appSettings
 
-    if (!stores.length) {
+    if (!stores?.length) {
       logger.error({
         message: 'Menu update for stores failed',
         reason: 'Missing or invalid stores information',
@@ -230,8 +234,15 @@ export const updateGlovoCompleteMenu = async (ctx: Context) => {
     }
 
     const glovoMenu = await recordsManager.getGlovoMenu()
+    let { max: maxItemsForSimulation }: MaxItemsForSimulation =
+      await vbase.getJSON(GLOVO, MAX_ITEMS_FOR_SIMULATION, true)
+
+    if (!maxItemsForSimulation) {
+      maxItemsForSimulation = 300
+    }
+
     const iterations = Math.ceil(
-      Object.keys(glovoMenu).length / MAX_ITEMS_FOR_SIMULATION
+      Object.keys(glovoMenu).length / maxItemsForSimulation
     )
 
     for await (const store of stores) {
@@ -252,14 +263,14 @@ export const updateGlovoCompleteMenu = async (ctx: Context) => {
       let payloadItems: OrderFormItem[] = []
 
       for (let i = 0; i < iterations; i++) {
-        const [from, to] = iterationLimits(i)
+        const [from, to] = iterationLimits(i, maxItemsForSimulation)
 
         const itemsForSimulation = Object.keys(glovoMenu).slice(from, to)
 
         const simulationItems = createSimulationItems(
           itemsForSimulation,
-          minimumStock,
-          sellerId
+          sellerId,
+          minimumStock
         )
 
         const [simulationPayload, querystring] = createSimulationPayload({
@@ -270,11 +281,13 @@ export const updateGlovoCompleteMenu = async (ctx: Context) => {
           country,
         })
 
-        let simulation = {} as SimulationOrderForm
+        let simulation: SimulationOrderForm
 
         try {
           // eslint-disable-next-line no-await-in-loop
-          simulation = await checkout.simulation(simulationPayload, querystring)
+          simulation = await requestWithRetries(
+            checkout.simulation(simulationPayload, querystring)
+          )
         } catch (error) {
           logger.warn({
             message: `Catalog update for store ${storeName} - ${glovoStoreId} failed`,
@@ -302,26 +315,34 @@ export const updateGlovoCompleteMenu = async (ctx: Context) => {
       )
 
       try {
-        const glovoResponse = await glovo.bulkUpdateProducts(
-          glovoPayload,
-          glovoStoreId,
-          glovoToken
+        const glovoResponse = await requestWithRetries<GlovoBulkUpdateResponse>(
+          glovo.bulkUpdateProducts(glovoPayload, glovoStoreId, glovoToken)
         )
-
-        recordsManager.saveStoreCompleteMenuUpdate(glovoStoreId, {
-          items: [...glovoPayload.products],
-          transactionId: glovoResponse.transaction_id,
-          lastUpdated: Date(),
-        })
 
         logger.info({
           message: `Catalog for store ${storeName} - ${glovoStoreId} has been updated. (${payloadItems.length} items)`,
           glovoResponse,
         })
+
+        recordsManager.saveStoreCompleteMenuUpdate(glovoStoreId, {
+          items: [...glovoPayload.products],
+          transactionId: glovoResponse.transaction_id,
+          lastUpdated: Date(),
+          successful: true,
+          minimumStock,
+        })
       } catch (error) {
         logger.error({
           message: `Catalog for store ${storeName} - ${glovoStoreId} could not be updated`,
           reason: `Bulk update request failed`,
+        })
+
+        recordsManager.saveStoreCompleteMenuUpdate(glovoStoreId, {
+          items: [...glovoPayload.products],
+          transactionId: null,
+          lastUpdated: Date(),
+          successful: false,
+          minimumStock,
         })
 
         continue
@@ -359,7 +380,7 @@ export const updateGlovoPartialMenu = async (ctx: Context) => {
 
   const { stores, glovoToken } = appSettings
 
-  if (!stores.length) {
+  if (!stores?.length) {
     logger.error({
       message: 'Missing or invalid stores information',
     })
