@@ -15,7 +15,7 @@ export function delayFor(miliseconds: number) {
  *
  * @param request Request to be made
  * @param retries Number of retries to be made. Defaults to 2
- * @param delay Dealy in miliseconds to wait between retries
+ * @param delay Dealy in miliseconds to wait between retries. Defaults to 500 miliseconds
  * @returns request response or request error
  */
 export async function requestWithRetries<T>(

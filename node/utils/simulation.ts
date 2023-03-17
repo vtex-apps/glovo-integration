@@ -40,12 +40,10 @@ export const createSimulationItems = (
   return simulationItems
 }
 
-export const MAX_ITEMS_FOR_SIMULATION = 300
-
-export function iterationLimits(step: number) {
+export function iterationLimits(step: number, maxItemsForSimulation: number) {
   return [
-    MAX_ITEMS_FOR_SIMULATION * step,
-    MAX_ITEMS_FOR_SIMULATION * step + MAX_ITEMS_FOR_SIMULATION - 1,
+    maxItemsForSimulation * step,
+    maxItemsForSimulation * step + maxItemsForSimulation - 1,
   ]
 }
 
