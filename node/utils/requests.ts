@@ -18,13 +18,13 @@ export function delayFor(miliseconds: number) {
  * @param delay Dealy in miliseconds to wait between retries
  * @returns request response or request error
  */
-export async function requestWithRetries(
+export async function requestWithRetries<T>(
   request: unknown,
   retries = 2,
   delay = 500
-): Promise<unknown> {
+): Promise<T> {
   try {
-    const response = await request
+    const response = (await request) as T
 
     return response
   } catch (error) {
