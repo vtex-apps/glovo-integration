@@ -1,6 +1,7 @@
 import { method } from '@vtex/api'
 
 import { authorizeOrder } from './authorizeOrder'
+import { checkOrderRecord } from './checkOrderRecord'
 import { createOrder } from './createOrder'
 import { errorHandler } from './errorHandler'
 import { getGlovoMenu } from './getGlovoMenu'
@@ -23,6 +24,7 @@ export const routes = {
       errorHandler,
       validateSettings,
       validateGlovoToken,
+      checkOrderRecord,
       simulateOrder,
       createOrder,
       authorizeOrder,
