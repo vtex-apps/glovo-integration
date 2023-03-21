@@ -1,4 +1,4 @@
-import { ServiceError } from '../../utils'
+import { requestWithRetries, ServiceError } from '../../utils'
 
 export async function saveOrderRecord(ctx: Context) {
   const {
@@ -7,26 +7,28 @@ export async function saveOrderRecord(ctx: Context) {
   } = ctx
 
   const { orderId } = vtexOrder
-  const currentDate = new Date()
-  const data: OrderRecord = {
+
+  const orderRecordData: OrderRecord = {
     orderId,
     glovoOrder,
-    invoiced: null,
+    vtexOrder,
     hasChanged: false,
-    createdAt: currentDate.getTime(),
+    createdAt: new Date().toISOString(),
   }
 
   try {
-    await recordsManager.saveOrderRecord(orderId, data)
+    await requestWithRetries(
+      recordsManager.saveOrderRecord(orderId, orderRecordData)
+    )
 
     ctx.status = 201
   } catch (error) {
     throw new ServiceError({
-      message: error.message,
-      reason: `Unable to save order record for order ${vtexOrder}`,
+      message: 'Order creation failed',
+      reason: `Unable to save order record for order ${orderId}`,
       metric: 'orders',
-      data: { orderId, orderRecord: data },
-      error: error.response?.data,
+      data: orderRecordData,
+      error,
     })
   }
 }
