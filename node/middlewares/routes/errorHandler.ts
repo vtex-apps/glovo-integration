@@ -15,7 +15,11 @@ export async function errorHandler(ctx: Context, next: () => Promise<void>) {
       error: error.error,
     })
 
-    ctx.body = error.reason
+    ctx.type = 'json'
+    ctx.body = {
+      message: error.message,
+      reason: error.reason,
+    }
     ctx.app.emit('error', error, ctx)
   }
 }
