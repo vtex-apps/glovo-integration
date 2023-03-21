@@ -2,7 +2,7 @@ import { createAuthorizationPayload, ServiceError } from '../../utils'
 
 export async function authorizeOrder(ctx: Context, next: () => Promise<void>) {
   const {
-    state: { vtexOrder, storeInfo, marketplace, glovoOrder },
+    state: { vtexOrder, storeInfo, marketplace, glovoOrder, orderId },
     clients: { orders },
     vtex: { logger },
   } = ctx
@@ -10,17 +10,21 @@ export async function authorizeOrder(ctx: Context, next: () => Promise<void>) {
   const { salesChannel, affiliateId, sellerId } = storeInfo
   let orderIdentifier: string
 
-  switch (marketplace) {
-    case true:
-      orderIdentifier = vtexOrder.orderId
-      break
+  if (!orderId) {
+    switch (marketplace) {
+      case true:
+        orderIdentifier = vtexOrder.orderId
+        break
 
-    default:
-      // eslint-disable-next-line no-case-declarations
-      const orderInfo = vtexOrder as VTEXOrder
+      default:
+        // eslint-disable-next-line no-case-declarations
+        const orderInfo = vtexOrder as VTEXOrder
 
-      orderIdentifier = orderInfo.marketplaceOrderId
-      break
+        orderIdentifier = orderInfo.marketplaceOrderId
+        break
+    }
+  } else {
+    orderIdentifier = orderId
   }
 
   const payload = createAuthorizationPayload(
@@ -60,12 +64,12 @@ export async function authorizeOrder(ctx: Context, next: () => Promise<void>) {
     await next()
   } catch (error) {
     throw new ServiceError({
-      message: error.message,
+      message: error.message ?? 'Order creation failed',
       reason:
         error.reason ?? `Authorization for order ${orderIdentifier} failed`,
       metric: 'orders',
-      data: { glovoOrder, vtexOrder },
-      error: error.response?.data,
+      data: error.data ?? { glovoOrder, vtexOrder },
+      error: error.error ?? error.response?.data,
     })
   }
 }

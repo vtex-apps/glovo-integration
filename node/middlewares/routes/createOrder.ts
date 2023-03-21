@@ -8,50 +8,53 @@ export async function createOrder(ctx: Context, next: () => Promise<void>) {
       storeInfo,
       marketplace,
       clientProfileData,
+      orderId,
     },
     clients: { orders },
     vtex: { account },
   } = ctx
 
-  const { salesChannel, affiliateId, sellerId } = storeInfo
-
   try {
-    const vtexOrderData = createVtexOrderData(
-      glovoOrder,
-      orderSimulation,
-      clientProfileData,
-      marketplace,
-      account
-    )
+    if (!orderId) {
+      const { salesChannel, affiliateId, sellerId } = storeInfo
 
-    let createdOrder
+      const vtexOrderData = createVtexOrderData(
+        glovoOrder,
+        orderSimulation,
+        clientProfileData,
+        marketplace,
+        account
+      )
 
-    switch (marketplace && sellerId !== '1') {
-      case true:
-        createdOrder = await orders.createMarketplaceOrder(
-          vtexOrderData,
-          salesChannel,
-          affiliateId
-        )
+      let createdOrder
 
-        ctx.state.vtexOrder = createdOrder.orders[0]
-        break
+      switch (marketplace && sellerId !== '1') {
+        case true:
+          createdOrder = await orders.createMarketplaceOrder(
+            vtexOrderData,
+            salesChannel,
+            affiliateId
+          )
 
-      default:
-        createdOrder = await orders.createOrder(
-          vtexOrderData,
-          salesChannel,
-          affiliateId
-        )
+          ctx.state.vtexOrder = createdOrder.orders[0]
+          break
 
-        ctx.state.vtexOrder = createdOrder[0]
-        break
+        default:
+          createdOrder = await orders.createOrder(
+            vtexOrderData,
+            salesChannel,
+            affiliateId
+          )
+
+          ctx.state.vtexOrder = createdOrder[0]
+          break
+      }
     }
 
     await next()
   } catch (error) {
     throw new ServiceError({
-      message: error.message,
+      message: error.message ?? 'Order creation failed',
       reason:
         error.reason ??
         `Order creation for order Glovo Order ${glovoOrder.order_id} failed`,
