@@ -1,12 +1,12 @@
 /**
  * Utility function to delay execution of your current process
- * @param miliseconds Miliseconds to delay the resolve
+ * @param milliseconds Milliseconds to delay the resolve
  */
-export function delayFor(miliseconds: number) {
+export function delayFor(milliseconds: number) {
   return new Promise<void>((resolve) => {
     setTimeout(() => {
       resolve()
-    }, miliseconds)
+    }, milliseconds)
   })
 }
 
@@ -15,7 +15,7 @@ export function delayFor(miliseconds: number) {
  *
  * @param request Request to be made
  * @param retries Number of retries to be made. Defaults to 2
- * @param delay Dealy in milliseconds to wait between retries. Defaults to 500 miliseconds
+ * @param delay Delay in milliseconds to wait between retries. Defaults to 500 milliseconds
  * @returns request response or request error
  */
 export async function requestWithRetries<T>(
