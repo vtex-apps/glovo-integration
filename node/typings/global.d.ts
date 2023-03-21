@@ -16,6 +16,7 @@ declare global {
     storeInfo: Store
     clientProfileData: ClientProfileData
     orderSimulation: SimulationOrderForm
+    orderId?: string
   }
 
   interface StatusChangeContext extends EventContext<Clients, State> {

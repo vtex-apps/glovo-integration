@@ -61,11 +61,11 @@ declare global {
   interface OrderRecord {
     orderId: string
     glovoOrder: GlovoOrder
-    invoiced: any | null
+    vtexOrder: VTEXOrder | VTEXMarketplaceOrder | null
     hasChanged: boolean
-    createdAt?: number
+    createdAt?: string
     startHandlingAt?: string
-    invoicedAt?: number
+    invoicedAt?: string
   }
 
   interface OrderChangeBody {
