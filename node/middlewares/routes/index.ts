@@ -15,7 +15,6 @@ import { saveOrderRecord } from './saveOrderRecord'
 import { sendResponse } from './sendReponse'
 import { simulateOrder } from './simulateOrder'
 import { storeMenuUpdates } from './storeMenuUpdate'
-import { validateGlovoToken } from './validateGlovoToken'
 import { validateSettings } from './validateSettings'
 
 export const routes = {
@@ -23,12 +22,11 @@ export const routes = {
     POST: [
       errorHandler,
       validateSettings,
-      validateGlovoToken,
       checkOrderRecord,
+      saveOrderRecord,
+      authorizeOrder,
       simulateOrder,
       createOrder,
-      authorizeOrder,
-      saveOrderRecord,
     ],
   }),
   updateProduct: method({

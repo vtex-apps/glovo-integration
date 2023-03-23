@@ -1,6 +1,10 @@
-import { ServiceError, createVtexOrderData } from '../../utils'
+import {
+  ServiceError,
+  createVtexOrderData,
+  requestWithRetries,
+} from '../../utils'
 
-export async function createOrder(ctx: Context, next: () => Promise<void>) {
+export async function createOrder(ctx: Context) {
   const {
     state: {
       glovoOrder,
@@ -8,50 +12,45 @@ export async function createOrder(ctx: Context, next: () => Promise<void>) {
       storeInfo,
       marketplace,
       clientProfileData,
-      orderId,
     },
     clients: { orders },
     vtex: { account },
   } = ctx
 
+  const { salesChannel, affiliateId, sellerId } = storeInfo
+
+  const vtexOrderData = createVtexOrderData(
+    glovoOrder,
+    orderSimulation,
+    clientProfileData,
+    marketplace,
+    account
+  )
+
+  let createdOrder
+
   try {
-    if (!orderId) {
-      const { salesChannel, affiliateId, sellerId } = storeInfo
-
-      const vtexOrderData = createVtexOrderData(
-        glovoOrder,
-        orderSimulation,
-        clientProfileData,
-        marketplace,
-        account
-      )
-
-      let createdOrder
-
-      switch (marketplace && sellerId !== '1') {
-        case true:
-          createdOrder = await orders.createMarketplaceOrder(
+    switch (marketplace && sellerId !== '1') {
+      case true:
+        createdOrder = await requestWithRetries<CreateMarketplaceOrderResponse>(
+          orders.createMarketplaceOrder(
             vtexOrderData,
             salesChannel,
             affiliateId
           )
+        )
 
-          ctx.state.vtexOrder = createdOrder.orders[0]
-          break
+        ctx.state.vtexOrder = createdOrder.orders[0]
+        break
 
-        default:
-          createdOrder = await orders.createOrder(
-            vtexOrderData,
-            salesChannel,
-            affiliateId
-          )
+      default:
+        createdOrder = await requestWithRetries<VTEXOrder[]>(
+          orders.createOrder(vtexOrderData, salesChannel, affiliateId)
+        )
 
-          ctx.state.vtexOrder = createdOrder[0]
-          break
-      }
+        ctx.state.vtexOrder = createdOrder[0]
+        break
     }
-
-    await next()
   } catch (error) {
     throw new ServiceError({
       message: error.message ?? 'Order creation failed',

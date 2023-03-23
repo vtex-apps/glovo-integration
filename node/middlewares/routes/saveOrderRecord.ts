@@ -1,6 +1,11 @@
 import { requestWithRetries, ServiceError } from '../../utils'
 
-export async function saveOrderRecord(ctx: Context) {
+export async function saveOrderRecord(ctx: Context, next: () => Promise<void>) {
+  /**
+   * We continue to create the order before creating the orderRecord
+   */
+  await next()
+
   const {
     clients: { recordsManager },
     state: { glovoOrder, vtexOrder },
@@ -21,14 +26,17 @@ export async function saveOrderRecord(ctx: Context) {
       recordsManager.saveOrderRecord(orderId, orderRecordData)
     )
 
-    ctx.status = 201
+    ctx.body = `Order ${orderId} placed`
+
+    return (ctx.status = 201)
   } catch (error) {
     throw new ServiceError({
-      message: 'Order creation failed',
-      reason: `Unable to save order record for order ${orderId}`,
+      message: error.message ?? 'Order creation failed',
+      reason:
+        error.reason ?? `Unable to save order record for order ${orderId}`,
       metric: 'orders',
-      data: orderRecordData,
-      error,
+      data: error.data ?? orderRecordData,
+      error: error.error ?? error,
     })
   }
 }

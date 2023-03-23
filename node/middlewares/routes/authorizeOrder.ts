@@ -1,8 +1,20 @@
-import { createAuthorizationPayload, ServiceError } from '../../utils'
+import {
+  createAuthorizationPayload,
+  requestWithRetries,
+  ServiceError,
+} from '../../utils'
 
 export async function authorizeOrder(ctx: Context, next: () => Promise<void>) {
+  if (!ctx.state.vtexOrder) {
+    /**
+     * If the order doesn't exists,
+     * we continue to the next middleware to create it.
+     */
+    await next()
+  }
+
   const {
-    state: { vtexOrder, storeInfo, marketplace, glovoOrder, orderId },
+    state: { vtexOrder, storeInfo, marketplace, glovoOrder },
     clients: { orders },
     vtex: { logger },
   } = ctx
@@ -10,21 +22,19 @@ export async function authorizeOrder(ctx: Context, next: () => Promise<void>) {
   const { salesChannel, affiliateId, sellerId } = storeInfo
   let orderIdentifier: string
 
-  if (!orderId) {
-    switch (marketplace) {
-      case true:
-        orderIdentifier = vtexOrder.orderId
-        break
-
-      default:
-        // eslint-disable-next-line no-case-declarations
-        const orderInfo = vtexOrder as VTEXOrder
-
-        orderIdentifier = orderInfo.marketplaceOrderId
-        break
+  switch (marketplace) {
+    case true: {
+      orderIdentifier = vtexOrder.orderId
+      break
     }
-  } else {
-    orderIdentifier = orderId
+
+    default: {
+      // eslint-disable-next-line no-case-declarations
+      const order = vtexOrder as VTEXOrder
+
+      orderIdentifier = order.marketplaceOrderId
+      break
+    }
   }
 
   const payload = createAuthorizationPayload(
@@ -33,35 +43,34 @@ export async function authorizeOrder(ctx: Context, next: () => Promise<void>) {
     glovoOrder
   )
 
-  let order
-
   try {
     switch (marketplace && sellerId !== '1') {
-      case true:
-        order = await orders.authorizeMarketplaceOrder(
-          payload as AuthorizeMarketplaceOrderPayload,
-          orderIdentifier
+      case true: {
+        await requestWithRetries<VTEXAuthorizedOrder>(
+          orders.authorizeMarketplaceOrder(
+            payload as AuthorizeMarketplaceOrderPayload,
+            orderIdentifier
+          )
         )
         break
+      }
 
-      default:
-        order = await orders.authorizeOrder(
-          payload as AuthorizeOrderPayload,
-          vtexOrder.orderId,
-          salesChannel,
-          affiliateId
+      default: {
+        await requestWithRetries<VTEXAuthorizedOrder>(
+          orders.authorizeOrder(
+            payload as AuthorizeOrderPayload,
+            vtexOrder.orderId,
+            salesChannel,
+            affiliateId
+          )
         )
         break
+      }
     }
 
     logger.info({
       message: `Order ${orderIdentifier} has been placed.`,
-      order,
     })
-
-    ctx.state.vtexOrder = vtexOrder
-
-    await next()
   } catch (error) {
     throw new ServiceError({
       message: error.message ?? 'Order creation failed',

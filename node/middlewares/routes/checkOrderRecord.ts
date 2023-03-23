@@ -1,6 +1,4 @@
-import { json } from 'co-body'
-
-import { getStoreInfoFormGlovoStoreId, ServiceError } from '../../utils'
+import { requestWithRetries, ServiceError } from '../../utils'
 
 export async function checkOrderRecord(
   ctx: Context,
@@ -8,34 +6,19 @@ export async function checkOrderRecord(
 ) {
   const {
     clients: { recordsManager },
-    state: { stores },
-    vtex: { logger },
+    state: { glovoOrder, storeInfo },
   } = ctx
-
-  const glovoOrder: GlovoOrder = await json(ctx.req)
-
-  logger.info({
-    message: `Received order ${glovoOrder.order_id} from store ${glovoOrder.store_id} from Glovo`,
-    glovoOrder,
-  })
-
-  const storeInfo = getStoreInfoFormGlovoStoreId(glovoOrder.store_id, stores)
-
-  if (!storeInfo) {
-    throw new Error('Store information not found. Check integration settings.')
-  }
 
   const orderId = `${storeInfo.affiliateId}-${glovoOrder.order_id}-01`
 
   try {
-    const orderRecord = await recordsManager.getOrderRecord(orderId)
+    const orderRecord = await requestWithRetries<OrderRecord>(
+      recordsManager.getOrderRecord(orderId)
+    )
 
-    if (orderRecord) {
-      ctx.state.orderId = orderId
+    if (orderRecord?.vtexOrder) {
+      ctx.state.vtexOrder = orderRecord.vtexOrder
     }
-
-    ctx.state.glovoOrder = glovoOrder
-    ctx.state.storeInfo = storeInfo
 
     await next()
   } catch (error) {
