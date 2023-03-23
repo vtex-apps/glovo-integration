@@ -12,10 +12,8 @@ export const isSkuAvailable = (item: OrderFormItem | undefined): boolean => {
   return item.availability === 'available'
 }
 
-export const getStoreInfoFormGlovoStoreId = (
-  id: string,
-  stores: Store[]
-): Store | undefined => stores.find(({ glovoStoreId }) => glovoStoreId === id)
+export const getStoreInfoFormGlovoStoreId = (id: string, stores: Store[]) =>
+  stores.find(({ glovoStoreId }) => glovoStoreId === id)
 
 export const getStoreInfoFromStoreId = (id: string, stores: Store[]) =>
   stores.find(({ affiliateId }) => affiliateId === id) as Store

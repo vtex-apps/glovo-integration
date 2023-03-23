@@ -95,9 +95,9 @@ export async function modifyGlovoOrder(
 
     const data: OrderRecord = {
       ...orderRecord,
-      invoiced: order,
+      vtexOrder: order,
       hasChanged: true,
-      invoicedAt: new Date().getTime(),
+      invoicedAt: new Date().toISOString(),
     }
 
     await recordsManager.saveOrderRecord(orderId, data)

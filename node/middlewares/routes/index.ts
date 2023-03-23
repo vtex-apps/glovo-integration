@@ -1,6 +1,7 @@
 import { method } from '@vtex/api'
 
 import { authorizeOrder } from './authorizeOrder'
+import { checkOrderRecord } from './checkOrderRecord'
 import { createOrder } from './createOrder'
 import { errorHandler } from './errorHandler'
 import { getGlovoMenu } from './getGlovoMenu'
@@ -14,7 +15,6 @@ import { saveOrderRecord } from './saveOrderRecord'
 import { sendResponse } from './sendReponse'
 import { simulateOrder } from './simulateOrder'
 import { storeMenuUpdates } from './storeMenuUpdate'
-import { validateGlovoToken } from './validateGlovoToken'
 import { validateSettings } from './validateSettings'
 
 export const routes = {
@@ -22,11 +22,11 @@ export const routes = {
     POST: [
       errorHandler,
       validateSettings,
-      validateGlovoToken,
+      checkOrderRecord,
+      saveOrderRecord,
+      authorizeOrder,
       simulateOrder,
       createOrder,
-      authorizeOrder,
-      saveOrderRecord,
     ],
   }),
   updateProduct: method({

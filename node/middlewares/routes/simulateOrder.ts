@@ -1,41 +1,17 @@
-import { json } from 'co-body'
-import type { Store } from 'vtex.glovo-integration'
-
 import {
   convertGlovoProductToItems,
   createSimulationPayload,
-  getStoreInfoFormGlovoStoreId,
   ServiceError,
 } from '../../utils'
 
 export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
   const {
-    state: { stores },
+    state: { glovoOrder, storeInfo },
     vtex: { logger },
     clients: { checkout },
   } = ctx
 
-  const glovoOrder: GlovoOrder = await json(ctx.req)
-
   try {
-    ctx.state.glovoOrder = glovoOrder
-
-    logger.info({
-      message: `Received order ${glovoOrder.order_id} from store ${glovoOrder.store_id} from Glovo`,
-      glovoOrder,
-    })
-
-    const storeInfo = getStoreInfoFormGlovoStoreId(
-      glovoOrder.store_id,
-      stores
-    ) as Store
-
-    if (!storeInfo) {
-      throw new Error(
-        `Order not handled. Missing or invalid store with Glovo Store Id ${glovoOrder.store_id}`
-      )
-    }
-
     const { sellerId, salesChannel, affiliateId, postalCode, country } =
       storeInfo
 
@@ -71,12 +47,11 @@ export async function simulateOrder(ctx: Context, next: () => Promise<void>) {
     })
 
     ctx.state.orderSimulation = simulation
-    ctx.state.storeInfo = storeInfo
 
     await next()
   } catch (error) {
     throw new ServiceError({
-      message: error.message ?? 'Order simulation error',
+      message: error.message ?? 'Order creation failed',
       reason:
         error.reason ??
         `Simulation failed for Glovo Order ${glovoOrder.order_id}`,

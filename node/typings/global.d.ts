@@ -6,11 +6,9 @@ declare global {
   type Context = ServiceContext<Clients, State>
 
   interface State extends RecorderState {
-    vtexAuthOrder: VTEXAuthorizedOrder
     vtexOrder: VTEXOrder | VTEXMarketplaceOrder
     glovoOrder: GlovoOrder
     glovoToken: string
-    catalogUpdate: CatalogChange
     marketplace: boolean
     stores: Store[]
     storeInfo: Store
