@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.5.1] - 2023-04-14
+
 ### Fixed
 
 - Problems with Glovo store's complete menu updates sending products as `unavailable`.

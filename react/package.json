@@ -26,5 +26,5 @@
     "vtex.sellers-graphql": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.sellers-graphql@7.5.2/public/@types/vtex.sellers-graphql",
     "vtex.styleguide": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.styleguide@9.146.3/public/@types/vtex.styleguide"
   },
-  "version": "3.5.0"
+  "version": "3.5.1"
 }
