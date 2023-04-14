@@ -20,7 +20,7 @@
     "@types/react-intl": "^2.3.17",
     "@vtex/test-tools": "^3.1.0",
     "@vtex/tsconfig": "^0.5.6",
-    "vtex.glovo-integration": "https://glvchange--ametllerorigenqa.myvtex.com/_v/private/typings/linked/v1/vtex.glovo-integration@3.4.1+build1678298929/public/@types/vtex.glovo-integration",
+    "vtex.glovo-integration": "https://glovo--ametllerorigenqa.myvtex.com/_v/private/typings/linked/v1/vtex.glovo-integration@3.5.0+build1679072072/public/@types/vtex.glovo-integration",
     "vtex.native-types": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.native-types@0.9.0/public/@types/vtex.native-types",
     "vtex.render-runtime": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.render-runtime@8.132.4/public/@types/vtex.render-runtime",
     "vtex.sellers-graphql": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.sellers-graphql@7.5.2/public/@types/vtex.sellers-graphql",

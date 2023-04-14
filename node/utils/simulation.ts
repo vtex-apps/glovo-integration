@@ -22,8 +22,8 @@ export const createSimulationItem = ({
 
 export const createSimulationItems = (
   items: string[],
-  quantity: number,
-  sellerId: string
+  sellerId: string,
+  quantity = 1
 ): PayloadItem[] => {
   const simulationItems: PayloadItem[] = []
 
@@ -40,12 +40,10 @@ export const createSimulationItems = (
   return simulationItems
 }
 
-export const MAX_ITEMS_FOR_SIMULATION = 300
-
-export function iterationLimits(step: number) {
+export function iterationLimits(step: number, maxItemsForSimulation: number) {
   return [
-    MAX_ITEMS_FOR_SIMULATION * step,
-    MAX_ITEMS_FOR_SIMULATION * step + MAX_ITEMS_FOR_SIMULATION - 1,
+    maxItemsForSimulation * step,
+    maxItemsForSimulation * step + maxItemsForSimulation - 1,
   ]
 }
 
@@ -69,7 +67,7 @@ export const createSimulationPayload = ({
 
 export const createGlovoBulkUpdatePayload = (
   items: OrderFormItem[],
-  minimumStock: number
+  minimumStock = 1
 ): GlovoProductBulkUpdate => {
   const payload: GlovoProductBulkUpdate = {
     products: [],

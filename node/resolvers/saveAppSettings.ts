@@ -17,8 +17,13 @@ export const saveGlovoIntegrationSettings = async (
     return false
   }
 
+  const validatedSettings: SaveGlovoIntegrationSettings = {
+    ...settings,
+    minimumStock: settings.minimumStock > 20 ? 20 : settings.minimumStock,
+  }
+
   try {
-    await vbase.saveJSON(GLOVO, APP_SETTINGS, settings)
+    await vbase.saveJSON(GLOVO, APP_SETTINGS, validatedSettings)
 
     return true
   } catch (error) {

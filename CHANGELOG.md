@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Problems with Glovo store's complete menu updates sending products as `unavailable`.
+- Simulation requests for Glovo store's complete menu updates are now retried two additional times if they fail.
+
+### Changed
+
+- Remove hard-coded max items per simulation value and added the query/mutation to check and update it if needed.
+
+### Added
+
+- Utility function to retry requests.
+
 ## [3.5.0] - 2023-03-09
 
 ### Fixed

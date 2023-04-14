@@ -59,11 +59,7 @@ export default class RecordsManager extends VBase {
   // Store's catalog update
   public saveStoreCompleteMenuUpdate(
     affiliateId: string,
-    data: {
-      items: GlovoProductPatch[]
-      transactionId: string
-      lastUpdated: string
-    }
+    data: CompleteUpdateRecord
   ) {
     return this.saveJSON(affiliateId, STORE_MENU_UPDATE, data)
   }

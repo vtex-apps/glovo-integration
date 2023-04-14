@@ -67,3 +67,11 @@ interface MenuUpdatesItem {
   glovoStoreId: string
   items: ProductRecord[]
 }
+
+interface CompleteUpdateRecord {
+  items: GlovoProductPatch[]
+  transactionId: string | null
+  lastUpdated: string
+  successful: boolean
+  minimumStock: number
+}
