@@ -234,12 +234,14 @@ export const updateGlovoCompleteMenu = async (ctx: Context) => {
     }
 
     const glovoMenu = await recordsManager.getGlovoMenu()
-    let { max: maxItemsForSimulation }: MaxItemsForSimulation =
-      await vbase.getJSON(GLOVO, MAX_ITEMS_FOR_SIMULATION, true)
 
-    if (!maxItemsForSimulation) {
-      maxItemsForSimulation = 300
-    }
+    const { max }: MaxItemsForSimulation = await vbase.getJSON(
+      GLOVO,
+      MAX_ITEMS_FOR_SIMULATION,
+      true
+    )
+
+    const maxItemsForSimulation = max ?? 300
 
     const iterations = Math.ceil(
       Object.keys(glovoMenu).length / maxItemsForSimulation
