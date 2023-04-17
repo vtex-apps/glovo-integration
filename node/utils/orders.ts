@@ -181,3 +181,33 @@ function getLastName(name: string) {
 function getReceiverName(name: string, phone_number: string) {
   return `${name} - ${phone_number}`
 }
+
+/**
+ * Function to get the items that were changed in an order
+ *
+ * @param changesData Order modification event changesAttachements
+ * @returns changedItems Object with the items that were changed { itemId: { quantity: number } }
+ */
+export function getChangedItems(changesData: ChangesData[]) {
+  const changedItems: Record<string, { quantity: number }> = {}
+
+  for (const change of changesData) {
+    for (const item of change.itemsAdded) {
+      if (!changedItems[item.id]) {
+        changedItems[item.id] = { quantity: item.quantity }
+      } else {
+        changedItems[item.id].quantity += item.quantity
+      }
+    }
+
+    for (const item of change.itemsRemoved) {
+      if (!changedItems[item.id]) {
+        changedItems[item.id] = { quantity: -item.quantity }
+      } else {
+        changedItems[item.id].quantity -= item.quantity
+      }
+    }
+  }
+
+  return changedItems
+}

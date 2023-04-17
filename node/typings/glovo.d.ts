@@ -180,12 +180,12 @@ interface GlovoUpdateOrderStatus {
 interface GlovoModifyOrderPayload {
   glovoStoreId: string
   glovoOrderId: string
-  replacements: GlovoModifyReplacements[]
+  replacements: GlovoModifyReplacement[]
   removed_purchases: Array<string | undefined>
   added_products: GlovoModifiedProduct[]
 }
 
-interface GlovoModifyReplacements {
+interface GlovoModifyReplacement {
   purchased_product_id: string
   product: GlovoModifiedProduct
 }

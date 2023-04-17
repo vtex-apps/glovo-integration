@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { isValidAffiliateId, ServiceError } from '../../utils'
+import { getChangedItems, isValidAffiliateId, ServiceError } from '../../utils'
 
 export async function modifyGlovoOrder(
   ctx: StatusChangeContext,
@@ -51,31 +51,56 @@ export async function modifyGlovoOrder(
       changesAttachment: { changesData },
     } = order
 
+    const replacements: GlovoModifyReplacement[] = []
     const removedProducts: string[] = []
     const addedProducts: GlovoModifiedProduct[] = []
+    const changedItems = getChangedItems(changesData)
 
-    for (const change of changesData) {
-      for (const item of change.itemsAdded) {
+    if (Object.keys(changedItems).length <= 0) {
+      return
+    }
+
+    // Replacements and removed products
+    for (const product of products) {
+      const { id } = product
+
+      if (!changedItems[id]) {
+        continue
+      }
+
+      const updatedQuantity = product.quantity + changedItems[id].quantity
+
+      if (updatedQuantity <= 0) {
+        removedProducts.push(product.purchased_product_id)
+      } else {
+        replacements.push({
+          purchased_product_id: product.purchased_product_id,
+          product: {
+            id,
+            quantity: updatedQuantity,
+            attributes: product.attributes,
+          },
+        })
+      }
+    }
+
+    // Added products
+    const itemsInOrder = products.map((product) => product.id)
+
+    for (const [id, item] of Object.entries(changedItems)) {
+      if (!itemsInOrder.includes(id)) {
         addedProducts.push({
-          id: item.id,
+          id,
           quantity: item.quantity,
           attributes: [],
         })
-      }
-
-      for (const item of change.itemsRemoved) {
-        for (const product of products) {
-          if (item.id === product.id) {
-            removedProducts.push(product.purchased_product_id)
-          }
-        }
       }
     }
 
     const payload: GlovoModifyOrderPayload = {
       glovoStoreId: store_id,
       glovoOrderId: order_id,
-      replacements: [],
+      replacements,
       removed_purchases: removedProducts,
       added_products: addedProducts,
     }
