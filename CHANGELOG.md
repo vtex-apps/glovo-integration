@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Bug affecting removed items in Glovo order modifications.
+
 ## [3.5.1] - 2023-04-14
 
 ### Fixed
