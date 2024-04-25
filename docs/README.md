@@ -1,5 +1,10 @@
 # Glovo Integration
 
+##  ⚠️ Maintenance ⚠️
+*Starting June 1st 2023, this application will no longer be maintained by VTEX.*
+
+---
+
 The Glovo Integration allows European stores to be integrated with the Glovo Marketplace.\
 _Note: Latin American stores are not supported_
 
