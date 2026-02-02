@@ -4,18 +4,19 @@
 
 > ⚠️ This app is no longer maintained by VTEX. This means support and maintenance are no longer provided.
 
-The Glovo Integration allows European stores to be integrated with the Glovo Marketplace.\
-_Note: Latin American stores are not supported_
+The Glovo Integration enables European stores to connect to the Glovo Marketplace.
 
-## Main Features
+- Possibility to add multiple stores with independent catalogs.
+- Product catalog update for stores - Updates to the store's catalogs can be scheduled to keep prices and product availability up to date.
+- Order Integration - The orders received from Glovo are integrated into VTEX.
 
-- **Possibility to add multiple stores with independent catalogs**.
-- **Product catalog update for stores** - Updates to the store's catalogs can be scheduled to keep prices and product availability up to date.
-- **Order Integration** - The orders received from Glovo are integrated into VTEX.
+> Latin American stores are not supported.
+
+## Before you start
+
+Before proceeding to the following steps, you should have already reached out to Glovo to create the Catalog for the stores you will have available on Glovo. You should upload a single catalog that includes all the products you want to offer on the independent Glovo Stores. The App will manage each store's availability.
 
 ## Configuration
-
-_Prior to the following steps, you should have already reached out to Glovo to create the Catalog for the stores you will have available in Glovo. You should upload a single catalog that includes all the products you want to offer on the independent Glovo Stores. The App will manage each store's availability._
 
 To configure the Glovo Integration, you can follow these steps:
 
@@ -101,4 +102,4 @@ curl --request GET \
      --header 'VtexIdClientAutCookie: {authToken} \
 ```
 
-_The response has a property called `lastUpdated` that shows you the last date in which the the record was generated._
+_The response has a property called `lastUpdated` that shows you the last date at which the record was generated._
