@@ -1,41 +1,41 @@
 # Glovo Integration
 
-##  ⚠️ Maintenance ⚠️
-*Starting June 1st 2023, this application will no longer be maintained by VTEX.*
+[<i class="fa-brands fa-github"></i> Source code](https://github.com/vtex-apps/glovo-integration)
 
----
+> ⚠️ This app is no longer maintained by VTEX. This means support and maintenance are no longer provided.
 
-The Glovo Integration allows European stores to be integrated with the Glovo Marketplace.\
-_Note: Latin American stores are not supported_
+The Glovo Integration enables European stores to connect to the Glovo Marketplace.
 
-## Main Features
+- Possibility to add multiple stores with independent catalogs.
+- Product catalog update for stores - Updates to the store's catalogs can be scheduled to keep prices and product availability up to date.
+- Order Integration - The orders received from Glovo are integrated into VTEX.
 
-- **Possibility to add multiple stores with independent catalogs**.
-- **Product catalog update for stores** - Updates to the store's catalogs can be scheduled to keep prices and product availability up to date.
-- **Order Integration** - The orders received from Glovo are integrated into VTEX.
+> Latin American stores are not supported.
+
+## Before you start
+
+Before proceeding to the following steps, you should have already reached out to Glovo to create the Catalog for the stores you will have available on Glovo. You should upload a single catalog that includes all the products you want to offer on the independent Glovo Stores. The App will manage each store's availability.
 
 ## Configuration
 
-_Prior to the following steps, you should have already reached out to Glovo to create the Catalog for the stores you will have available in Glovo, you should upload one catalog that includes all of the products you want to offer on the independent Glovo Stores. The App will take care of managing the availability for each store._
-
-To configure the Glovo Integration you can follow these steps:
+To configure the Glovo Integration, you can follow these steps:
 
 1. Run the following command in your store's CLI: `vtex install vtex.glovo-integration@3.x`
-2. Make sure you have at least one (1) pick-up-point configured for each of the salesChannel where you want to offer the integration.
-3. In your store's admin dashboard, on the side menu browse to **Apps -> Glovo Integration** and then click on it to open the application settings.\
+2. Make sure you have at least one (1) pick-up-point configured for each of the `salesChannel` where you want to offer the integration.
+3. In your store's admin dashboard, on the side menu, browse to **Apps -> Glovo Integration** and then click on it to open the application settings.\
 4. Add the stores that will integrate with Glovo:
 
 | Field          | Description                                                                                                                        |
 | -------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| Store name     | Display name associated to the store                                                                                               |
-| Seller ID      | Seller ID associated to the store (the dropdown displays the seller's name)                                                        |
-| Affiliate ID   | Three letters ID associated for the affiliate (you can find this ID going to **Store settings -> Orders' settings -> Affiliates**) |
-| Sales channel  | The sales channel associated to the store                                                                                          |
+| Store name     | Display name associated with the store                                                                                               |
+| Seller ID      | Seller ID associated with the store (the dropdown displays the seller's name)                                                        |
+| Affiliate ID   | Three-letter ID associated with the affiliate (you can find this ID by going to **Store settings -> Orders' settings -> Affiliates**) |
+| Sales channel  | The sales channel associated with the store                                                                                          |
 | Postal code    | The postal code for the store in charge of fulfilling the orders from Glovo                                                        |
 | Country        | The country where the store is located                                                                                             |
 | Glovo Store ID | Glovo store ID assigned to the store by Glovo                                                                                      |
 
-5. Fill in the the integration settings and client information:
+5. Fill in the integration settings and client information:
 
 | Field                  | Description                                                               | Default value |
 | ---------------------- | ------------------------------------------------------------------------- | ------------- |
@@ -74,7 +74,7 @@ curl --request POST \
      --header 'VtexIdClientAutCookie: {authToken}' \
 ```
 
-- **Partial update** - This endpoint will send a bulk update to every store only for products that have changed since the last update.\
+- **Partial update** - This endpoint will send a bulk update to every store only for products that have changed since the last update.
   _The partial update requires the affiliate configuration described on step 5_
 
 ```
@@ -83,7 +83,7 @@ curl --request POST \
      --header 'VtexIdClientAutCookie: {authToken}' \
 ```
 
-8. Inside your store's admin dashboard, on the side menu go to _Orders Management -> Settings -> Affiliate_ and configure a new [affiliate](https://help.vtex.com/en/tutorial/integration-guide-consuming-catalog-information-for-use-in-an-external-service) as follows:
+8. Inside your store's admin dashboard, on the side menu, go to **Orders Management > Settings > Affiliate** and configure a new [affiliate](https://help.vtex.com/en/tutorial/integration-guide-consuming-catalog-information-for-use-in-an-external-service) as follows:
 
    - Name: Give the affiliate a name
    - ID: a three (3) letter key for the affiliate (not compatible with numbers or vocals)
@@ -93,8 +93,8 @@ curl --request POST \
 
 ## Store Menu
 
-It is possible to see the current catalog offered in Glovo for any of the stores that have been added to the configuration. \
-The following endpoint will respond with the store's current catalog and generate a new updated record in the background.
+It is possible to view the current catalog offered on Glovo for any stores added to the configuration. 
+The following endpoint returns the store's current catalog and generates a new, updated record.
 
 ```
 curl --request GET \
@@ -102,4 +102,4 @@ curl --request GET \
      --header 'VtexIdClientAutCookie: {authToken} \
 ```
 
-_The response has a property called `lastUpdated` that shows you the last date in which the the record was generated._
+_The response has a property called `lastUpdated` that shows you the last date at which the record was generated._
